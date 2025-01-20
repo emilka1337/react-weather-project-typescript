@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { ReduxState } from "../../types/State";
 
 interface TemperatureContainerProps {
     temperature: number;
@@ -6,7 +7,7 @@ interface TemperatureContainerProps {
 }
 
 function TemperatureContainer({ temperature, main }: TemperatureContainerProps) {
-    const temperatureInF = useSelector((state) => state.settings.temperatureInF);
+    const temperatureInF: boolean = useSelector((state: ReduxState) => state.settings.temperatureInF);
 
     return (
         <div className="temperature-container">

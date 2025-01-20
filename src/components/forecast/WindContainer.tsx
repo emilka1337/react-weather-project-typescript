@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { ReduxState } from "../../types/State";
 
 interface WindContainerProps {
     speed: number;
@@ -16,7 +17,7 @@ function defineWindArrowScale(speed: number): number | undefined {
 }
 
 function WindContainer({ speed, degree }: WindContainerProps) {
-    const speedUnitInMS = useSelector((state) => state.settings.speedUnitInMS);
+    const speedUnitInMS: boolean = useSelector((state: ReduxState) => state.settings.speedUnitInMS);
 
     return (
         <div className="wind-container">

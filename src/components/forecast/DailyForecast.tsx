@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { ForecastUnit } from "../../types/ForecastUnit";
 import { ForecastData } from "../../types/ForecastData";
 import { ForecastByDay } from "../../types/ForecastByDay";
+import { ReduxState } from "../../types/State";
 
 function extractWeekDayFromTimestamp(ts: number): number {
     return new Date(ts * 1000).getDay();
@@ -68,7 +69,7 @@ function DailyForecast() {
     const [notificationsPermission, setNotificationsPermission] = useState<string>("denied");
     const [separatedForecastList, setseparatedForecastList] = useState<Array<Array<ForecastUnit>>>([]);
 
-    const forecast: ForecastData = useSelector((state) => state.forecast);
+    const forecast: ForecastData = useSelector((state: ReduxState) => state.forecast);
 
     useEffect(() => {
         Notification.requestPermission().then((result) => {

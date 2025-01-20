@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Greeting from "./Greeting";
 import { Time } from "../../types/Time";
+import { ReduxState } from "../../types/State";
 
 function getCurrentTime(): Time {
     const date: Date = new Date();
@@ -37,7 +38,7 @@ function formatTime(time: Time, showSeconds: boolean): string {
 function Clocks() {
     const [currentTime, setCurrentTime] = useState<string | null>();
 
-    const showSecondsInClocks = useSelector((state) => state.settings.showSecondsInClocks);
+    const showSecondsInClocks: boolean = useSelector((state: ReduxState) => state.settings.showSecondsInClocks);
 
     useEffect(() => {
         setTime();

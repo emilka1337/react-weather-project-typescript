@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { ReduxState } from "../../types/State";
 
 const icons = {
     wind: (
@@ -30,10 +31,10 @@ const icons = {
 };
 
 function MoreWeatherInfo() {
-    const windSpeed: number = useSelector((state) => state.selectedWeather.selectedWind);
-    const speedUnitInMS: boolean = useSelector((state) => state.settings.speedUnitInMS);
-    const humidity: number = useSelector((state) => state.selectedWeather.selectedHumidity);
-    const sky: string = useSelector((state) => state.selectedWeather.selectedMain);
+    const windSpeed: number = useSelector((state: ReduxState) => state.selectedWeather.selectedWind);
+    const speedUnitInMS: boolean = useSelector((state: ReduxState) => state.settings.speedUnitInMS);
+    const humidity: number = useSelector((state: ReduxState) => state.selectedWeather.selectedHumidity);
+    const sky: string = useSelector((state: ReduxState) => state.selectedWeather.selectedMain);
 
     const getWindSpeedValue = (): string => {
         let tempWindSpeed = "";

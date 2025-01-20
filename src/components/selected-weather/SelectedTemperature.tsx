@@ -1,9 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { ReduxState } from "../../types/State";
 
 function SelectedTemperature() {
-    const temperature: number = useSelector((state) => state.selectedWeather.selectedTemperature);
-    const temperatureInF: boolean = useSelector((state) => state.settings.temperatureInF);
+    const temperature: number = useSelector((state: ReduxState) => state.selectedWeather.selectedTemperature);
+    const temperatureInF: boolean = useSelector((state: ReduxState) => state.settings.temperatureInF);
 
     const getSelectedTemperatureValue = (): string => {
         if (temperatureInF === false) {
