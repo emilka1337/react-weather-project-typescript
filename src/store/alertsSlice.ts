@@ -1,13 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { Alert } from "../types/Alert";
+import { ReduxState } from "../types/State";
+
+interface AlertInitialState {
+    errors: Alert[]
+    warnings: Alert[]
+}
+
+const initialState: AlertInitialState = {
+    errors: [],
+    warnings: []
+}
 
 const alertsSlice = createSlice({
     name: "alerts",
-    initialState: {
-        errors: [],
-        warnings: []
-    },
+    initialState: initialState,
     reducers: {
-        addError(state, action) {
+        addError(state, action): void {
             let errorName;
 
             switch (action.payload.error.code) {
@@ -19,7 +28,7 @@ const alertsSlice = createSlice({
             let error = { name: errorName, message: action.payload.error.message }
             state.errors.push(error)
         },
-        addWarning(state, action) {
+        addWarning(state: ReduxState, action): void {
             state.alerts.warnings.push(action.payload.warningObject)
         }
     }

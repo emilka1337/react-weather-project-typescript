@@ -8,6 +8,8 @@ import { setGeolocation } from "../store/geolocationSlice";
 import { setForecast } from "../store/forecastSlice";
 import { fetchForecast } from "../store/forecastThunk";
 import { ForecastData } from "../types/ForecastData";
+import { CityGeolocation } from "../types/CityGeolocation";
+import { ReduxState } from "../types/State";
 
 const Settings = React.lazy(() => import("./settings/Settings"));
 
@@ -27,9 +29,9 @@ function getSavedForecastData() {
 
 function App() {
     const dispatch = useDispatch();
-    const darkMode = useSelector((state) => state.settings.darkMode);
-    const geolocation = useSelector((state) => state.geolocation);
-    const cityName = useSelector((state) => state.selectedCity);
+    const darkMode: boolean = useSelector((state: ReduxState) => state.settings.darkMode);
+    const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
+    const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
 
     // Defines user geolocation
     useEffect(() => {
@@ -69,7 +71,7 @@ function App() {
                 savedForecastData.payload.city.name != cityName
             ) {
                 const data = dispatch(fetchForecast({ lat, lon }));
-                data.then((data) => {
+                data.then((data: ForecastData) => {
                     saveForecastData(data);
                     dispatch(setForecast(data));
                 });

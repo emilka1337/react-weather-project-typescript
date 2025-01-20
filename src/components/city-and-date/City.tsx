@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSelectedCity } from "../../store/selectedCitySlice";
 import EditCityToggler from "./EditCityToggler";
 import ky from "ky";
+import { CityGeolocation } from "../../types/CityGeolocation";
+import { ReduxState } from "../../types/State";
 
 const CitySearch = React.lazy(() => import("./CitySearch"));
 
@@ -20,8 +22,8 @@ const loadLastSavedCityName = (): string => {
 
 function City() {
     const [showCitySearch, setShowCitySearch] = useState(false);
-    const geolocation = useSelector((state) => state.geolocation);
-    const cityName = useSelector((state) => state.selectedCity);
+    const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
+    const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
 
     const dispatch = useDispatch();
 

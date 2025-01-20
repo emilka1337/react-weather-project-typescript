@@ -1,11 +1,12 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { ReduxState } from "../../types/State";
 
 function FeelsLikeField() {
     const selectedFeelsLike: number = useSelector(
-        (state) => state.selectedWeather.selectedFeelsLike
+        (state: ReduxState) => state.selectedWeather.selectedFeelsLike
     );
-    const temperatureInF: boolean = useSelector((state) => state.settings.temperatureInF);
+    const temperatureInF: boolean = useSelector((state: ReduxState) => state.settings.temperatureInF);
 
     const getFeelsLikeValue = (): string => {
         if (temperatureInF === false) {

@@ -3,7 +3,7 @@ import SettingsMenuToggler from "./SettingsMenuToggler";
 import SettingsMenu from "./SettingsMenu";
 
 function Settings() {
-    let [showSettings, setShowSetting] = useState(false);
+    let [showSettings, setShowSetting] = useState<boolean>(false);
 
     return (
         <>
