@@ -1,0 +1,114 @@
+.right {
+    width: 25%;
+    padding: 40px 0px;
+    padding-right: 10px;
+    overflow: hidden;
+
+    .settings-menu-toggler-container {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .settings-menu-toggler {
+        @include button;
+    }
+
+    .settings-menu {
+        transition: 500ms;
+        transform: translateX(110%);
+        opacity: 0;
+        // overflow-y: scroll;
+
+        &.show {
+            transform: none;
+            opacity: 1;
+        }
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+
+            li {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 20px;
+                padding: 10px;
+                padding-right: 5px;
+                border-radius: 10px;
+                transition: 200ms;
+
+                &:not(:last-child) {
+                    cursor: pointer;
+                }
+
+                &:not(:last-child):hover {
+                    background: $hoverBgColor;
+                }
+
+                h5 {
+                    color: $textColor;
+                    font-weight: 500;
+                    margin: 0;
+                    font-size: 14px;
+                    span {
+                        font-size: 10px;
+                    }
+                }
+
+                .toggler {
+                    // background: #A3A1A1;
+                    border: 1px solid #a3a1a1;
+                    border-radius: 10px;
+                    padding: 5px 15px;
+                    position: relative;
+                    transition: 400ms;
+                    cursor: pointer;
+
+                    .circle {
+                        background: $textColor;
+                        padding: 8px;
+                        position: absolute;
+                        left: -1px;
+                        top: -3px;
+                        border-radius: 50%;
+                        transition: 400ms;
+                    }
+
+                    &.toggled {
+                        background: #a3a1a1;
+
+                        .circle {
+                            background: $textColor;
+                            border-color: $textColor;
+                            left: calc(100% - 15px);
+                        }
+                    }
+                }
+
+                .reset-button {
+                    color: crimson;
+                    border: 1px solid transparent;
+                    background: transparent;
+                    cursor: pointer;
+                    transition: 400ms;
+                    padding: 5px;
+                    border-radius: 5px;
+
+                    &:hover {
+                        border-color: $textColor;
+                    }
+
+                    &.resetted {
+                        color: green;
+
+                        &:hover {
+                            border-color: green;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

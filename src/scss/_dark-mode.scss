@@ -1,0 +1,131 @@
+&.dark {
+    background: $appDarkBgColor !important;
+
+    .widget {
+        background: $widgetDarkBgColor !important;
+        box-shadow: none;
+
+        .left {
+            .city-and-date {
+                color: $darkTextColor !important;
+
+                svg {
+                    color: $darkTextColor !important;
+                }
+
+                .city-search {
+                    background: $appDarkBgColor;
+
+                    input {
+                        background: $weatherDarkTextColor;
+                    }
+
+                    .cities-list {
+                        button {
+                            color: $darkTextColor !important;
+
+                            &:hover {
+                                background: $hoverDarkBgColor !important;
+                            }
+                        }
+                    }
+
+                    .starred-cities-list svg {
+                        color: #FFE234 !important;
+                    }
+                }
+            }
+
+            .selected-weather {
+                .selected-temperature {
+                    color: $weatherDarkTextColor !important;
+                }
+
+                .feels-like {
+                    color: $weatherDarkTextColor !important;
+                }
+            }
+
+            .loader {
+                .circle {
+                    color: $weatherDarkTextColor !important;
+                }
+            }
+
+            .more-info {
+                color: $darkTextColor !important;
+            }
+
+            .forecast-mode-toggler {
+                border-color: $widgetDarkBgColor !important;
+
+                &:hover,
+                &.active {
+                    border-color: $textColor !important;
+                }
+
+                svg {
+                    color: $darkTextColor !important;
+                }
+            }
+
+            .daily-forecast {
+                &::-webkit-scrollbar {
+                    // background: $textColor;
+                    background: $widgetDarkBgColor;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    // background: $appDarkBgColor;
+                    background: $widgetDarkBgColor;
+                }
+
+                &:hover::-webkit-scrollbar-thumb {
+                    background: $weatherDarkTextColor;
+                }
+            }
+
+            .forecast-day {
+                border-color: $textColor !important;
+
+                .weekday {
+                    background: $widgetDarkBgColor !important;
+                    color: $darkTextColor !important;
+                }
+            }
+
+            .forecast-cell {
+                .time,
+                .temperature {
+                    color: $darkTextColor !important;
+                }
+
+                .wind {
+                    color: $darkTextColor !important;
+                }
+
+                &:hover {
+                    background: $appDarkBgColor !important;
+                }
+            }
+        }
+
+        .right {
+            .settings-menu-toggler {
+                @include buttonDark;
+            }
+
+            .settings-menu {
+                ul li {
+                    &:not(:last-child):hover {
+                        background: $hoverDarkBgColor !important;
+                    }
+
+                    h5 {
+                        color: $darkTextColor;
+                    }
+                }
+            }
+        }
+    }
+}

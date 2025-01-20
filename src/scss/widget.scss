@@ -1,0 +1,10 @@
+.widget {
+    background: $widgetBgColor;
+    display: flex;
+    border-radius: 20px;
+    width: 992px;
+    box-shadow: 0px 0px 10px #acacac;
+
+    @import "./left/left";
+    @import "./right/right";
+}

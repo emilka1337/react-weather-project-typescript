@@ -1,0 +1,31 @@
+@mixin button {
+    background: none;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+    transition: 400ms;
+    display: flex;
+    transform: translateY(-5px);
+
+    &:hover {
+        background: $hoverBgColor;
+    }
+
+    svg {
+        width: 20px;
+        color: $textColor;
+    }
+}
+
+@mixin buttonDark {
+    @include button;
+
+    &:hover {
+        background: $hoverDarkBgColor !important;
+    }
+
+    svg {
+        color: $darkTextColor !important;
+    }
+}

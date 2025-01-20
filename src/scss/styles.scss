@@ -1,0 +1,45 @@
+@font-face {
+    font-family: "Google Sans";
+    font-weight: 400;
+    src: url(../fonts/GoogleSans-Regular.woff2) format("woff2");
+}
+@font-face {
+    font-family: "Google Sans";
+    font-weight: 500;
+    src: url(../fonts/GoogleSans-Medium.woff2) format("woff2");
+}
+@font-face {
+    font-family: "Google Sans";
+    font-weight: 600;
+    src: url(../fonts/GoogleSans-Bold.woff2) format("woff2");
+}
+
+@import "./variables";
+@import "./mixins";
+
+body {
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+::selection {
+    background-color: $weatherTextColor;
+    color: $widgetBgColor;
+}
+
+.app {
+    background: $appBgColor;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: "Google Sans";
+    transition: 400ms;
+
+    @import "./widget.scss";
+    @import "./alert";
+    @import "./dark-mode";
+}
