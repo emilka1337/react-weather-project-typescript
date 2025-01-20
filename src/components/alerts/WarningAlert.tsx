@@ -1,21 +1,22 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { Alert } from "../../types/Alert";
 
-function ErrorAlert() {
+function WarningAlert() {
     let [showAlert, setShowAlert] = useState(false);
 
-    const errors = useSelector((store) => store.alerts.errors);
+    const warnings = useSelector((store) => store.alerts.warnings);
 
     const hideAlert = () => setShowAlert(false);
 
-    return errors.map((error, index) => {
+    return warnings.map((warning: Alert, index: number) => {
         <div className={showAlert ? "alert show" : "alert"} key={index}>
             <h3>Something went wrong :(</h3>
             <p>
-                <span>Error Name/Code:</span> {`${error.name ?? error.code}`}
+                <span>Error Name/Code:</span> {`${warning.name ?? warning.code}`}
             </p>
             <p>
-                <span>Error message:</span> {`${error.message}`}
+                <span>Error message:</span> {`${warning.message}`}
             </p>
             <button onClick={hideAlert}>
                 <svg
@@ -31,4 +32,4 @@ function ErrorAlert() {
     });
 }
 
-export default ErrorAlert;
+export default WarningAlert;

@@ -5,7 +5,7 @@ import Loading from "./Loading";
 import SelectedTemperature from "./SelectedTemperature";
 import FeelsLikeField from "./FeelsLikeField";
 import MoreWeatherInfo from "./MoreWeatherInfo";
-import { ForecastData } from "../App";
+import { ForecastData } from "../../types/ForecastData";
 
 function SelectedWeather() {
     const dispatch = useDispatch();
