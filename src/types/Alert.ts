@@ -1,5 +1,9 @@
+type AlertCode = number | string
+type AlertName = string | undefined
+type AlertMessage = string | undefined
+
 export interface Alert {
-    code: number | string
-    name: string
-    message: string
+    code: AlertCode
+    name: AlertName
+    message: AlertMessage
 }
