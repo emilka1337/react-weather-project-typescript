@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Alert } from "../types/Alert";
-import { ReduxState } from "../types/State";
 
 interface AlertInitialState {
     errors: Alert[]
@@ -25,11 +24,15 @@ const alertsSlice = createSlice({
                 case 3: errorName = "Geolocation imeout"; break;
             }
 
-            let error = { name: errorName, message: action.payload.error.message }
+            const error: Alert = {
+                name: errorName,
+                message: action.payload.error.message,
+                code: action.payload.error.code
+            }
             state.errors.push(error)
         },
-        addWarning(state: ReduxState, action): void {
-            state.alerts.warnings.push(action.payload.warningObject)
+        addWarning(state, action): void {
+            state.warnings.push(action.payload.warningObject)
         }
     }
 })
