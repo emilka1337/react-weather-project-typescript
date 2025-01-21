@@ -29,7 +29,7 @@ function ForecastCell({ cellForecast, timestamp, isDefaultActive }: ForecastCell
     const forecastMode: ForecastModes = useSelector((state: ReduxState) => state.forecastMode);
 
     const dispatch = useDispatch();
-    const activeIndicator = useRef();
+    const activeIndicator = useRef<HTMLDivElement | null>(null);
 
     const date: Date = new Date(timestamp * 1000);
     const hours: number = date.getHours();

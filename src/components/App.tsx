@@ -20,16 +20,18 @@ function saveForecastData(data: ForecastData): void {
     localStorage.setItem("forecastData", JSON.stringify(data));
 }
 
-function getSavedForecastData(): ForecastData | void {
+function getSavedForecastData(): ForecastData | null {
     const forecastData: string | null = localStorage.getItem("forecastData");
 
     if (typeof forecastData === "string") {
         return JSON.parse(forecastData);
+    } else {
+        return null;
     }
 }
 
 function App() {
-    const dispatch: Dispatch = useDispatch();
+    const dispatch = useDispatch();
     const darkMode: boolean = useSelector((state: ReduxState) => state.settings.darkMode);
     const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
     const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
@@ -62,11 +64,11 @@ function App() {
 
     function getForecast(lat: number, lon: number): void {
         try {
-            const savedForecastData: ForecastData = getSavedForecastData();
+            const savedForecastData: ForecastData | null = getSavedForecastData();
             const currentMilliseconds: number = Date.now();
 
             if (
-                !savedForecastData ||
+                savedForecastData === null ||
                 (savedForecastData.timeStamp &&
                     currentMilliseconds - savedForecastData.timeStamp > 300 * 1000) ||
                 savedForecastData.city.name != cityName
