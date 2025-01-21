@@ -10,16 +10,17 @@ import { fetchForecast } from "../store/forecastThunk";
 import { ForecastData } from "../types/ForecastData";
 import { CityGeolocation } from "../types/CityGeolocation";
 import { ReduxState } from "../types/State";
+import { Dispatch } from "@reduxjs/toolkit";
 
 const Settings = React.lazy(() => import("./settings/Settings"));
 
-function saveForecastData(data: ForecastData) {
+function saveForecastData(data: ForecastData): void {
     const date = new Date();
     data.timeStamp = +date;
     localStorage.setItem("forecastData", JSON.stringify(data));
 }
 
-function getSavedForecastData() {
+function getSavedForecastData(): ForecastData | void {
     const forecastData: string | null = localStorage.getItem("forecastData");
 
     if (typeof forecastData === "string") {
@@ -28,7 +29,7 @@ function getSavedForecastData() {
 }
 
 function App() {
-    const dispatch = useDispatch();
+    const dispatch: Dispatch = useDispatch();
     const darkMode: boolean = useSelector((state: ReduxState) => state.settings.darkMode);
     const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
     const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
@@ -36,7 +37,7 @@ function App() {
     // Defines user geolocation
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(
-            (position) => {
+            (position: GeolocationPosition) => {
                 dispatch(
                     setGeolocation({
                         lat: position.coords.latitude,
@@ -44,7 +45,7 @@ function App() {
                     })
                 );
             },
-            (error) => {
+            (error: GeolocationPositionError) => {
                 console.log(error);
             },
             { enableHighAccuracy: true }
@@ -68,7 +69,7 @@ function App() {
                 !savedForecastData ||
                 (savedForecastData.timeStamp &&
                     currentMilliseconds - savedForecastData.timeStamp > 300 * 1000) ||
-                savedForecastData.payload.city.name != cityName
+                savedForecastData.city.name != cityName
             ) {
                 const data = dispatch(fetchForecast({ lat, lon }));
                 data.then((data: ForecastData) => {

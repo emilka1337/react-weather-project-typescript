@@ -8,7 +8,7 @@ function FeelsLikeField() {
     );
     const temperatureInF: boolean = useSelector((state: ReduxState) => state.settings.temperatureInF);
 
-    const getFeelsLikeValue = (): string => {
+    const getFeelsLikeValue = (temperatureInF: boolean): string | undefined => {
         if (temperatureInF === false) {
             return selectedFeelsLike.toFixed(0);
         } else if (temperatureInF == true) {
@@ -20,7 +20,7 @@ function FeelsLikeField() {
 
     return (
         <p className="feels-like">
-            {`Feels like: ${getFeelsLikeValue()}`}
+            {`Feels like: ${getFeelsLikeValue(temperatureInF)}`}
             <span className="degree">°</span>
         </p>
     );

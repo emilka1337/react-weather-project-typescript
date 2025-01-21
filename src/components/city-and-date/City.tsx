@@ -19,7 +19,7 @@ const loadLastSavedCityName = (): string | void => {
 }
 
 function City() {
-    const [showCitySearch, setShowCitySearch] = useState(false);
+    const [showCitySearch, setShowCitySearch] = useState<boolean>(false);
     const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
     const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
 

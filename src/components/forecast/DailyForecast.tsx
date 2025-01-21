@@ -109,8 +109,8 @@ function DailyForecast() {
             <>
                 <ForecastModeTogglePanel />
                 <ul className="daily-forecast">
-                    {separatedForecastList.map((day, index) => {
-                        return <ForecastDay day={day} weekday={day[0].weekday} key={index} index={index} />;
+                    {separatedForecastList.map((day: ForecastUnit[], index: number) => {
+                        return <ForecastDay day={day} weekday={day[0].weekday || new Date().getDay()} key={index} index={index} />;
                     })}
                 </ul>
             </>
