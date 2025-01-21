@@ -11,12 +11,10 @@ const CitySearch = React.lazy(() => import("./CitySearch"));
 const saveCityName = (cityName: string) =>
     localStorage.setItem("last-saved-city-name", JSON.stringify(cityName));
 
-const loadLastSavedCityName = (): string => {
+const loadLastSavedCityName = (): string | void => {
     const lastSavedCity: string | null = localStorage.getItem("last-saved-city-name");
     if (lastSavedCity) {
         return JSON.parse(lastSavedCity)
-    } else {
-        throw new Error("Failed to load last saved city name")
     }
 }
 
