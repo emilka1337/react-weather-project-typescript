@@ -73,7 +73,7 @@ function App() {
                     currentMilliseconds - savedForecastData.timeStamp > 300 * 1000) ||
                 savedForecastData.city.name != cityName
             ) {
-                const data = dispatch(fetchForecast({ lat, lon }));
+                const data: Promise<ForecastData> = dispatch(fetchForecast({ lat, lon }));
                 data.then((data: ForecastData) => {
                     saveForecastData(data);
                     dispatch(setForecast(data));

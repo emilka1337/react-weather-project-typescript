@@ -15,8 +15,7 @@ export const fetchForecast = createAsyncThunk<
             }data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${import.meta.env.VITE_API_KEY
             }&units=metric`;
 
-        // Ky автоматически типизирует возвращаемое значение
-        const forecastData = await ky.get(forecastURL).json<ForecastData>();
+        const forecastData = await ky.get<ForecastData>(forecastURL).json();
 
         return forecastData;
     }
