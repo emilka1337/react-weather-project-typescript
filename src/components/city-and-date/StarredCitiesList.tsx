@@ -5,10 +5,11 @@ import { setGeolocation } from "../../store/geolocationSlice";
 import { removeCityFromStarredCities } from "../../store/starredCitiesSlice";
 import { SearchedCity } from "../../types/SearchedCity";
 import { ReduxState } from "../../types/State";
+import { AppDispatch } from "../../store/store";
 
 function StarredCitiesList() {
     const starredCities: SearchedCity[] = useSelector((state: ReduxState) => state.starredCities);
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
 
     const handleCityClick = (city: SearchedCity): void => {
         dispatch(setSelectedCity(city.name));

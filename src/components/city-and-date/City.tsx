@@ -5,6 +5,7 @@ import EditCityToggler from "./EditCityToggler";
 import ky from "ky";
 import { CityGeolocation } from "../../types/CityGeolocation";
 import { ReduxState } from "../../types/State";
+import { AppDispatch } from "../../store/store";
 
 const CitySearch = React.lazy(() => import("./CitySearch"));
 
@@ -23,7 +24,7 @@ function City() {
     const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
     const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
 
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
 
     useEffect(() => {
         fetchCityNameByCoords(geolocation.lat, geolocation.lon);

@@ -9,6 +9,8 @@ import forecastSlice from "./forecastSlice";
 import selectedCitySlice from "./selectedCitySlice";
 import starredCitiesSlice from "./starredCitiesSlice";
 
+export type AppDispatch = typeof store.dispatch;
+
 const store = configureStore({
     reducer: {
         settings: settingsSlice,

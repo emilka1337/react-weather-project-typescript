@@ -3,10 +3,11 @@ import { setForecastMode } from "../../store/forecastModeSlice";
 import { ForecastModes } from "../../enums/ForecastMode";
 import { ReduxState } from "../../types/State";
 import { Dispatch } from "@reduxjs/toolkit";
+import { AppDispatch } from "../../store/store";
 
 function ForecastModeTogglePanel() {
     const forecastMode: ForecastModes = useSelector((state: ReduxState) => state.forecastMode)
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
 
     const temperatureButtonClick: Dispatch = () => dispatch(setForecastMode("temperature"));
     const windButtonClick: Dispatch = () => dispatch(setForecastMode("wind"));

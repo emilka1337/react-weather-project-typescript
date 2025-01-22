@@ -7,9 +7,10 @@ import FeelsLikeField from "./FeelsLikeField";
 import MoreWeatherInfo from "./MoreWeatherInfo";
 import { ForecastData } from "../../types/ForecastData";
 import { ReduxState } from "../../types/State";
+import { AppDispatch } from "../../store/store";
 
 function SelectedWeather() {
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
     const showFeelsLikeField: boolean = useSelector((state: ReduxState) => state.settings.showFeelsLikeField);
     const forecast: ForecastData = useSelector((state: ReduxState) => state.forecast);
 

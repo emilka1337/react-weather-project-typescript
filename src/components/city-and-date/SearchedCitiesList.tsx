@@ -5,13 +5,14 @@ import { setGeolocation } from "../../store/geolocationSlice";
 import { addCityToStarredCities } from "../../store/starredCitiesSlice";
 
 import { SearchedCity } from "./StarredCitiesList";
+import { AppDispatch } from "../../store/store";
 
 interface SearchedCitiesListProps {
     citiesList: SearchedCity[];
 }
 
 function SearchedCitiesList({ citiesList }: SearchedCitiesListProps) {
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
 
     const handleCityClick = (city: SearchedCity): void => {
         dispatch(setSelectedCity(city.name));

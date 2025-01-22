@@ -6,6 +6,7 @@ import { ForecastUnit } from "../../types/ForecastUnit";
 import { Time } from "../../types/Time";
 import { ForecastModes } from "../../enums/ForecastMode";
 import { ReduxState } from "../../types/State";
+import { AppDispatch } from "../../store/store";
 
 const WindContainer = React.lazy(() => import("./WindContainer"));
 
@@ -28,7 +29,7 @@ function formatTime(time: Time): string {
 function ForecastCell({ cellForecast, timestamp, isDefaultActive }: ForecastCellProps) {
     const forecastMode: ForecastModes = useSelector((state: ReduxState) => state.forecastMode);
 
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
     const activeIndicator = useRef<HTMLDivElement | null>(null);
 
     const date: Date = new Date(timestamp * 1000);

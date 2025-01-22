@@ -11,6 +11,7 @@ import { ForecastData } from "../types/ForecastData";
 import { CityGeolocation } from "../types/CityGeolocation";
 import { ReduxState } from "../types/State";
 import { Dispatch } from "@reduxjs/toolkit";
+import { AppDispatch } from "../store/store";
 
 const Settings = React.lazy(() => import("./settings/Settings"));
 
@@ -31,7 +32,7 @@ function getSavedForecastData(): ForecastData | null {
 }
 
 function App() {
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
     const darkMode: boolean = useSelector((state: ReduxState) => state.settings.darkMode);
     const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
     const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
@@ -73,11 +74,15 @@ function App() {
                     currentMilliseconds - savedForecastData.timeStamp > 300 * 1000) ||
                 savedForecastData.city.name != cityName
             ) {
-                const data: Promise<ForecastData> = dispatch(fetchForecast({ lat, lon }));
-                data.then((data: ForecastData) => {
-                    saveForecastData(data);
-                    dispatch(setForecast(data));
-                });
+                dispatch(fetchForecast({ lat, lon }))
+                    .unwrap()
+                    .then((forecastData: ForecastData) => {
+                        saveForecastData(forecastData);
+                        dispatch(setForecast(forecastData));
+                    })
+                    .catch((error) => {
+                        console.error("Failed to fetch forecast:", error);
+                    });
             } else {
                 dispatch(setForecast(savedForecastData));
             }

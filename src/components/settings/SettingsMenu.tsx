@@ -10,7 +10,7 @@ import {
 } from "../../store/settingsSlice";
 import { Settings } from "../../types/Settings";
 import { ReduxState } from "../../types/State";
-import { Dispatch } from "@reduxjs/toolkit";
+import { AppDispatch } from "../../store/store";
 
 interface SettingsMenuProps {
     showSettings: boolean;
@@ -19,7 +19,7 @@ interface SettingsMenuProps {
 function SettingsMenu({ showSettings }: SettingsMenuProps) {
     let [settingsResetted, setSettingsResetted] = useState<boolean>(false);
 
-    const dispatch: Dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
     const settings: Settings = useSelector((state: ReduxState) => state.settings);
 
     //#region Settings click event listeners
