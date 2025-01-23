@@ -1,37 +1,37 @@
 export interface ForecastUnit {
-    clouds: {
-        all: number;
+    readonly clouds: {
+        readonly all: number;
     };
-    dt: number;
-    dt_txt: string;
-    main: {
-        feels_like: number;
-        grnd_level: number;
-        humidity: number;
-        pressure: number;
-        sea_level: number;
-        temp: number;
-        temp_kf: number;
-        temp_max: number;
-        temp_min: number;
+    readonly dt: number;
+    readonly dt_txt: string;
+    readonly main: {
+        readonly feels_like: number;
+        readonly grnd_level: number;
+        readonly humidity: number;
+        readonly pressure: number;
+        readonly sea_level: number;
+        readonly temp: number;
+        readonly temp_kf: number;
+        readonly temp_max: number;
+        readonly temp_min: number;
     };
-    pop: number;
-    sys: {
-        pod: string;
+    readonly pop: number;
+    readonly sys: {
+        readonly pod: string;
     };
-    visibility: number;
-    weather: [
+    readonly visibility: number;
+    readonly weather: [
         {
-            description: string;
-            icon: string;
-            id: number;
-            main: string;
+            readonly description: string;
+            readonly icon: string;
+            readonly id: number;
+            readonly main: string;
         }
     ];
-    wind: {
-        deg: number;
-        gust: number;
-        speed: number;
+    readonly wind: {
+        readonly deg: number;
+        readonly gust: number;
+        readonly speed: number;
     };
     weekday?: number;
 }

@@ -39,7 +39,7 @@ function App() {
     // Defines user geolocation
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(
-            (position: GeolocationPosition) => {
+            (position: GeolocationPosition): void => {
                 dispatch(
                     setGeolocation({
                         lat: position.coords.latitude,
@@ -47,7 +47,7 @@ function App() {
                     })
                 );
             },
-            (error: GeolocationPositionError) => {
+            (error: GeolocationPositionError): void => {
                 console.log(error);
             },
             { enableHighAccuracy: true }

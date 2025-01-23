@@ -1,13 +1,13 @@
 export interface City {
-    coord: {
+    readonly coord: {
         lat: number;
         lon: number;
     };
-    country: string;
-    id: number;
-    name: string;
-    population: number;
-    sunrise: number;
-    sunset: number;
-    timezone: number;
+    readonly country: string;
+    readonly id: number;
+    readonly name: string;
+    readonly population: number;
+    readonly sunrise: number;
+    readonly sunset: number;
+    readonly timezone: number;
 }
