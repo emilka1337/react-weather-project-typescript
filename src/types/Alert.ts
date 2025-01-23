@@ -3,7 +3,7 @@ type AlertName = string | undefined
 type AlertMessage = string | undefined
 
 export interface Alert {
-    code: AlertCode
+    code?: AlertCode
     name: AlertName
     message: AlertMessage
 }

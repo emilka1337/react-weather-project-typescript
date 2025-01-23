@@ -36,7 +36,7 @@ function MoreWeatherInfo() {
     const humidity: number = useSelector((state: ReduxState) => state.selectedWeather.selectedHumidity);
     const sky: string = useSelector((state: ReduxState) => state.selectedWeather.selectedMain);
 
-    const getWindSpeedValue = (): string => {
+    const getWindSpeedValue = (speedUnitInMS: boolean): string => {
         let tempWindSpeed = "";
 
         if (speedUnitInMS === false) {
@@ -54,7 +54,7 @@ function MoreWeatherInfo() {
         <div className="more-info">
             <h3 className="wind">
                 {icons.wind}
-                {getWindSpeedValue()}
+                {getWindSpeedValue(speedUnitInMS)}
             </h3>
             <h2 className="sky">{sky}</h2>
             <h3 className="humidity">

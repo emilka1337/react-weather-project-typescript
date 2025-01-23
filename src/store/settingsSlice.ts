@@ -1,6 +1,14 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Settings } from "../types/Settings";
 
-const initialState = JSON.parse(localStorage.getItem("weather-app-settings")) ?? {
+let localSavedSettings: Settings | string | null = localStorage.getItem("weather-app-settings");
+let parsedSettings: Settings | undefined;
+
+if (localSavedSettings) {
+    parsedSettings = JSON.parse(localSavedSettings);
+}
+
+const initialState: Settings = parsedSettings ?? {
     darkMode: window.matchMedia("(prefers-color-scheme: dark)").matches ? true : false,
     showFeelsLikeField: false,
     temperatureInF: false,
@@ -10,26 +18,24 @@ const initialState = JSON.parse(localStorage.getItem("weather-app-settings")) ??
 
 const settingsSlice = createSlice({
     name: "settings",
-    initialState: {
-        ...initialState
-    },
+    initialState: initialState,
     reducers: {
-        toggleDarkMode(state, action) {
+        toggleDarkMode(state: Settings): void {
             state.darkMode = !state.darkMode;
         },
-        toggleFeelsLikeField(state, action) {
+        toggleFeelsLikeField(state: Settings): void {
             state.showFeelsLikeField = !state.showFeelsLikeField;
         },
-        toggleTemperatureScale(state, action) {
+        toggleTemperatureScale(state: Settings): void {
             state.temperatureInF = !state.temperatureInF;
         },
-        toggleSpeedUnit(state, action) {
+        toggleSpeedUnit(state: Settings): void {
             state.speedUnitInMS = !state.speedUnitInMS;
         },
-        toggleSecondsInClocks(state, action) {
+        toggleSecondsInClocks(state: Settings): void {
             state.showSecondsInClocks = !state.showSecondsInClocks;
         },
-        resetSettings(state, action) {
+        resetSettings(state: Settings): void {
             state.darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? true : false;
             state.showFeelsLikeField = false;
             state.temperatureInF = false;

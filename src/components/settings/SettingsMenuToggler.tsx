@@ -6,7 +6,7 @@ interface SettingsMenuTogglerProps {
 }
 
 function SettingsMenuToggler({ showSettings, setShowSettings }: SettingsMenuTogglerProps) {
-    let [icon, setIcon] = useState();
+    let [icon, setIcon] = useState<JSX.Element>();
 
     useEffect(() => {
         if (showSettings == true) {

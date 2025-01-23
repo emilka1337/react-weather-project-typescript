@@ -10,25 +10,28 @@ import { fetchForecast } from "../store/forecastThunk";
 import { ForecastData } from "../types/ForecastData";
 import { CityGeolocation } from "../types/CityGeolocation";
 import { ReduxState } from "../types/State";
+import { AppDispatch } from "../store/store";
 
 const Settings = React.lazy(() => import("./settings/Settings"));
 
-function saveForecastData(data: ForecastData) {
+function saveForecastData(data: ForecastData): void {
     const date = new Date();
     data.timeStamp = +date;
     localStorage.setItem("forecastData", JSON.stringify(data));
 }
 
-function getSavedForecastData() {
+function getSavedForecastData(): ForecastData | null {
     const forecastData: string | null = localStorage.getItem("forecastData");
 
     if (typeof forecastData === "string") {
         return JSON.parse(forecastData);
+    } else {
+        return null;
     }
 }
 
 function App() {
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
     const darkMode: boolean = useSelector((state: ReduxState) => state.settings.darkMode);
     const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
     const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
@@ -36,7 +39,7 @@ function App() {
     // Defines user geolocation
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(
-            (position) => {
+            (position: GeolocationPosition) => {
                 dispatch(
                     setGeolocation({
                         lat: position.coords.latitude,
@@ -44,7 +47,7 @@ function App() {
                     })
                 );
             },
-            (error) => {
+            (error: GeolocationPositionError) => {
                 console.log(error);
             },
             { enableHighAccuracy: true }
@@ -61,24 +64,29 @@ function App() {
 
     function getForecast(lat: number, lon: number): void {
         try {
-            const savedForecastData: ForecastData = getSavedForecastData();
+            const savedForecastData: ForecastData | null = getSavedForecastData();
             const currentMilliseconds: number = Date.now();
 
             if (
-                !savedForecastData ||
+                savedForecastData === null ||
                 (savedForecastData.timeStamp &&
-                    currentMilliseconds - savedForecastData.timeStamp > 300 * 1000) ||
-                savedForecastData.payload.city.name != cityName
+                    currentMilliseconds - savedForecastData?.timeStamp > 300 * 1000) ||
+                savedForecastData.city.name != cityName
             ) {
-                const data = dispatch(fetchForecast({ lat, lon }));
-                data.then((data: ForecastData) => {
-                    saveForecastData(data);
-                    dispatch(setForecast(data));
-                });
+                dispatch(fetchForecast({ lat, lon }))
+                    .unwrap()
+                    .then((forecastData: ForecastData) => {
+                        saveForecastData(forecastData);
+                        dispatch(setForecast(forecastData.list));
+                    })
+                    .catch((error) => {
+                        console.error("Failed to fetch forecast:", error);
+                    });
             } else {
                 dispatch(setForecast(savedForecastData));
             }
-        } catch {
+        } catch (error) {
+            console.log("getForecast error: ", error);
             setForecast(getSavedForecastData());
         }
     }

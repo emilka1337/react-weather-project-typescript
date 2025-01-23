@@ -69,7 +69,7 @@ function DailyForecast() {
     const [notificationsPermission, setNotificationsPermission] = useState<string>("denied");
     const [separatedForecastList, setseparatedForecastList] = useState<Array<Array<ForecastUnit>>>([]);
 
-    const forecast: ForecastData = useSelector((state: ReduxState) => state.forecast);
+    const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
 
     useEffect(() => {
         Notification.requestPermission().then((result) => {
@@ -83,8 +83,8 @@ function DailyForecast() {
     }, []);
 
     useEffect(() => {
-        if (forecast.list.length > 0) {
-            setseparatedForecastList(separateListByWeekdays(forecast.list));
+        if (forecast.length > 0) {
+            setseparatedForecastList(separateListByWeekdays(forecast));
         }
     }, [forecast]);
 
@@ -109,8 +109,8 @@ function DailyForecast() {
             <>
                 <ForecastModeTogglePanel />
                 <ul className="daily-forecast">
-                    {separatedForecastList.map((day, index) => {
-                        return <ForecastDay day={day} weekday={day[0].weekday} key={index} index={index} />;
+                    {separatedForecastList.map((day: ForecastUnit[], index: number) => {
+                        return <ForecastDay day={day} weekday={day[0].weekday || new Date().getDay()} key={index} index={index} />;
                     })}
                 </ul>
             </>

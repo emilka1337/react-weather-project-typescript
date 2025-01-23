@@ -5,33 +5,33 @@ import EditCityToggler from "./EditCityToggler";
 import ky from "ky";
 import { CityGeolocation } from "../../types/CityGeolocation";
 import { ReduxState } from "../../types/State";
+import { AppDispatch } from "../../store/store";
+import { SearchCity } from "../../types/SearchCity";
 
 const CitySearch = React.lazy(() => import("./CitySearch"));
 
 const saveCityName = (cityName: string) =>
     localStorage.setItem("last-saved-city-name", JSON.stringify(cityName));
 
-const loadLastSavedCityName = (): string => {
+const loadLastSavedCityName = (): string | void => {
     const lastSavedCity: string | null = localStorage.getItem("last-saved-city-name");
     if (lastSavedCity) {
         return JSON.parse(lastSavedCity)
-    } else {
-        throw new Error("Failed to load last saved city name")
     }
 }
 
 function City() {
-    const [showCitySearch, setShowCitySearch] = useState(false);
+    const [showCitySearch, setShowCitySearch] = useState<boolean>(false);
     const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
     const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
 
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
 
     useEffect(() => {
         fetchCityNameByCoords(geolocation.lat, geolocation.lon);
     }, [geolocation.lat, geolocation.lon]);
 
-    const focusOnCitySearch = () => {
+    const focusOnCitySearch = (): void => {
         setShowCitySearch(!showCitySearch);
     };
 
@@ -44,9 +44,10 @@ function City() {
             import.meta.env.VITE_API_KEY
         }`;
 
-        ky.get(requestURL)
+        ky.get<SearchCity[]>(requestURL)
             .json()
             .then((data) => {
+                console.log(data);
                 saveCityName(data[0].name);
                 dispatch(setSelectedCity(data[0].name));
             })

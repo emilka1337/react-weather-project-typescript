@@ -17,7 +17,7 @@ function ForecastDay(props: ForecastDayProps) {
                 <h4>{WEEKDAYS[props.weekday]}</h4>
             </div>
 
-            {props.day.map((item, index) => {
+            {props.day.map((item: ForecastUnit, index: number) => {
                 const isDefaultActive = props.index == 0 && index == 0;
 
                 return (
