@@ -15,22 +15,22 @@ const selectedWeatherSlice = createSlice({
     name: "selectedWeather",
     initialState: initialState,
     reducers: {
-        setSelectedTemperature: (state, action: PayloadAction<ForecastUnit>) => {
+        setSelectedTemperature: (state: SelectedWeather, action: PayloadAction<ForecastUnit>): void => {
             state.selectedTemperature = action.payload.main.temp
         },
-        setSelectedFeelsLike: (state, action: PayloadAction<ForecastUnit>) => {
+        setSelectedFeelsLike: (state: SelectedWeather, action: PayloadAction<ForecastUnit>): void => {
             state.selectedFeelsLike = action.payload.main.feels_like
         },
-        setSelectedWind: (state, action: PayloadAction<ForecastUnit>) => {
+        setSelectedWind: (state: SelectedWeather, action: PayloadAction<ForecastUnit>): void => {
             state.selectedWind = action.payload.wind.speed
         },
-        setSelectedHumidity: (state, action: PayloadAction<ForecastUnit>) => {
+        setSelectedHumidity: (state: SelectedWeather, action: PayloadAction<ForecastUnit>): void => {
             state.selectedHumidity = action.payload.main.humidity
         },
-        setSelectedMain: (state, action: PayloadAction<ForecastUnit>) => {
+        setSelectedMain: (state: SelectedWeather, action: PayloadAction<ForecastUnit>): void => {
             state.selectedMain = action.payload.weather[0].main
         },
-        setSelectedWeather: (state, action: PayloadAction<ForecastUnit>) => {
+        setSelectedWeather: (state: SelectedWeather, action: PayloadAction<ForecastUnit>): void => {
             state.selectedTemperature = action.payload.main.temp
             state.selectedFeelsLike = action.payload.main.feels_like
             state.selectedWind = action.payload.wind.speed

@@ -14,8 +14,6 @@ function SelectedWeather() {
     const showFeelsLikeField: boolean = useSelector((state: ReduxState) => state.settings.showFeelsLikeField);
     const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
 
-    console.log(forecast);
-
     // Setting main displaying weather to current weather
     useEffect(() => {
         if (forecast[0]) {

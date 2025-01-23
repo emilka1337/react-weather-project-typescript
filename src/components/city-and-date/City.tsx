@@ -6,6 +6,7 @@ import ky from "ky";
 import { CityGeolocation } from "../../types/CityGeolocation";
 import { ReduxState } from "../../types/State";
 import { AppDispatch } from "../../store/store";
+import { SearchCity } from "../../types/SearchCity";
 
 const CitySearch = React.lazy(() => import("./CitySearch"));
 
@@ -30,7 +31,7 @@ function City() {
         fetchCityNameByCoords(geolocation.lat, geolocation.lon);
     }, [geolocation.lat, geolocation.lon]);
 
-    const focusOnCitySearch = () => {
+    const focusOnCitySearch = (): void => {
         setShowCitySearch(!showCitySearch);
     };
 
@@ -43,9 +44,10 @@ function City() {
             import.meta.env.VITE_API_KEY
         }`;
 
-        ky.get(requestURL)
+        ky.get<SearchCity[]>(requestURL)
             .json()
             .then((data) => {
+                console.log(data);
                 saveCityName(data[0].name);
                 dispatch(setSelectedCity(data[0].name));
             })

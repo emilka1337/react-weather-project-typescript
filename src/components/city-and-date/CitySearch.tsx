@@ -2,16 +2,15 @@ import React, { useEffect, useState } from "react";
 import SearchedCitiesList from "./SearchedCitiesList";
 import StarredCitiesList from "./StarredCitiesList";
 import ky from "ky";
-
-import { SearchedCity } from "./StarredCitiesList";
+import { SearchCity } from "../../types/SearchCity";
 
 interface CitySearchProps {
     showCitySearch: boolean;
 }
 
 function CitySearch({ showCitySearch }: CitySearchProps) {
-    const [inputValue, setInputValue] = useState("");
-    const [citiesList, setCitiesList] = useState<SearchedCity[]>([]);
+    const [inputValue, setInputValue] = useState<string>("");
+    const [citiesList, setCitiesList] = useState<SearchCity[]>([]);
 
     const handleInputChange = (e: React.BaseSyntheticEvent) => {
         setInputValue(e.target.value);
@@ -20,13 +19,13 @@ function CitySearch({ showCitySearch }: CitySearchProps) {
     useEffect(() => {
         const timeoutID: number = setTimeout((): void => {
             if (inputValue) {
-                const requestURL = `${
+                const requestURL: string = `${
                     import.meta.env.VITE_BASE_URL
                 }geo/1.0/direct?q=${inputValue}&limit=3&appid=${import.meta.env.VITE_API_KEY}`;
 
-                ky.get(requestURL)
+                ky.get<SearchCity[]>(requestURL)
                     .json()
-                    .then((data: SearchedCity[]) => {
+                    .then((data: SearchCity[]) => {
                         setCitiesList(data);
                     });
             } else {
