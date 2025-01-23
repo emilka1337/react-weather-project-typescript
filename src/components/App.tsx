@@ -71,7 +71,7 @@ function App() {
             if (
                 savedForecastData === null ||
                 (savedForecastData.timeStamp &&
-                    currentMilliseconds - savedForecastData.timeStamp > 300 * 1000) ||
+                    currentMilliseconds - savedForecastData?.timeStamp > 300 * 1000) ||
                 savedForecastData.city.name != cityName
             ) {
                 dispatch(fetchForecast({ lat, lon }))
@@ -86,7 +86,8 @@ function App() {
             } else {
                 dispatch(setForecast(savedForecastData));
             }
-        } catch {
+        } catch (error) {
+            console.log("getForecast error: ", error);
             setForecast(getSavedForecastData());
         }
     }
