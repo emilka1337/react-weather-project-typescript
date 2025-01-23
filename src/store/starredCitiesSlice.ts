@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { SearchCity } from "../types/SearchCity";
 
-let localSavedCities: SearchCity[] | string | null = localStorage.getItem("starredCities");
+let localSavedCities: string | null = localStorage.getItem("starredCities");
 let parsedCities: SearchCity[] | undefined;
 
 if (localSavedCities) {
-    parsedCities = JSON.parse(localSavedCities) || []
+    parsedCities = JSON.parse(localSavedCities)
+} else {
+    parsedCities = []
 }
 
 const starredCitiesSlice = createSlice({
