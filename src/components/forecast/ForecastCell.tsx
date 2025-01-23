@@ -16,18 +16,23 @@ interface ForecastCellProps {
     isDefaultActive: boolean;
 }
 
-function formatTime(time: Time): string {
+function formatTime(time: Time<number>): string {
     let hours = time.hours;
     let minutes = time.minutes;
 
+    const result: Time<string> = {
+        hours: "",
+        minutes: ""
+    };
+
     if (typeof hours === "number" && hours < 10) {
-        hours = "0" + hours;
+        result.hours = "0" + hours;
     }
     if (typeof minutes === "number" && minutes < 10) {
-        minutes = "0" + minutes;
+        result.minutes = "0" + minutes;
     }
 
-    return `${hours}:${minutes}`;
+    return `${result.hours}:${result.minutes}`;
 }
 
 function ForecastCell({ cellForecast, timestamp, isDefaultActive }: ForecastCellProps) {

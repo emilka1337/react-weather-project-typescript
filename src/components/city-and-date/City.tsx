@@ -10,7 +10,7 @@ import { SearchCity } from "../../types/SearchCity";
 
 const CitySearch = React.lazy(() => import("./CitySearch"));
 
-const saveCityName = (cityName: string) =>
+const saveCityName = (cityName: string): void =>
     localStorage.setItem("last-saved-city-name", JSON.stringify(cityName));
 
 const loadLastSavedCityName = (): string | void => {

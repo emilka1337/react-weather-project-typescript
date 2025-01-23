@@ -4,7 +4,7 @@ import Greeting from "./Greeting";
 import { Time } from "../../types/Time";
 import { ReduxState } from "../../types/State";
 
-function getCurrentTime(): Time {
+function getCurrentTime(): Time<number> {
     const date: Date = new Date();
     return {
         hours: date.getHours(),
@@ -13,32 +13,47 @@ function getCurrentTime(): Time {
     };
 }
 
-function formatTime(time: Time, showSeconds: boolean): string {
-    let hours = time.hours;
-    let minutes = time.minutes;
-    let seconds = time.seconds;
+function formatTime(time: Time<number>, showSeconds: boolean): string | never {
+    const hours: number = time.hours;
+    const minutes: number = time.minutes;
+    const seconds: number | undefined = time.seconds;
+
+    const result: Time<string> = {
+        hours: "",
+        minutes: "",
+        seconds: ""
+    }
+
+    if (!hours) {
+        throw new Error("No hours provided to formatTime function");
+    }
+    if (!minutes) {
+        throw new Error("No hours minutes to formatTime function");
+    }
 
     if (hours && +hours < 10) {
-        hours = "0" + hours;
+        result.hours = "0" + hours;
     }
     if (minutes && +minutes < 10) {
-        minutes = "0" + minutes;
+        result.minutes = "0" + minutes;
     }
     if (seconds && +seconds < 10) {
-        seconds = "0" + seconds;
+        result.seconds = "0" + seconds;
     }
 
     if (showSeconds) {
-        return `${hours}:${minutes}:${seconds}`;
+        return `${result.hours}:${result.minutes}:${result.seconds}`;
     } else {
-        return `${hours}:${minutes}`;
+        return `${result.hours}:${result.minutes}`;
     }
 }
 
 function Clocks() {
     const [currentTime, setCurrentTime] = useState<string | null>();
 
-    const showSecondsInClocks: boolean = useSelector((state: ReduxState) => state.settings.showSecondsInClocks);
+    const showSecondsInClocks: boolean = useSelector(
+        (state: ReduxState) => state.settings.showSecondsInClocks
+    );
 
     useEffect(() => {
         setTime();
@@ -47,7 +62,7 @@ function Clocks() {
     }, [showSecondsInClocks]);
 
     const setTime = () => {
-        const time: Time = getCurrentTime();
+        const time: Time<number> = getCurrentTime();
         const timeFormatted = formatTime(time, showSecondsInClocks);
         setCurrentTime(timeFormatted);
     };

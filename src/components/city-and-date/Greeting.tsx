@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
-import { Time } from "./Clocks";
+import { Time } from "../../types/Time";
 
 interface GreetingProps {
-    time: Time;
+    time: Time<number>;
 }
 
 function Greeting({ time }: GreetingProps) {

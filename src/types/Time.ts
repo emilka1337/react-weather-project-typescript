@@ -1,5 +1,5 @@
-export interface Time {
-    hours?: number | string;
-    minutes?: number | string;
-    seconds?: number | string;
+export interface Time<T> {
+    hours: T;
+    minutes: T;
+    seconds?: T;
 }

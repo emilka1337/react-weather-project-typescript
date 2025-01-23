@@ -3,7 +3,6 @@ import ForecastDay from "./ForecastDay";
 import ForecastModeTogglePanel from "./ForecastModeTogglePanel";
 import { useSelector } from "react-redux";
 import { ForecastUnit } from "../../types/ForecastUnit";
-import { ForecastData } from "../../types/ForecastData";
 import { ForecastByDay } from "../../types/ForecastByDay";
 import { ReduxState } from "../../types/State";
 
