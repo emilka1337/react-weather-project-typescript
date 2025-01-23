@@ -4,11 +4,11 @@ import { Alert } from "../../types/Alert";
 import { ReduxState } from "../../types/State";
 
 function ErrorAlert() {
-    let [showAlert, setShowAlert] = useState(false);
+    let [showAlert, setShowAlert] = useState<boolean>(false);
 
     const errors: Alert[] = useSelector((state: ReduxState) => state.alerts.errors);
 
-    const hideAlert = () => setShowAlert(false);
+    const hideAlert = (): void => setShowAlert(false);
 
     return errors.map((error: Alert, index: number) => {
         <div className={showAlert ? "alert show" : "alert"} key={index}>
