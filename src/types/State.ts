@@ -1,9 +1,8 @@
 import { ForecastModes } from "../enums/ForecastMode"
 import { Alert } from "./Alert";
 import { CityGeolocation } from "./CityGeolocation";
-import { ForecastData } from "./ForecastData";
 import { ForecastUnit } from "./ForecastUnit";
-import { SearchedCity } from "./SearchedCity";
+import { SearchCity } from "./SearchCity";
 import { SelectedWeather } from "./SelectedWeather";
 import { Settings } from "./Settings";
 
@@ -13,7 +12,7 @@ export interface ReduxState {
     selectedWeather: SelectedWeather
     geolocation: CityGeolocation
     selectedCity: string
-    starredCities: SearchedCity[]
+    starredCities: SearchCity[]
     alerts: {
         errors: Alert[]
         warnings: Alert[]

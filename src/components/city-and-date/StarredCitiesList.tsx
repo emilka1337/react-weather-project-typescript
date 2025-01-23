@@ -3,15 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSelectedCity } from "../../store/selectedCitySlice";
 import { setGeolocation } from "../../store/geolocationSlice";
 import { removeCityFromStarredCities } from "../../store/starredCitiesSlice";
-import { SearchedCity } from "../../types/SearchedCity";
 import { ReduxState } from "../../types/State";
 import { AppDispatch } from "../../store/store";
+import { SearchCity } from "../../types/SearchCity";
 
 function StarredCitiesList() {
-    const starredCities: SearchedCity[] = useSelector((state: ReduxState) => state.starredCities);
+    const starredCities: SearchCity[] = useSelector((state: ReduxState) => state.starredCities);
     const dispatch: AppDispatch = useDispatch();
 
-    const handleCityClick = (city: SearchedCity): void => {
+    const handleCityClick = (city: SearchCity): void => {
         dispatch(setSelectedCity(city.name));
         dispatch(setGeolocation({ lat: city.lat, lon: city.lon }));
     };

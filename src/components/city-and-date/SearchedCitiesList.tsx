@@ -3,23 +3,22 @@ import { useDispatch } from "react-redux";
 import { setSelectedCity } from "../../store/selectedCitySlice";
 import { setGeolocation } from "../../store/geolocationSlice";
 import { addCityToStarredCities } from "../../store/starredCitiesSlice";
-
-import { SearchedCity } from "./StarredCitiesList";
 import { AppDispatch } from "../../store/store";
+import { SearchCity } from "../../types/SearchCity";
 
 interface SearchedCitiesListProps {
-    citiesList: SearchedCity[];
+    citiesList: SearchCity[];
 }
 
 function SearchedCitiesList({ citiesList }: SearchedCitiesListProps) {
     const dispatch: AppDispatch = useDispatch();
 
-    const handleCityClick = (city: SearchedCity): void => {
+    const handleCityClick = (city: SearchCity): void => {
         dispatch(setSelectedCity(city.name));
         dispatch(setGeolocation({ lat: city.lat, lon: city.lon }));
     };
 
-    const addToFavorites = (city: SearchedCity) => {
+    const addToFavorites = (city: SearchCity) => {
         dispatch(addCityToStarredCities(city));
     };
 
