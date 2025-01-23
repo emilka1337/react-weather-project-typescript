@@ -69,7 +69,7 @@ function DailyForecast() {
     const [notificationsPermission, setNotificationsPermission] = useState<string>("denied");
     const [separatedForecastList, setseparatedForecastList] = useState<Array<Array<ForecastUnit>>>([]);
 
-    const forecast: ForecastData = useSelector((state: ReduxState) => state.forecast);
+    const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
 
     useEffect(() => {
         Notification.requestPermission().then((result) => {
@@ -83,8 +83,8 @@ function DailyForecast() {
     }, []);
 
     useEffect(() => {
-        if (forecast.list.length > 0) {
-            setseparatedForecastList(separateListByWeekdays(forecast.list));
+        if (forecast.length > 0) {
+            setseparatedForecastList(separateListByWeekdays(forecast));
         }
     }, [forecast]);
 

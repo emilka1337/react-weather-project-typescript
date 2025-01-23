@@ -77,7 +77,7 @@ function App() {
                     .unwrap()
                     .then((forecastData: ForecastData) => {
                         saveForecastData(forecastData);
-                        dispatch(setForecast(forecastData));
+                        dispatch(setForecast(forecastData.list));
                     })
                     .catch((error) => {
                         console.error("Failed to fetch forecast:", error);
