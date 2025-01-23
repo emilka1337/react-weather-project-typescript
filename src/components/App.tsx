@@ -10,7 +10,6 @@ import { fetchForecast } from "../store/forecastThunk";
 import { ForecastData } from "../types/ForecastData";
 import { CityGeolocation } from "../types/CityGeolocation";
 import { ReduxState } from "../types/State";
-import { Dispatch } from "@reduxjs/toolkit";
 import { AppDispatch } from "../store/store";
 
 const Settings = React.lazy(() => import("./settings/Settings"));

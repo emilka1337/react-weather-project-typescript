@@ -17,13 +17,17 @@ interface ForecastCellProps {
 }
 
 function formatTime(time: Time): string {
+    let hours = time.hours;
     let minutes = time.minutes;
 
-    if (minutes && +minutes < 10) {
+    if (typeof hours === "number" && hours < 10) {
+        hours = "0" + hours;
+    }
+    if (typeof minutes === "number" && minutes < 10) {
         minutes = "0" + minutes;
     }
 
-    return `${time.hours}:${minutes}`;
+    return `${hours}:${minutes}`;
 }
 
 function ForecastCell({ cellForecast, timestamp, isDefaultActive }: ForecastCellProps) {
