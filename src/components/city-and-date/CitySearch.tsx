@@ -5,7 +5,7 @@ import ky from "ky";
 import { SearchCity } from "../../types/SearchCity";
 
 interface CitySearchProps {
-    showCitySearch: boolean;
+    readonly showCitySearch: boolean;
 }
 
 function CitySearch({ showCitySearch }: CitySearchProps) {

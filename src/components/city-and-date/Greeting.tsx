@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { Time } from "../../types/Time";
 
 interface GreetingProps {
-    time: Time<number>;
+    readonly time: Time<number>;
 }
 
 function Greeting({ time }: GreetingProps) {

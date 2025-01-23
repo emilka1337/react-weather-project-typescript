@@ -2,8 +2,8 @@ import { useSelector } from "react-redux";
 import { ReduxState } from "../../types/State";
 
 interface TemperatureContainerProps {
-    temperature: number;
-    main: string;
+    readonly temperature: number;
+    readonly main: string;
 }
 
 function TemperatureContainer({ temperature, main }: TemperatureContainerProps) {

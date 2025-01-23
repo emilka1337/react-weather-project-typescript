@@ -11,9 +11,9 @@ import { AppDispatch } from "../../store/store";
 const WindContainer = React.lazy(() => import("./WindContainer"));
 
 interface ForecastCellProps {
-    cellForecast: ForecastUnit;
-    timestamp: number;
-    isDefaultActive: boolean;
+    readonly cellForecast: ForecastUnit;
+    readonly timestamp: number;
+    readonly isDefaultActive: boolean;
 }
 
 function formatTime(time: Time<number>): string {

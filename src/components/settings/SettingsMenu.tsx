@@ -13,7 +13,7 @@ import { ReduxState } from "../../types/State";
 import { AppDispatch } from "../../store/store";
 
 interface SettingsMenuProps {
-    showSettings: boolean;
+    readonly showSettings: boolean;
 }
 
 function SettingsMenu({ showSettings }: SettingsMenuProps) {

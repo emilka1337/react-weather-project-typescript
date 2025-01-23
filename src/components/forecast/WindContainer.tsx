@@ -2,8 +2,8 @@ import { useSelector } from "react-redux";
 import { ReduxState } from "../../types/State";
 
 interface WindContainerProps {
-    speed: number;
-    degree: number;
+    readonly speed: number;
+    readonly degree: number;
 }
 
 function defineWindArrowScale(speed: number): number | undefined {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 interface SettingsMenuTogglerProps {
-    showSettings: boolean;
-    setShowSettings: (value: boolean) => void;
+    readonly showSettings: boolean;
+    readonly setShowSettings: (value: boolean) => void;
 }
 
 function SettingsMenuToggler({ showSettings, setShowSettings }: SettingsMenuTogglerProps) {
