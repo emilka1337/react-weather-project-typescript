@@ -3,7 +3,7 @@ import ForecastDay from "./ForecastDay";
 import ForecastModeTogglePanel from "./ForecastModeTogglePanel";
 import { useSelector } from "react-redux";
 import { ForecastUnit } from "../../types/ForecastUnit";
-import { ForecastByDay } from "../../types/ForecastByDay";
+import { CommonForecastByDay } from "../../types/CommonForecastByDay";
 import { ReduxState } from "../../types/State";
 
 function extractWeekDayFromTimestamp(ts: number): number {
@@ -43,7 +43,7 @@ function separateListByWeekdays(list: ForecastUnit[]): Array<Array<ForecastUnit>
     return result;
 }
 
-function getForecastByDay(forecastDay: ForecastUnit[]): ForecastByDay {
+function getCommonForecastByDay(forecastDay: readonly ForecastUnit[]): CommonForecastByDay {
     const minTemp = Math.min(...forecastDay.map((item) => item.main.temp));
     const maxTemp = Math.max(...forecastDay.map((item) => item.main.temp));
     const maxWind = Math.max(...forecastDay.map((item) => item.wind.speed));
@@ -51,7 +51,7 @@ function getForecastByDay(forecastDay: ForecastUnit[]): ForecastByDay {
     return { minTemp, maxTemp, maxWind };
 }
 
-function showTomorrowforecastNotification(tomorrowForecast: ForecastByDay): Notification {
+function showTomorrowforecastNotification(tomorrowForecast: CommonForecastByDay): Notification {
     return new Notification("Tomorrow's weather", {
         body: `💨Max wind: ${(tomorrowForecast.maxWind * 3.6).toFixed(
             0
@@ -66,7 +66,7 @@ function showTomorrowforecastNotification(tomorrowForecast: ForecastByDay): Noti
 function DailyForecast() {
     const [notificationShowed, setNotificationShowed] = useState<boolean>(false);
     const [notificationsPermission, setNotificationsPermission] = useState<string>("denied");
-    const [separatedForecastList, setseparatedForecastList] = useState<Array<Array<ForecastUnit>>>([]);
+    const [separatedForecastList, setseparatedForecastList] = useState<ReadonlyArray<ReadonlyArray<ForecastUnit>>>([]);
 
     const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
 
@@ -93,7 +93,7 @@ function DailyForecast() {
             notificationShowed === false &&
             separatedForecastList.length > 0
         ) {
-            const tomorrowForecast: ForecastByDay = getForecastByDay(separatedForecastList[1]);
+            const tomorrowForecast: CommonForecastByDay = getCommonForecastByDay(separatedForecastList[1]);
             setNotificationShowed(true);
             setTimeout(function () {
                 showTomorrowforecastNotification(tomorrowForecast);
@@ -108,7 +108,7 @@ function DailyForecast() {
             <>
                 <ForecastModeTogglePanel />
                 <ul className="daily-forecast">
-                    {separatedForecastList.map((day: ForecastUnit[], index: number) => {
+                    {separatedForecastList.map((day: readonly ForecastUnit[], index: number) => {
                         return <ForecastDay day={day} weekday={day[0].weekday || new Date().getDay()} key={index} index={index} />;
                     })}
                 </ul>

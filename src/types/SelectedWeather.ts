@@ -1,8 +1,8 @@
 export interface SelectedWeather {
-    selectedWeather: number
-    selectedTemperature: number
-    selectedFeelsLike: number
-    selectedWind: number
-    selectedHumidity: number
-    selectedMain: string
+    readonly selectedWeather: number
+    readonly selectedTemperature: number
+    readonly selectedFeelsLike: number
+    readonly selectedWind: number
+    readonly selectedHumidity: number
+    readonly selectedMain: string
 }

@@ -7,7 +7,7 @@ import { AppDispatch } from "../../store/store";
 import { SearchCity } from "../../types/SearchCity";
 
 interface SearchedCitiesListProps {
-    citiesList: SearchCity[];
+    readonly citiesList: SearchCity[];
 }
 
 function SearchedCitiesList({ citiesList }: SearchedCitiesListProps) {

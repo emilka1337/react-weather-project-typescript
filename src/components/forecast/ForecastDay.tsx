@@ -3,9 +3,9 @@ import ForecastCell from "./ForecastCell";
 import { ForecastUnit } from "../../types/ForecastUnit";
 
 interface ForecastDayProps {
-    day: ForecastUnit[];
-    index: number;
-    weekday: number;
+    day: readonly ForecastUnit[];
+    readonly index: number;
+    readonly weekday: number;
 }
 
 function ForecastDay(props: ForecastDayProps) {

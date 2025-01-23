@@ -18,10 +18,10 @@ function formatTime(time: Time<number>, showSeconds: boolean): string | never {
     const minutes: number = time.minutes;
     const seconds: number | undefined = time.seconds;
 
-    const result: Time<string> = {
-        hours: "",
-        minutes: "",
-        seconds: ""
+    const result: Time<number | string> = {
+        hours: time.hours,
+        minutes: time.minutes,
+        seconds: time.seconds
     }
 
     if (!hours) {
