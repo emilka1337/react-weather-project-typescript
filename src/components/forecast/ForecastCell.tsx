@@ -20,9 +20,9 @@ function formatTime(time: Time<number>): string {
     let hours = time.hours;
     let minutes = time.minutes;
 
-    const result: Time<string> = {
-        hours: "",
-        minutes: ""
+    const result: Time<string | number> = {
+        hours: time.hours,
+        minutes: time.minutes
     };
 
     if (typeof hours === "number" && hours < 10) {
