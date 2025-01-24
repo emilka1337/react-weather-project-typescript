@@ -9,6 +9,7 @@ import { ReduxState } from "../../types/State";
 import { AppDispatch } from "../../store/store";
 
 const WindContainer = React.lazy(() => import("./WindContainer"));
+const HumidityContainer = React.lazy(() => import("./HumidityContainer"));
 
 interface ForecastCellProps {
     readonly cellForecast: ForecastUnit;
@@ -22,7 +23,7 @@ function formatTime(time: Time<number>): string {
 
     const result: Time<string | number> = {
         hours: time.hours,
-        minutes: time.minutes
+        minutes: time.minutes,
     };
 
     if (typeof hours === "number" && hours < 10) {
@@ -68,6 +69,11 @@ function ForecastCell({ cellForecast, timestamp, isDefaultActive }: ForecastCell
             <Suspense>
                 {forecastMode == ForecastModes.WIND && (
                     <WindContainer speed={cellForecast.wind.speed} degree={cellForecast.wind.deg} />
+                )}
+            </Suspense>
+            <Suspense>
+                {forecastMode == ForecastModes.HUMIDITY && (
+                    <HumidityContainer humidity={cellForecast.main.humidity} />
                 )}
             </Suspense>
             <div
