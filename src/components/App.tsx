@@ -11,6 +11,9 @@ import { ForecastData } from "../types/ForecastData";
 import { CityGeolocation } from "../types/CityGeolocation";
 import { ReduxState } from "../types/State";
 import { AppDispatch } from "../store/store";
+import useNotificationPermission from "../hooks/useNotificationPermission";
+import useNotification from "../hooks/useNotification";
+import { ForecastUnit } from "../types/ForecastUnit";
 
 const Settings = React.lazy(() => import("./settings/Settings"));
 
@@ -35,6 +38,15 @@ function App() {
     const darkMode: boolean = useSelector((state: ReduxState) => state.settings.darkMode);
     const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
     const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
+    const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
+    useNotificationPermission();
+    const showNotification = useNotification();
+
+    useEffect(() => {
+        if (forecast.length > 0) {
+            showNotification();
+        }
+    }, [forecast]);
 
     // Defines user geolocation
     useEffect(() => {

@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { Settings } from "../types/Settings";
 
 let localSavedSettings: Settings | string | null = localStorage.getItem("weather-app-settings");
@@ -14,6 +14,7 @@ const initialState: Settings = parsedSettings ?? {
     temperatureInF: false,
     speedUnitInMS: false,
     showSecondsInClocks: false,
+    showNotifications: false,
 }
 
 const settingsSlice = createSlice({
@@ -35,16 +36,20 @@ const settingsSlice = createSlice({
         toggleSecondsInClocks(state: Settings): void {
             state.showSecondsInClocks = !state.showSecondsInClocks;
         },
+        toggleNotifications(state: Settings): void {
+            state.showNotifications = !state.showNotifications;
+        },
         resetSettings(state: Settings): void {
             state.darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? true : false;
             state.showFeelsLikeField = false;
             state.temperatureInF = false;
             state.speedUnitInMS = false;
             state.showSecondsInClocks = false;
+            state.showNotifications = false;
         }
     }
 })
 
 
-export const { toggleDarkMode, toggleFeelsLikeField, toggleTemperatureScale, toggleSpeedUnit, toggleSecondsInClocks, resetSettings } = settingsSlice.actions
+export const { toggleDarkMode, toggleFeelsLikeField, toggleTemperatureScale, toggleSpeedUnit, toggleSecondsInClocks, resetSettings, toggleNotifications } = settingsSlice.actions
 export default settingsSlice.reducer
