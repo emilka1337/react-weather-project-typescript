@@ -17,7 +17,7 @@
         border-radius: 4px;
         background: $widgetBgColor;
     }
-    
+
     &:hover::-webkit-scrollbar-thumb {
         background: $weatherTextColor;
     }
@@ -99,7 +99,8 @@
                 margin-bottom: 8px;
             }
 
-            .temperature {
+            .temperature,
+            .humidity-container {
                 color: $weatherTextColor;
                 margin: 10px 0px;
                 transition: 300ms;
@@ -108,6 +109,22 @@
 
                 .degree {
                     position: absolute;
+                }
+            }
+
+            .humidity-container {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+
+                .humidity {
+                    margin: 4px 0px;
+                    font-size: 14px;
+                    color: $forecastGreyColor;
+                }
+
+                svg {
+                    color: $forecastGreyColor;
                 }
             }
 

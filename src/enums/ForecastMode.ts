@@ -1,4 +1,5 @@
 export enum ForecastModes {
     TEMPERATURE = "temperature",
-    WIND = "wind"
+    WIND = "wind",
+    HUMIDITY = "humidity"
 }
