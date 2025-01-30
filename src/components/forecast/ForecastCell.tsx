@@ -1,4 +1,4 @@
-import React, { Suspense, useRef } from "react";
+import React, { Suspense, useCallback, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedWeather } from "../../store/selectedWeatherSlice";
 import TemperatureContainer from "./TemperatureContainer";
@@ -42,12 +42,12 @@ function ForecastCell({ cellForecast, timestamp, isDefaultActive }: ForecastCell
     const dispatch: AppDispatch = useDispatch();
     const activeIndicator = useRef<HTMLDivElement | null>(null);
 
-    const date: Date = new Date(timestamp * 1000);
-    const hours: number = date.getHours();
-    const minutes: number = date.getMinutes();
-    const formattedTime: string = formatTime({ hours, minutes });
+    const date: Date = useMemo<Date>(() => new Date(timestamp * 1000), [timestamp]);
+    const hours: number = useMemo<number>(() => date.getHours(), [date]);
+    const minutes: number = useMemo<number>(() => date.getMinutes(), [date]);
+    const formattedTime: string = useMemo(() => formatTime({ hours, minutes }), [hours, minutes]);
 
-    const clickHandler = (): void => {
+    const clickHandler = useCallback((): void => {
         document
             .querySelectorAll(".active-indicator")
             .forEach((item: Element) => item.classList.remove("show"));
@@ -55,7 +55,7 @@ function ForecastCell({ cellForecast, timestamp, isDefaultActive }: ForecastCell
             activeIndicator.current.classList.add("show");
         }
         dispatch(setSelectedWeather(cellForecast));
-    };
+    }, [])
 
     return (
         <div className="forecast-cell" onClick={clickHandler}>

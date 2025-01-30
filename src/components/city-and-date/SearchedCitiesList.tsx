@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { setSelectedCity } from "../../store/selectedCitySlice";
 import { setGeolocation } from "../../store/geolocationSlice";
@@ -13,14 +13,14 @@ interface SearchedCitiesListProps {
 function SearchedCitiesList({ citiesList }: SearchedCitiesListProps) {
     const dispatch: AppDispatch = useDispatch();
 
-    const handleCityClick = (city: SearchCity): void => {
+    const handleCityClick = useCallback((city: SearchCity): void => {
         dispatch(setSelectedCity(city.name));
         dispatch(setGeolocation({ lat: city.lat, lon: city.lon }));
-    };
+    }, []);
 
-    const addToFavorites = (city: SearchCity) => {
+    const addToFavorites = useCallback((city: SearchCity) => {
         dispatch(addCityToStarredCities(city));
-    };
+    }, []);
 
     return (
         <ul className="cities-list">

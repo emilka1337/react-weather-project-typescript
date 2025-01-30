@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { ReduxState } from "../../types/State";
 
@@ -36,19 +36,22 @@ function MoreWeatherInfo() {
     const humidity: number = useSelector((state: ReduxState) => state.selectedWeather.selectedHumidity);
     const sky: string = useSelector((state: ReduxState) => state.selectedWeather.selectedMain);
 
-    const getWindSpeedValue = (speedUnitInMS: boolean): string => {
-        let tempWindSpeed = "";
+    const getWindSpeedValue = useCallback(
+        (speedUnitInMS: boolean): string => {
+            let tempWindSpeed = "";
 
-        if (speedUnitInMS === false) {
-            tempWindSpeed += (windSpeed * 3.6).toFixed(0);
-        } else if (speedUnitInMS === true) {
-            tempWindSpeed += windSpeed.toFixed(0);
-        }
+            if (speedUnitInMS === false) {
+                tempWindSpeed += (windSpeed * 3.6).toFixed(0);
+            } else if (speedUnitInMS === true) {
+                tempWindSpeed += windSpeed.toFixed(0);
+            }
 
-        tempWindSpeed += speedUnitInMS == false ? " km/h" : " m/s";
+            tempWindSpeed += speedUnitInMS == false ? " km/h" : " m/s";
 
-        return tempWindSpeed;
-    };
+            return tempWindSpeed;
+        },
+        [speedUnitInMS, windSpeed]
+    );
 
     return (
         <div className="more-info">

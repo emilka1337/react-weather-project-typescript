@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import Greeting from "./Greeting";
 import { Time } from "../../types/Time";
@@ -61,11 +61,11 @@ function Clocks() {
         return () => clearInterval(timeInterval);
     }, [showSecondsInClocks]);
 
-    const setTime = () => {
+    const setTime = useCallback(() => {
         const time: Time<number> = getCurrentTime();
         const timeFormatted = formatTime(time, showSecondsInClocks);
         setCurrentTime(timeFormatted);
-    };
+    }, [])
 
     return (
         <div className="clocks">

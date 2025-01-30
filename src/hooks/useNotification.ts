@@ -2,7 +2,6 @@ import { useSelector } from "react-redux";
 import { CommonForecastByDay } from "../types/CommonForecastByDay";
 import { ForecastUnit } from "../types/ForecastUnit";
 import { ReduxState } from "../types/State";
-import { useState } from "react";
 import { separateListByWeekdays } from "../components/forecast/DailyForecast";
 
 function getCommonForecastByDay(forecastDay: readonly ForecastUnit[]): CommonForecastByDay | undefined {

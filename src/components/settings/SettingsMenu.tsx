@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     toggleDarkMode,
@@ -24,40 +24,40 @@ function SettingsMenu({ showSettings }: SettingsMenuProps) {
     const settings: Settings = useSelector((state: ReduxState) => state.settings);
 
     //#region Settings click event listeners
-    const darkModeSettingClick = (): void => {
+    const darkModeSettingClick = useCallback((): void => {
         dispatch(toggleDarkMode());
-    };
+    }, []);
 
-    const feelsLikeSettingClick = (): void => {
+    const feelsLikeSettingClick = useCallback((): void => {
         dispatch(toggleFeelsLikeField());
-    };
+    }, []);
 
-    const temperatureScaleSettingClick = (): void => {
+    const temperatureScaleSettingClick = useCallback((): void => {
         dispatch(toggleTemperatureScale());
-    };
+    }, []);
 
-    const speedUnitSettingClick = (): void => {
+    const speedUnitSettingClick = useCallback((): void => {
         dispatch(toggleSpeedUnit());
-    };
+    }, []);
 
-    const showSecondsInClocksClick = (): void => {
+    const showSecondsInClocksClick = useCallback((): void => {
         dispatch(toggleSecondsInClocks());
-    };
+    }, []);
 
-    const showNotificationsClick = (): void => {
+    const showNotificationsClick = useCallback((): void => {
         dispatch(toggleNotifications());
-    };
+    }, []);
 
-    const resetSettingsClick = (): void => {
+    const resetSettingsClick = useCallback((): void => {
         dispatch(resetSettings());
         setSettingsResetted(true);
         setTimeout(() => setSettingsResetted(false), 3000);
-    };
+    }, []);
 
-    const resetAppClick = (): void => {
+    const resetAppClick = useCallback((): void => {
         localStorage.clear();
         window.location.reload();
-    };
+    }, []);
     //#endregion
 
     return (

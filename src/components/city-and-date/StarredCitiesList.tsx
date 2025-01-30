@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedCity } from "../../store/selectedCitySlice";
 import { setGeolocation } from "../../store/geolocationSlice";
@@ -11,14 +11,14 @@ function StarredCitiesList() {
     const starredCities: SearchCity[] = useSelector((state: ReduxState) => state.starredCities);
     const dispatch: AppDispatch = useDispatch();
 
-    const handleCityClick = (city: SearchCity): void => {
+    const handleCityClick = useCallback((city: SearchCity): void => {
         dispatch(setSelectedCity(city.name));
         dispatch(setGeolocation({ lat: city.lat, lon: city.lon }));
-    };
+    }, [])
 
-    const removeFromFavorites = (index: number): void => {
+    const removeFromFavorites = useCallback((index: number): void => {
         dispatch(removeCityFromStarredCities(index));
-    };
+    }, [])
 
     return (
         <ul className="cities-list starred-cities-list">
