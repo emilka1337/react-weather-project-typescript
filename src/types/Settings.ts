@@ -1,4 +1,5 @@
 export interface Settings {
+    showSettings: boolean,
     darkMode: boolean,
     showFeelsLikeField: boolean,
     temperatureInF: boolean,

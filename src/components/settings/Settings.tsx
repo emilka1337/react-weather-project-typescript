@@ -7,8 +7,7 @@ function Settings() {
 
     return (
         <>
-            <SettingsMenuToggler showSettings={showSettings} setShowSettings={setShowSetting} />
-            <SettingsMenu showSettings={showSettings}/>
+            
         </>
     );
 }

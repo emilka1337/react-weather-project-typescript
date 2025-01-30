@@ -1,4 +1,4 @@
-.city-and-date {
+.topbar {
     color: $textColor;
     display: flex;
     justify-content: space-between;
@@ -118,7 +118,7 @@
         }
     }
 
-    @import "./clocks";
+    @import "./topbar-right";
 }
 
 @keyframes clocks-transform {

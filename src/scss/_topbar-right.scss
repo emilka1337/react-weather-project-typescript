@@ -1,0 +1,21 @@
+.topbar-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    .clocks {
+        height: 22px;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        overflow: hidden;
+
+        .greeting,
+        .time {
+            transition: 400ms;
+            margin: 0;
+            animation: clocks-transform 10s infinite;
+            text-align: right;
+        }
+    }
+}
