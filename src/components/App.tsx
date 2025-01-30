@@ -4,13 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import CityAndDate from "./city-and-date/CityAndDate";
 import DailyForecast from "./forecast/DailyForecast";
 import SelectedWeather from "./selected-weather/SelectedWeather";
-import { setGeolocation } from "../store/geolocationSlice";
 import { setForecast } from "../store/forecastSlice";
 import { fetchForecast } from "../store/forecastThunk";
 import { ForecastData } from "../types/ForecastData";
 import { CityGeolocation } from "../types/CityGeolocation";
 import { ReduxState } from "../types/State";
 import { AppDispatch } from "../store/store";
+import useNotificationPermission from "../hooks/useNotificationPermission";
+import useNotification from "../hooks/useNotification";
+import { ForecastUnit } from "../types/ForecastUnit";
+import useGeolocation from "../hooks/useGeolocation";
 
 const Settings = React.lazy(() => import("./settings/Settings"));
 
@@ -35,24 +38,17 @@ function App() {
     const darkMode: boolean = useSelector((state: ReduxState) => state.settings.darkMode);
     const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
     const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
-
+    const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
+    useNotificationPermission();
+    const showNotification = useNotification();
     // Defines user geolocation
+    useGeolocation();
+
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition(
-            (position: GeolocationPosition): void => {
-                dispatch(
-                    setGeolocation({
-                        lat: position.coords.latitude,
-                        lon: position.coords.longitude,
-                    })
-                );
-            },
-            (error: GeolocationPositionError): void => {
-                console.log(error);
-            },
-            { enableHighAccuracy: true }
-        );
-    }, []);
+        if (forecast.length > 0) {
+            showNotification();
+        }
+    }, [forecast]);
 
     // Fetching forecast after defining user geolocation
     useEffect(() => {

@@ -4,4 +4,5 @@ export interface Settings {
     temperatureInF: boolean,
     speedUnitInMS: boolean,
     showSecondsInClocks: boolean,
+    showNotifications: boolean,
 }
