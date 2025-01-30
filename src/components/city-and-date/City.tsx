@@ -62,7 +62,7 @@ function City() {
         <div className="city">
             <h3 className="city-name">{cityName}</h3>
             <EditCityToggler onClick={focusOnCitySearch} />
-            <CitySearch showCitySearch={showCitySearch} />
+            <CitySearch showCitySearch={showCitySearch} setShowCitySearch={setShowCitySearch} />
         </div>
     );
 }

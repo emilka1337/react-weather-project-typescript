@@ -15,6 +15,10 @@
             .city-search {
                 background: $appDarkBgColor;
 
+                &>button {
+                    @include button;
+                }
+
                 input {
                     background: $weatherDarkTextColor;
                 }

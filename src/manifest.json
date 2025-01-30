@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "React Weather Project",
+    "name": "Simple Weather",
     "version": "1.0.0",
     "description": "A weather application built with React and TypeScript.",
     "icons": {
@@ -15,19 +15,11 @@
         }
     },
     "permissions": [
-        "activeTab",
         "storage",
         "notifications",
         "geolocation"
     ],
-    "content_scripts": [
-        {
-            "matches": [
-                "<all_urls>"
-            ],
-            "js": [
-                "assets/index-CnexK5FB.js"
-            ]
-        }
+    "host_permissions": [
+        "https://api.openweathermap.org/*"
     ]
 }
