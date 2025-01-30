@@ -41,15 +41,14 @@ function App() {
     const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
     useNotificationPermission();
     const showNotification = useNotification();
+    // Defines user geolocation
+    useGeolocation();
 
     useEffect(() => {
         if (forecast.length > 0) {
             showNotification();
         }
     }, [forecast]);
-
-    // Defines user geolocation
-    useGeolocation()
 
     // Fetching forecast after defining user geolocation
     useEffect(() => {
