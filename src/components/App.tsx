@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import CityAndDate from "./city-and-date/CityAndDate";
 import DailyForecast from "./forecast/DailyForecast";
 import SelectedWeather from "./selected-weather/SelectedWeather";
-import { setGeolocation } from "../store/geolocationSlice";
 import { setForecast } from "../store/forecastSlice";
 import { fetchForecast } from "../store/forecastThunk";
 import { ForecastData } from "../types/ForecastData";
@@ -14,6 +13,7 @@ import { AppDispatch } from "../store/store";
 import useNotificationPermission from "../hooks/useNotificationPermission";
 import useNotification from "../hooks/useNotification";
 import { ForecastUnit } from "../types/ForecastUnit";
+import useGeolocation from "../hooks/useGeolocation";
 
 const Settings = React.lazy(() => import("./settings/Settings"));
 
@@ -49,22 +49,7 @@ function App() {
     }, [forecast]);
 
     // Defines user geolocation
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition(
-            (position: GeolocationPosition): void => {
-                dispatch(
-                    setGeolocation({
-                        lat: position.coords.latitude,
-                        lon: position.coords.longitude,
-                    })
-                );
-            },
-            (error: GeolocationPositionError): void => {
-                console.log(error);
-            },
-            { enableHighAccuracy: true }
-        );
-    }, []);
+    useGeolocation()
 
     // Fetching forecast after defining user geolocation
     useEffect(() => {
