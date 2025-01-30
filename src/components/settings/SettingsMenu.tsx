@@ -6,6 +6,7 @@ import {
     toggleSecondsInClocks,
     toggleSpeedUnit,
     toggleTemperatureScale,
+    toggleNotifications,
     resetSettings,
 } from "../../store/settingsSlice";
 import { Settings } from "../../types/Settings";
@@ -41,6 +42,10 @@ function SettingsMenu({ showSettings }: SettingsMenuProps) {
 
     const showSecondsInClocksClick = (): void => {
         dispatch(toggleSecondsInClocks());
+    };
+
+    const showNotificationsClick = (): void => {
+        dispatch(toggleNotifications());
     };
 
     const resetSettingsClick = (): void => {
@@ -85,6 +90,12 @@ function SettingsMenu({ showSettings }: SettingsMenuProps) {
                 <li onClick={showSecondsInClocksClick}>
                     <h5>Show seconds in clocks</h5>
                     <button className={settings.showSecondsInClocks ? "toggler toggled" : "toggler"}>
+                        <div className="circle"></div>
+                    </button>
+                </li>
+                <li onClick={showNotificationsClick}>
+                    <h5>Show notifications</h5>
+                    <button className={settings.showNotifications ? "toggler toggled" : "toggler"}>
                         <div className="circle"></div>
                     </button>
                 </li>
