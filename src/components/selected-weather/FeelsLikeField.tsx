@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { ReduxState } from "../../types/State";
 
@@ -8,7 +8,7 @@ function FeelsLikeField() {
     );
     const temperatureInF: boolean = useSelector((state: ReduxState) => state.settings.temperatureInF);
 
-    const getFeelsLikeValue = (temperatureInF: boolean): string | undefined => {
+    const getFeelsLikeValue = useCallback((temperatureInF: boolean): string | undefined => {
         if (temperatureInF === false) {
             return selectedFeelsLike.toFixed(0);
         } else if (temperatureInF == true) {
@@ -16,7 +16,7 @@ function FeelsLikeField() {
         } else {
             return "0";
         }
-    };
+    }, [])
 
     return (
         <p className="feels-like">

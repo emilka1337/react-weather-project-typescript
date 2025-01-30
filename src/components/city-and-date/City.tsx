@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedCity } from "../../store/selectedCitySlice";
 import EditCityToggler from "./EditCityToggler";
@@ -35,7 +35,7 @@ function City() {
         setShowCitySearch(!showCitySearch);
     };
 
-    const fetchCityNameByCoords = async (lat: number, lon: number) => {
+    const fetchCityNameByCoords = useCallback(async (lat: number, lon: number) => {
         if (!lat || !lon) return;
 
         const requestURL = `${
@@ -56,7 +56,7 @@ function City() {
                     loadLastSavedCityName() ?? "Sorry, something went wrong :(";
                 dispatch(setSelectedCity(cityName));
             });
-    };
+    }, [])
 
     return (
         <div className="city">

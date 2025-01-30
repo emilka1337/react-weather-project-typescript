@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import ForecastCell from "./ForecastCell";
 import { ForecastUnit } from "../../types/ForecastUnit";
 
@@ -8,7 +8,7 @@ interface ForecastDayProps {
 }
 
 function ForecastDay({day, weekday}: ForecastDayProps) {
-    const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const WEEKDAYS = useMemo(() => ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], []);
 
     return (
         <li className="forecast-day">

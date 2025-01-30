@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // Components
 import CityAndDate from "./city-and-date/CityAndDate";
@@ -58,7 +58,7 @@ function App() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [geolocation]);
 
-    function getForecast(lat: number, lon: number): void {
+    const getForecast = useCallback((lat: number, lon: number): void => {
         try {
             const savedForecastData: ForecastData | null = getSavedForecastData();
             const currentMilliseconds: number = Date.now();
@@ -85,7 +85,7 @@ function App() {
             console.log("getForecast error: ", error);
             setForecast(getSavedForecastData());
         }
-    }
+    }, [])
 
     return (
         <div className={darkMode ? "app dark" : "app"}>
