@@ -1,7 +1,7 @@
-import React, { Suspense, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // Components
-import CityAndDate from "./city-and-date/CityAndDate";
+import Topbar from "./city-and-date/Topbar";
 import DailyForecast from "./forecast/DailyForecast";
 import SelectedWeather from "./selected-weather/SelectedWeather";
 import { setForecast } from "../store/forecastSlice";
@@ -14,6 +14,7 @@ import useNotificationPermission from "../hooks/useNotificationPermission";
 import useNotification from "../hooks/useNotification";
 import { ForecastUnit } from "../types/ForecastUnit";
 import useGeolocation from "../hooks/useGeolocation";
+import SettingsMenu from "./settings/SettingsMenu";
 
 const Settings = React.lazy(() => import("./settings/Settings"));
 
@@ -35,6 +36,7 @@ function getSavedForecastData(): ForecastData | null {
 
 function App() {
     const dispatch: AppDispatch = useDispatch();
+    const showSettings: boolean = useSelector((state: ReduxState) => state.settings.showSettings);
     const darkMode: boolean = useSelector((state: ReduxState) => state.settings.darkMode);
     const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
     const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
@@ -85,21 +87,15 @@ function App() {
             console.log("getForecast error: ", error);
             setForecast(getSavedForecastData());
         }
-    }, [])
+    }, []);
 
     return (
         <div className={darkMode ? "app dark" : "app"}>
             <div className="widget">
-                <div className="left">
-                    <CityAndDate />
-                    <SelectedWeather />
-                    <DailyForecast />
-                </div>
-                <div className="right">
-                    <Suspense>
-                        <Settings />
-                    </Suspense>
-                </div>
+                <Topbar />
+                <SelectedWeather />
+                <DailyForecast />
+                <SettingsMenu showSettings={showSettings} />
             </div>
         </div>
     );

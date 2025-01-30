@@ -1,0 +1,25 @@
+{
+    "manifest_version": 3,
+    "name": "Simple Weather",
+    "version": "1.0.0",
+    "description": "A weather application built with React and TypeScript.",
+    "icons": {
+        "16": "favicon/favicon-16x16.png",
+        "32": "favicon/favicon-32x32.png"
+    },
+    "action": {
+        "default_popup": "index.html",
+        "default_icon": {
+            "16": "favicon/favicon-16x16.png",
+            "32": "favicon/favicon-32x32.png"
+        }
+    },
+    "permissions": [
+        "storage",
+        "notifications",
+        "geolocation"
+    ],
+    "host_permissions": [
+        "https://api.openweathermap.org/*"
+    ]
+}

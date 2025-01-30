@@ -4,7 +4,7 @@
     overflow-x: scroll;
     margin: 0;
     padding: 0;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
 
     &::-webkit-scrollbar {
         height: 5px;
@@ -120,11 +120,11 @@
                 .humidity {
                     margin: 4px 0px;
                     font-size: 14px;
-                    color: $forecastGreyColor;
+                    color: $weatherTextColor;
                 }
 
                 svg {
-                    color: $forecastGreyColor;
+                    color: $weatherTextColor;
                 }
             }
 
