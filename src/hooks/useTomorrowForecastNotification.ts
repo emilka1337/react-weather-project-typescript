@@ -29,7 +29,7 @@ function showTomorrowforecastNotification(tomorrowForecast: CommonForecastByDay)
 
 type useNotificationType = () => void;
 
-export default function useNotification(): useNotificationType {
+export default function useTomorrowForecastNotification(): useNotificationType {
     // const [notificationShowed, setNotificationShowed] = useState<boolean>(false);
     const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
     const tomorrowForecast: CommonForecastByDay | undefined = getCommonForecastByDay(separateListByWeekdays(forecast)[1]) || undefined;

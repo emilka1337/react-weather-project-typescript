@@ -11,7 +11,7 @@ import { CityGeolocation } from "../types/CityGeolocation";
 import { ReduxState } from "../types/State";
 import { AppDispatch } from "../store/store";
 import useNotificationPermission from "../hooks/useNotificationPermission";
-import useNotification from "../hooks/useNotification";
+import useTomorrowForecastNotification from "../hooks/useTomorrowForecastNotification";
 import { ForecastUnit } from "../types/ForecastUnit";
 import useGeolocation from "../hooks/useGeolocation";
 import SettingsMenu from "./settings/SettingsMenu";
@@ -42,7 +42,7 @@ function App() {
     const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
     const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
     useNotificationPermission();
-    const showNotification = useNotification();
+    const showNotification = useTomorrowForecastNotification();
     // Defines user geolocation
     useGeolocation();
 

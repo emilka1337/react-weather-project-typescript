@@ -1,8 +1,12 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setGeolocation } from "../store/geolocationSlice";
+import { CityGeolocation } from "../types/CityGeolocation";
+import { ReduxState } from "../types/State";
 
-const useGeolocation = (): void => {
+// Asks user for geolocation permission and sets it in the Redux store and also returns it
+const useGeolocation = (): CityGeolocation | null => {
+    const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -13,7 +17,7 @@ const useGeolocation = (): void => {
                         lat: position.coords.latitude,
                         lon: position.coords.longitude,
                     })
-                );
+                )
             },
             (error: GeolocationPositionError): void => {
                 console.log(error);
@@ -21,6 +25,8 @@ const useGeolocation = (): void => {
             { enableHighAccuracy: true }
         );
     }, []);
+
+    return geolocation;
 }
 
 export default useGeolocation
