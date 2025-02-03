@@ -32,7 +32,7 @@ export function separateListByWeekdays(list: ForecastUnit[]): Array<Array<Foreca
     while (countElementsInArrayOfArrays(result) < 40) {
         result.push(newList.filter((item) => item.weekday == currentWeekday));
 
-        if (currentWeekday && currentWeekday < 6) {
+        if (currentWeekday !== undefined && currentWeekday < 6) {
             currentWeekday++;
         } else {
             currentWeekday = 0;
@@ -59,6 +59,7 @@ function DailyForecast() {
                 <ForecastModeTogglePanel />
                 <ul className="daily-forecast">
                     {separatedForecastList.map((day: readonly ForecastUnit[], index: number) => {
+                        console.log(separatedForecastList);
                         return <ForecastDay day={day} weekday={day[0].weekday || new Date().getDay()} key={index} />;
                     })}
                 </ul>
