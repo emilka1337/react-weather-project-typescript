@@ -57,7 +57,7 @@ function App() {
         if (geolocation.lat !== 0 && geolocation.lon !== 0) {
             getForecast(geolocation.lat, geolocation.lon);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line +react-hooks/exhaustive-deps
     }, [geolocation]);
 
     const getForecast = useCallback((lat: number, lon: number): void => {
