@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Simple Weather",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Simple Weather is a Chrome extension that shows real-time weather updates and a 5-day forecast with 3-hour intervals.",
     "icons": {
         "16": "favicon/favicon-16x16.png",
