@@ -16,8 +16,6 @@ import { ForecastUnit } from "../types/ForecastUnit";
 import useGeolocation from "../hooks/useGeolocation";
 import SettingsMenu from "./settings/SettingsMenu";
 
-const Settings = React.lazy(() => import("./settings/Settings"));
-
 function saveForecastData(data: ForecastData): void {
     const date = new Date();
     data.timeStamp = +date;
