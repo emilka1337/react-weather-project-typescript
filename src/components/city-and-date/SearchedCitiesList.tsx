@@ -1,10 +1,11 @@
 import React, { useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSelectedCity } from "../../store/selectedCitySlice";
 import { setGeolocation } from "../../store/geolocationSlice";
 import { addCityToStarredCities } from "../../store/starredCitiesSlice";
 import { AppDispatch } from "../../store/store";
 import { SearchCity } from "../../types/SearchCity";
+import { ReduxState } from "../../types/State";
 
 interface SearchedCitiesListProps {
     readonly citiesList: SearchCity[];
@@ -12,6 +13,7 @@ interface SearchedCitiesListProps {
 
 function SearchedCitiesList({ citiesList }: SearchedCitiesListProps) {
     const dispatch: AppDispatch = useDispatch();
+    const StarredCitiesList: SearchCity[] = useSelector((state: ReduxState) => state.starredCities);
 
     const handleCityClick = useCallback((city: SearchCity): void => {
         dispatch(setSelectedCity(city.name));
@@ -19,7 +21,13 @@ function SearchedCitiesList({ citiesList }: SearchedCitiesListProps) {
     }, []);
 
     const addToFavorites = useCallback((city: SearchCity) => {
-        dispatch(addCityToStarredCities(city));
+        const cityAlreadyStarred: boolean = StarredCitiesList.some(
+            (starredCity: SearchCity) => city.name === starredCity.name
+        );
+
+        if (!cityAlreadyStarred) {
+            dispatch(addCityToStarredCities(city));
+        }
     }, []);
 
     return (
