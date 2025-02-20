@@ -48,7 +48,6 @@ function City() {
         ky.get<SearchCity[]>(requestURL)
             .json()
             .then((data) => {
-                console.log(data);
                 saveCityName(data[0].name);
                 dispatch(setSelectedCity(data[0].name));
             })

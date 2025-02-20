@@ -59,7 +59,6 @@ function DailyForecast() {
                 <ForecastModeTogglePanel />
                 <ul className="daily-forecast">
                     {separatedForecastList.map((day: readonly ForecastUnit[], index: number) => {
-                        console.log(separatedForecastList);
                         return <ForecastDay day={day} weekday={day[0].weekday || new Date().getDay()} key={index} />;
                     })}
                 </ul>

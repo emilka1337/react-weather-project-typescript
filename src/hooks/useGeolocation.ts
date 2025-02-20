@@ -5,7 +5,7 @@ import { CityGeolocation } from "../types/CityGeolocation";
 import { ReduxState } from "../types/State";
 
 // Asks user for geolocation permission and sets it in the Redux store and also returns it
-const useGeolocation = (): CityGeolocation | null => {
+const useGeolocation = (): CityGeolocation => {
     const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
     const dispatch = useDispatch();
 

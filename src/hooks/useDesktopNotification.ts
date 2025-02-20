@@ -6,7 +6,6 @@ import { separateListByWeekdays } from "../components/forecast/DailyForecast";
 
 function getCommonForecastByDay(forecastDay: readonly ForecastUnit[]): CommonForecastByDay | undefined {
     if (!forecastDay) return
-    console.log("forecastDay: ", forecastDay);
     const minTemp = Math.min(...forecastDay.map((item) => item.main.temp));
     const maxTemp = Math.max(...forecastDay.map((item) => item.main.temp));
     const maxWind = Math.max(...forecastDay.map((item) => item.wind.speed));
@@ -29,11 +28,7 @@ function showTomorrowforecastNotification(tomorrowForecast: CommonForecastByDay)
 
 type useDesktopNotificationType = () => void;
 
-<<<<<<<< Updated upstream:src/hooks/useTomorrowForecastNotification.ts
-export default function useTomorrowForecastNotification(): useNotificationType {
-========
 export default function useDesktopNotification(): useDesktopNotificationType {
->>>>>>>> Stashed changes:src/hooks/useDesktopNotification.ts
     // const [notificationShowed, setNotificationShowed] = useState<boolean>(false);
     const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
     const tomorrowForecast: CommonForecastByDay | undefined = getCommonForecastByDay(separateListByWeekdays(forecast)[1]) || undefined;

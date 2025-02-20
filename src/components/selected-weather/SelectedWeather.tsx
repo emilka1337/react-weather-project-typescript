@@ -30,7 +30,7 @@ function SelectedWeather() {
             </div>
         );
     } else {
-        return <Loading />;
+        // return <Loading />;
     }
 }
 
