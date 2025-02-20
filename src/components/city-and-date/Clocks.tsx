@@ -24,10 +24,10 @@ function formatTime(time: Time<number>, showSeconds: boolean): string | never {
         seconds: time.seconds
     }
 
-    if (!hours) {
+    if (hours === null || hours === undefined) {
         throw new Error("No hours provided to formatTime function");
     }
-    if (!minutes) {
+    if (minutes === null || minutes === undefined) {
         throw new Error("No hours minutes to formatTime function");
     }
 
