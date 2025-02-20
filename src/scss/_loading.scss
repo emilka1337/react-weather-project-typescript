@@ -21,6 +21,10 @@
             }
         }
     }
+
+    h2 {
+        color: $weatherTextColor;
+    }
 }
 
 @keyframes lds-ripple {

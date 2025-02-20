@@ -27,9 +27,13 @@ function showTomorrowforecastNotification(tomorrowForecast: CommonForecastByDay)
     });
 }
 
-type useNotificationType = () => void;
+type useDesktopNotificationType = () => void;
 
-export default function useNotification(): useNotificationType {
+<<<<<<<< Updated upstream:src/hooks/useTomorrowForecastNotification.ts
+export default function useTomorrowForecastNotification(): useNotificationType {
+========
+export default function useDesktopNotification(): useDesktopNotificationType {
+>>>>>>>> Stashed changes:src/hooks/useDesktopNotification.ts
     // const [notificationShowed, setNotificationShowed] = useState<boolean>(false);
     const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
     const tomorrowForecast: CommonForecastByDay | undefined = getCommonForecastByDay(separateListByWeekdays(forecast)[1]) || undefined;

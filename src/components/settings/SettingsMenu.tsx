@@ -8,6 +8,7 @@ import {
     toggleTemperatureScale,
     toggleNotifications,
     resetSettings,
+    toggleLoadingAnimation,
 } from "../../store/settingsSlice";
 import { Settings } from "../../types/Settings";
 import { ReduxState } from "../../types/State";
@@ -26,6 +27,10 @@ function SettingsMenu({ showSettings }: SettingsMenuProps) {
     //#region Settings click event listeners
     const darkModeSettingClick = useCallback((): void => {
         dispatch(toggleDarkMode());
+    }, []);
+
+    const loadingAnimationSettingClick = useCallback((): void => {
+        dispatch(toggleLoadingAnimation());
     }, []);
 
     const feelsLikeSettingClick = useCallback((): void => {
@@ -66,6 +71,12 @@ function SettingsMenu({ showSettings }: SettingsMenuProps) {
                 <li onClick={darkModeSettingClick}>
                     <h5>Dark mode</h5>
                     <button className={settings.darkMode ? "toggler toggled" : "toggler"}>
+                        <div className="circle"></div>
+                    </button>
+                </li>
+                <li onClick={loadingAnimationSettingClick}>
+                    <h5>Loading animation</h5>
+                    <button className={settings.loadingAnimation ? "toggler toggled" : "toggler"}>
                         <div className="circle"></div>
                     </button>
                 </li>

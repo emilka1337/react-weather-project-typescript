@@ -1,22 +1,23 @@
-import React, { useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // Components
 import Topbar from "./city-and-date/Topbar";
 import DailyForecast from "./forecast/DailyForecast";
 import SelectedWeather from "./selected-weather/SelectedWeather";
+import SettingsMenu from "./settings/SettingsMenu";
+// Hooks
+import useGeolocation from "../hooks/useGeolocation";
+import useNotificationPermission from "../hooks/useNotificationPermission";
+import useDesktopNotification from "../hooks/useDesktopNotification";
+// Redux Toolkit
 import { setForecast } from "../store/forecastSlice";
 import { fetchForecast } from "../store/forecastThunk";
+import { AppDispatch } from "../store/store";
+// Types
 import { ForecastData } from "../types/ForecastData";
 import { CityGeolocation } from "../types/CityGeolocation";
 import { ReduxState } from "../types/State";
-import { AppDispatch } from "../store/store";
-import useNotificationPermission from "../hooks/useNotificationPermission";
-import useNotification from "../hooks/useNotification";
 import { ForecastUnit } from "../types/ForecastUnit";
-import useGeolocation from "../hooks/useGeolocation";
-import SettingsMenu from "./settings/SettingsMenu";
-
-const Settings = React.lazy(() => import("./settings/Settings"));
 
 function saveForecastData(data: ForecastData): void {
     const date = new Date();
@@ -34,15 +35,23 @@ function getSavedForecastData(): ForecastData | null {
     }
 }
 
+function isSavedForecastDataExpired(savedForecastData: ForecastData | null): boolean {
+    const currentMilliseconds: number = Date.now();
+
+    if (savedForecastData && savedForecastData.timeStamp) {
+        return currentMilliseconds - savedForecastData.timeStamp > 300 * 1000;
+    } else return true;
+}
+
 function App() {
     const dispatch: AppDispatch = useDispatch();
     const showSettings: boolean = useSelector((state: ReduxState) => state.settings.showSettings);
     const darkMode: boolean = useSelector((state: ReduxState) => state.settings.darkMode);
-    const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
     const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
     const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
+    const geolocation: CityGeolocation = useGeolocation(); // Defines user geolocation
     useNotificationPermission();
-    const showNotification = useNotification();
+    const showNotification = useDesktopNotification();
     // Defines user geolocation
     useGeolocation();
 
@@ -54,24 +63,20 @@ function App() {
 
     // Fetching forecast after defining user geolocation
     useEffect(() => {
-        if (geolocation.lat !== 0 && geolocation.lon !== 0) {
-            getForecast(geolocation.lat, geolocation.lon);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        getForecast(geolocation);
     }, [geolocation]);
 
-    const getForecast = useCallback((lat: number, lon: number): void => {
+    const getForecast = useCallback((geolocation: CityGeolocation): void => {
+        if (!geolocation.lat || !geolocation.lon) return;
         try {
             const savedForecastData: ForecastData | null = getSavedForecastData();
-            const currentMilliseconds: number = Date.now();
 
             if (
                 savedForecastData === null ||
-                (savedForecastData.timeStamp &&
-                    currentMilliseconds - savedForecastData?.timeStamp > 300 * 1000) ||
+                isSavedForecastDataExpired(savedForecastData) ||
                 savedForecastData.city.name != cityName
             ) {
-                dispatch(fetchForecast({ lat, lon }))
+                dispatch(fetchForecast(geolocation))
                     .unwrap()
                     .then((forecastData: ForecastData) => {
                         saveForecastData(forecastData);
@@ -84,7 +89,7 @@ function App() {
                 dispatch(setForecast(savedForecastData));
             }
         } catch (error) {
-            console.log("getForecast error: ", error);
+            console.error("getForecast error: ", error);
             setForecast(getSavedForecastData());
         }
     }, []);

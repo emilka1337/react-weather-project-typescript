@@ -8,6 +8,7 @@ import geolocationSlice from "./geolocationSlice";
 import forecastSlice from "./forecastSlice";
 import selectedCitySlice from "./selectedCitySlice";
 import starredCitiesSlice from "./starredCitiesSlice";
+import showCitySearchMenuSlice from "./citySearchMenuSlice";
 
 export type AppDispatch = typeof store.dispatch;
 
@@ -20,7 +21,8 @@ const store = configureStore({
         geolocation: geolocationSlice,
         forecast: forecastSlice,
         selectedCity: selectedCitySlice,
-        starredCities: starredCitiesSlice
+        starredCities: starredCitiesSlice,
+        showCitySearchMenu: showCitySearchMenuSlice
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(settingsMiddleware),
 })

@@ -18,4 +18,5 @@ export interface ReduxState {
         warnings: Alert[]
     }
     settings: Settings
+    showCitySearchMenu: boolean
 }

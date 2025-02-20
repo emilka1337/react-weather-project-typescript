@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSettings } from "../../store/settingsSlice";
 import { ReduxState } from "../../types/State";
+import { setShowCitySearchMenu } from "../../store/citySearchMenuSlice";
 
 function SettingsMenuToggler() {
     const showSettings: boolean = useSelector((state: ReduxState) => state.settings.showSettings);
@@ -37,6 +38,7 @@ function SettingsMenuToggler() {
     }, [showSettings]);
 
     function handleClick() {
+        dispatch(setShowCitySearchMenu(false));
         dispatch(toggleSettings());
     }
 

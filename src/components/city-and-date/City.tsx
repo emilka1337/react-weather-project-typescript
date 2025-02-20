@@ -7,6 +7,7 @@ import { CityGeolocation } from "../../types/CityGeolocation";
 import { ReduxState } from "../../types/State";
 import { AppDispatch } from "../../store/store";
 import { SearchCity } from "../../types/SearchCity";
+import { setShowCitySearchMenu } from "../../store/citySearchMenuSlice";
 
 const CitySearch = React.lazy(() => import("./CitySearch"));
 
@@ -21,8 +22,8 @@ const loadLastSavedCityName = (): string | void => {
 }
 
 function City() {
-    const [showCitySearch, setShowCitySearch] = useState<boolean>(false);
     const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
+    const showCitySearch = useSelector((state: ReduxState) => state.showCitySearchMenu);
     const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
 
     const dispatch: AppDispatch = useDispatch();
@@ -32,7 +33,7 @@ function City() {
     }, [geolocation.lat, geolocation.lon]);
 
     const focusOnCitySearch = (): void => {
-        setShowCitySearch(!showCitySearch);
+        dispatch(setShowCitySearchMenu(!showCitySearch));
     };
 
     const fetchCityNameByCoords = useCallback(async (lat: number, lon: number) => {
@@ -47,7 +48,6 @@ function City() {
         ky.get<SearchCity[]>(requestURL)
             .json()
             .then((data) => {
-                console.log(data);
                 saveCityName(data[0].name);
                 dispatch(setSelectedCity(data[0].name));
             })
@@ -62,7 +62,7 @@ function City() {
         <div className="city">
             <h3 className="city-name">{cityName}</h3>
             <EditCityToggler onClick={focusOnCitySearch} />
-            <CitySearch showCitySearch={showCitySearch} setShowCitySearch={setShowCitySearch} />
+            <CitySearch />
         </div>
     );
 }
