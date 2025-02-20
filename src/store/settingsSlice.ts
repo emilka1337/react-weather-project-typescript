@@ -11,6 +11,7 @@ if (localSavedSettings) {
 const initialState: Settings = parsedSettings ?? {
     showSettings: false,
     darkMode: window.matchMedia("(prefers-color-scheme: dark)").matches ? true : false,
+    loadingAnimation: true,
     showFeelsLikeField: false,
     temperatureInF: false,
     speedUnitInMS: false,
@@ -27,6 +28,9 @@ const settingsSlice = createSlice({
         },
         toggleDarkMode(state: Settings): void {
             state.darkMode = !state.darkMode;
+        },
+        toggleLoadingAnimation(state: Settings): void {
+            state.loadingAnimation = !state.loadingAnimation;
         },
         toggleFeelsLikeField(state: Settings): void {
             state.showFeelsLikeField = !state.showFeelsLikeField;
@@ -55,5 +59,5 @@ const settingsSlice = createSlice({
 })
 
 
-export const { toggleSettings, toggleDarkMode, toggleFeelsLikeField, toggleTemperatureScale, toggleSpeedUnit, toggleSecondsInClocks, resetSettings, toggleNotifications } = settingsSlice.actions
+export const { toggleSettings, toggleDarkMode, toggleLoadingAnimation, toggleFeelsLikeField, toggleTemperatureScale, toggleSpeedUnit, toggleSecondsInClocks, resetSettings, toggleNotifications } = settingsSlice.actions
 export default settingsSlice.reducer
