@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedCity } from "../../store/selectedCitySlice";
 import EditCityToggler from "./EditCityToggler";
@@ -17,9 +17,9 @@ const saveCityName = (cityName: string): void =>
 const loadLastSavedCityName = (): string | void => {
     const lastSavedCity: string | null = localStorage.getItem("last-saved-city-name");
     if (lastSavedCity) {
-        return JSON.parse(lastSavedCity)
+        return JSON.parse(lastSavedCity);
     }
-}
+};
 
 function City() {
     const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
@@ -41,22 +41,18 @@ function City() {
 
         const requestURL = `${
             import.meta.env.VITE_BASE_URL
-        }geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=5&appid=${
-            import.meta.env.VITE_API_KEY
-        }`;
+        }geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=5&appid=${import.meta.env.VITE_API_KEY}`;
 
-        ky.get<SearchCity[]>(requestURL)
-            .json()
-            .then((data) => {
-                saveCityName(data[0].name);
-                dispatch(setSelectedCity(data[0].name));
-            })
-            .catch(() => {
-                const cityName: string =
-                    loadLastSavedCityName() ?? "Sorry, something went wrong :(";
-                dispatch(setSelectedCity(cityName));
-            });
-    }, [])
+        try {
+            const res = await ky.get<SearchCity[]>(requestURL);
+            const data = await res.json();
+            saveCityName(data[0].name);
+            dispatch(setSelectedCity(data[0].name));
+        } catch (err) {
+            const cityName: string = loadLastSavedCityName() ?? "Sorry, something went wrong :(";
+            dispatch(setSelectedCity(cityName));
+        }
+    }, []);
 
     return (
         <div className="city">
