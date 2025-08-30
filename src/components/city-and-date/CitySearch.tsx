@@ -19,7 +19,7 @@ function CitySearch() {
     };
 
     useEffect(() => {
-        const timeoutID: number = setTimeout(async (): void => {
+        const timeoutID: number = setTimeout(async (): Promise<void> => {
             if (inputValue) {
                 const requestURL: string = `${
                     import.meta.env.VITE_BASE_URL
