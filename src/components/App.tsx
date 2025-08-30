@@ -76,7 +76,8 @@ function App() {
                 isSavedForecastDataExpired(savedForecastData) ||
                 savedForecastData.city.name != cityName
             ) {
-                dispatch(fetchForecast(geolocation))
+                const forecastAction = fetchForecast(geolocation);
+                dispatch(forecastAction)
                     .unwrap()
                     .then((forecastData: ForecastData) => {
                         saveForecastData(forecastData);

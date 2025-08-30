@@ -10,13 +10,19 @@ export const fetchForecast = createAsyncThunk<
     CityGeolocation
 >(
     'forecast/fetchforecast',
-    async ({ lat, lon }: CityGeolocation) => {
+    async ({ lat, lon }: CityGeolocation, { rejectWithValue }) => {
         const forecastURL = `${import.meta.env.VITE_BASE_URL
             }data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${import.meta.env.VITE_API_KEY
             }&units=metric`;
 
-        const forecastData = await ky.get<ForecastData>(forecastURL).json();
+        try {
+            const res = await ky.get<ForecastData>(forecastURL);
+            const forecastData = res.json();
+            return forecastData;
+        } catch (err) {
+            console.log(err);
+            return rejectWithValue([])
+        }
 
-        return forecastData;
     }
 );

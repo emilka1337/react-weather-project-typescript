@@ -45,17 +45,15 @@ function City() {
             import.meta.env.VITE_API_KEY
         }`;
 
-        ky.get<SearchCity[]>(requestURL)
-            .json()
-            .then((data) => {
-                saveCityName(data[0].name);
-                dispatch(setSelectedCity(data[0].name));
-            })
-            .catch(() => {
-                const cityName: string =
-                    loadLastSavedCityName() ?? "Sorry, something went wrong :(";
-                dispatch(setSelectedCity(cityName));
-            });
+        try {
+            const res = await ky.get<SearchCity[]>(requestURL);
+            const data = await res.json()
+            saveCityName(data[0].name);
+            dispatch(setSelectedCity(data[0].name));
+        } catch (err) {
+            const cityName: string = loadLastSavedCityName() ?? "Sorry, something went wrong :(";
+            dispatch(setSelectedCity(cityName));
+        }
     }, [])
 
     return (

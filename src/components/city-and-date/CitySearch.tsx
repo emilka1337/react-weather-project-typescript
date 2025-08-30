@@ -19,17 +19,19 @@ function CitySearch() {
     };
 
     useEffect(() => {
-        const timeoutID: number = setTimeout((): void => {
+        const timeoutID: number = setTimeout(async (): void => {
             if (inputValue) {
                 const requestURL: string = `${
                     import.meta.env.VITE_BASE_URL
                 }geo/1.0/direct?q=${inputValue}&limit=3&appid=${import.meta.env.VITE_API_KEY}`;
 
-                ky.get<SearchCity[]>(requestURL)
-                    .json()
-                    .then((data: SearchCity[]) => {
-                        setCitiesList(data);
-                    });
+                try {
+                    const res = await ky.get<SearchCity[]>(requestURL);
+                    const data = await res.json();
+                    setCitiesList(data);
+                } catch (err) {
+                    console.error(err);
+                }
             } else {
                 setCitiesList([]);
             }
