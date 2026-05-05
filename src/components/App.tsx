@@ -68,6 +68,7 @@ function App() {
 
     const getForecast = useCallback((geolocation: CityGeolocation): void => {
         if (!geolocation.lat || !geolocation.lon) return;
+
         try {
             const savedForecastData: ForecastData | null = getSavedForecastData();
 
@@ -77,6 +78,7 @@ function App() {
                 savedForecastData.city.name != cityName
             ) {
                 const forecastAction = fetchForecast(geolocation);
+                
                 dispatch(forecastAction)
                     .unwrap()
                     .then((forecastData: ForecastData) => {

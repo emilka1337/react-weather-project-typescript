@@ -17,7 +17,8 @@ export const fetchForecast = createAsyncThunk<
 
         try {
             const res = await ky.get<ForecastData>(forecastURL);
-            const forecastData = res.json();
+            const forecastData = await res.json();
+            console.log(forecastData);
             return forecastData;
         } catch (err) {
             console.log(err);
