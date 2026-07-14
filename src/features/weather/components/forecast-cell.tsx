@@ -1,10 +1,11 @@
 import React, { Suspense, useCallback, useMemo, useRef } from "react";
+
 import TemperatureContainer from "@/features/weather/components/temperature-container";
-import { ForecastUnit } from "@/features/weather/types/forecast-unit";
-import { Time } from "@/types/time";
-import { ForecastModes } from "@/features/weather/types/forecast-mode";
 import { useForecastModeStore } from "@/features/weather/stores/forecast-mode-store";
 import { useSelectedWeatherStore } from "@/features/weather/stores/selected-weather-store";
+import { ForecastModes } from "@/features/weather/types/forecast-mode";
+import { ForecastUnit } from "@/features/weather/types/forecast-unit";
+import { formatTime } from "@/utils/format-time";
 
 const WindContainer = React.lazy(() => import("@/features/weather/components/wind-container"));
 const HumidityContainer = React.lazy(() => import("@/features/weather/components/humidity-container"));
@@ -15,35 +16,17 @@ interface ForecastCellProps {
     readonly isDefaultActive: boolean;
 }
 
-function formatTime(time: Time<number>): string {
-    const hours = time.hours;
-    const minutes = time.minutes;
-
-    const result: Time<string | number> = {
-        hours: time.hours,
-        minutes: time.minutes,
-    };
-
-    if (typeof hours === "number" && hours < 10) {
-        result.hours = "0" + hours;
-    }
-    if (typeof minutes === "number" && minutes < 10) {
-        result.minutes = "0" + minutes;
-    }
-
-    return `${result.hours}:${result.minutes}`;
-}
-
 function ForecastCell({ cellForecast, timestamp, isDefaultActive }: ForecastCellProps) {
     const forecastMode: ForecastModes = useForecastModeStore((state) => state.forecastMode);
     const setSelectedWeather = useSelectedWeatherStore((state) => state.setSelectedWeather);
 
     const activeIndicator = useRef<HTMLDivElement | null>(null);
 
-    const date: Date = useMemo<Date>(() => new Date(timestamp * 1000), [timestamp]);
-    const hours: number = useMemo<number>(() => date.getHours(), [date]);
-    const minutes: number = useMemo<number>(() => date.getMinutes(), [date]);
-    const formattedTime: string = useMemo(() => formatTime({ hours, minutes }), [hours, minutes]);
+    const formattedTime: string = useMemo(() => {
+        const date = new Date(timestamp * 1000);
+
+        return formatTime({ hours: date.getHours(), minutes: date.getMinutes() });
+    }, [timestamp]);
 
     const clickHandler = useCallback((): void => {
         document

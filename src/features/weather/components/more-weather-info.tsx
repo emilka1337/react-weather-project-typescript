@@ -1,6 +1,8 @@
-import React, { useCallback } from "react";
-import { useSettingsStore } from "@/stores/settings-store";
+import React from "react";
+
 import { useSelectedWeatherStore } from "@/features/weather/stores/selected-weather-store";
+import { formatWindSpeed } from "@/features/weather/utils/units";
+import { useSettingsStore } from "@/stores/settings-store";
 
 const icons = {
     wind: (
@@ -38,28 +40,11 @@ function MoreWeatherInfo() {
     );
     const sky: string = useSelectedWeatherStore((state) => state.selectedWeather.selectedMain);
 
-    const getWindSpeedValue = useCallback(
-        (speedUnitInMS: boolean): string => {
-            let tempWindSpeed = "";
-
-            if (speedUnitInMS === false) {
-                tempWindSpeed += (windSpeed * 3.6).toFixed(0);
-            } else if (speedUnitInMS === true) {
-                tempWindSpeed += windSpeed.toFixed(0);
-            }
-
-            tempWindSpeed += speedUnitInMS == false ? " km/h" : " m/s";
-
-            return tempWindSpeed;
-        },
-        [speedUnitInMS, windSpeed]
-    );
-
     return (
         <div className="more-info">
             <h3 className="wind">
                 {icons.wind}
-                {getWindSpeedValue(speedUnitInMS)}
+                {formatWindSpeed(windSpeed, speedUnitInMS)}
             </h3>
             <h2 className="sky">{sky}</h2>
             <h3 className="humidity">

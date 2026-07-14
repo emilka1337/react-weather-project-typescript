@@ -1,24 +1,13 @@
 import { create } from "zustand";
+
 import { SearchCity } from "@/features/city/types/search-city";
+import { readJson, writeJson } from "@/utils/storage";
 
 const STORAGE_KEY = "starredCities";
 
-function loadStarredCities(): SearchCity[] {
-    const savedCities: string | null = localStorage.getItem(STORAGE_KEY);
+const loadStarredCities = (): SearchCity[] => readJson<SearchCity[]>(STORAGE_KEY) ?? [];
 
-    if (savedCities === null) return [];
-
-    try {
-        return JSON.parse(savedCities);
-    } catch (error) {
-        console.error("Saved starred cities are corrupted, dropping them: ", error);
-        localStorage.removeItem(STORAGE_KEY);
-        return [];
-    }
-}
-
-const saveStarredCities = (starredCities: SearchCity[]): void =>
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(starredCities));
+const saveStarredCities = (starredCities: SearchCity[]): void => writeJson(STORAGE_KEY, starredCities);
 
 interface StarredCitiesStore {
     starredCities: SearchCity[];

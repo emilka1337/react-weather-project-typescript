@@ -1,6 +1,8 @@
-import React, { useCallback } from "react";
-import { useSettingsStore } from "@/stores/settings-store";
+import React from "react";
+
 import { useSelectedWeatherStore } from "@/features/weather/stores/selected-weather-store";
+import { formatTemperature } from "@/features/weather/utils/units";
+import { useSettingsStore } from "@/stores/settings-store";
 
 function FeelsLikeField() {
     const selectedFeelsLike: number = useSelectedWeatherStore(
@@ -8,19 +10,9 @@ function FeelsLikeField() {
     );
     const temperatureInF: boolean = useSettingsStore((state) => state.settings.temperatureInF);
 
-    const getFeelsLikeValue = useCallback((temperatureInF: boolean): string | undefined => {
-        if (temperatureInF === false) {
-            return selectedFeelsLike.toFixed(0);
-        } else if (temperatureInF == true) {
-            return (selectedFeelsLike * (9 / 5) + 32).toFixed(0);
-        } else {
-            return "0";
-        }
-    }, [selectedFeelsLike])
-
     return (
         <p className="feels-like">
-            {`Feels like: ${getFeelsLikeValue(temperatureInF)}`}
+            {`Feels like: ${formatTemperature(selectedFeelsLike, temperatureInF)}`}
             <span className="degree">°</span>
         </p>
     );

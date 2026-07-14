@@ -1,6 +1,8 @@
-import React, { useCallback } from "react";
-import { useSettingsStore } from "@/stores/settings-store";
+import React from "react";
+
 import { useSelectedWeatherStore } from "@/features/weather/stores/selected-weather-store";
+import { formatTemperature } from "@/features/weather/utils/units";
+import { useSettingsStore } from "@/stores/settings-store";
 
 function SelectedTemperature() {
     const temperature: number = useSelectedWeatherStore(
@@ -8,20 +10,9 @@ function SelectedTemperature() {
     );
     const temperatureInF: boolean = useSettingsStore((state) => state.settings.temperatureInF);
 
-    const getSelectedTemperatureValue = useCallback(
-        (temperatureInF: boolean): string | undefined => {
-            if (temperatureInF === false) {
-                return temperature.toFixed(0);
-            } else if (temperatureInF == true) {
-                return (temperature * (9 / 5) + 32).toFixed(0);
-            }
-        },
-        [temperatureInF, temperature]
-    );
-
     return (
         <h1 className="selected-temperature">
-            {getSelectedTemperatureValue(temperatureInF)}
+            {formatTemperature(temperature, temperatureInF)}
             <span className="degree">°</span>
         </h1>
     );

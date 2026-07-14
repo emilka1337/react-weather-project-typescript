@@ -1,5 +1,7 @@
 import { create } from "zustand";
+
 import { Settings } from "@/types/settings";
+import { readJson, removeItem, writeJson } from "@/utils/storage";
 
 const STORAGE_KEY = "weather-app-settings";
 
@@ -17,23 +19,12 @@ const defaultSettings = (): Settings => ({
 });
 
 function loadSettings(): Settings {
-    const savedSettings: string | null = localStorage.getItem(STORAGE_KEY);
-
-    if (savedSettings === null) return defaultSettings();
-
-    try {
-        // Spread over the defaults so a settings key added after the user last saved
-        // is present rather than undefined.
-        return { ...defaultSettings(), ...JSON.parse(savedSettings) };
-    } catch (error) {
-        console.error("Saved settings are corrupted, dropping them: ", error);
-        localStorage.removeItem(STORAGE_KEY);
-        return defaultSettings();
-    }
+    // Spread over the defaults so a settings key added after the user last saved is present
+    // rather than undefined.
+    return { ...defaultSettings(), ...readJson<Partial<Settings>>(STORAGE_KEY) };
 }
 
-const saveSettings = (settings: Settings): void =>
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+const saveSettings = (settings: Settings): void => writeJson(STORAGE_KEY, settings);
 
 interface SettingsStore {
     settings: Settings;
@@ -85,7 +76,7 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
 
             // Deliberately not saveSettings(): a reset drops the persisted settings entirely,
             // so the next load starts from the defaults. Same as the old middleware did.
-            localStorage.removeItem(STORAGE_KEY);
+            removeItem(STORAGE_KEY);
         },
     };
 });

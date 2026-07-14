@@ -1,3 +1,4 @@
+import { formatTemperature } from "@/features/weather/utils/units";
 import { useSettingsStore } from "@/stores/settings-store";
 
 interface TemperatureContainerProps {
@@ -11,7 +12,7 @@ function TemperatureContainer({ temperature, main }: TemperatureContainerProps) 
     return (
         <div className="temperature-container">
             <h3 className="temperature">
-                {temperatureInF === false ? temperature.toFixed(0) : (temperature * (9 / 5) + 32).toFixed(0)}
+                {formatTemperature(temperature, temperatureInF)}
                 <span className="degree">°</span>
             </h3>
             <h3 className="main">{main}</h3>
