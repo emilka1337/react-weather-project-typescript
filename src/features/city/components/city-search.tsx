@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+
+import { searchCities } from "@/features/city/api/search-cities";
 import SearchedCitiesList from "@/features/city/components/searched-cities-list";
 import StarredCitiesList from "@/features/city/components/starred-cities-list";
-import ky from "ky";
 import { SearchCity } from "@/features/city/types/search-city";
 import { useCitySearchMenuStore } from "@/stores/ui-store";
 
@@ -27,20 +28,14 @@ function CitySearch() {
         // and overwrite the results of a newer query.
         const controller = new AbortController();
 
-        const timeoutID = setTimeout(async (): Promise<void> => {
-            const requestURL: string = `${
-                import.meta.env.VITE_BASE_URL
-            }geo/1.0/direct?q=${encodeURIComponent(inputValue)}&limit=3&appid=${
-                import.meta.env.VITE_API_KEY
-            }`;
+        const timeoutID = setTimeout(() => {
+            searchCities(inputValue, { signal: controller.signal })
+                .then(setCitiesList)
+                .catch((error: unknown) => {
+                    if (controller.signal.aborted) return;
 
-            try {
-                const res = await ky.get<SearchCity[]>(requestURL, { signal: controller.signal });
-                setCitiesList(await res.json());
-            } catch (error) {
-                if (controller.signal.aborted) return;
-                console.error("City search failed: ", error);
-            }
+                    console.error("City search failed: ", error);
+                });
         }, 500);
 
         return () => {

@@ -1,29 +1,14 @@
-import React, { useEffect, useCallback } from "react";
+import React, { Suspense, useEffect } from "react";
+
+import { getCityNameByCoords } from "@/features/city/api/reverse-geocode";
 import EditCityToggler from "@/features/city/components/edit-city-toggler";
-import ky from "ky";
-import { CityGeolocation } from "@/types/geolocation";
-import { SearchCity } from "@/features/city/types/search-city";
-import { useGeolocationStore } from "@/stores/geolocation-store";
 import { useSelectedCityStore } from "@/features/city/stores/selected-city-store";
+import { loadLastCityName, saveLastCityName } from "@/features/city/utils/last-city-storage";
 import { useCitySearchMenuStore } from "@/stores/ui-store";
+import { useGeolocationStore } from "@/stores/geolocation-store";
+import { CityGeolocation } from "@/types/geolocation";
 
 const CitySearch = React.lazy(() => import("@/features/city/components/city-search"));
-
-const saveCityName = (cityName: string): void =>
-    localStorage.setItem("last-saved-city-name", JSON.stringify(cityName));
-
-const loadLastSavedCityName = (): string | undefined => {
-    const lastSavedCity: string | null = localStorage.getItem("last-saved-city-name");
-    if (!lastSavedCity) return undefined;
-
-    // Runs inside the recovery path below, so it must not throw on a corrupted value.
-    try {
-        return JSON.parse(lastSavedCity);
-    } catch {
-        localStorage.removeItem("last-saved-city-name");
-        return undefined;
-    }
-};
 
 function City() {
     const geolocation: CityGeolocation = useGeolocationStore((state) => state.geolocation);
@@ -36,40 +21,41 @@ function City() {
         setShowCitySearchMenu(!showCitySearch);
     };
 
-    const fetchCityNameByCoords = useCallback(
-        async (lat: number, lon: number): Promise<void> => {
-            if (!lat || !lon) return;
-
-            const requestURL = `${
-                import.meta.env.VITE_BASE_URL
-            }geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=5&appid=${import.meta.env.VITE_API_KEY}`;
-
-            try {
-                const res = await ky.get<SearchCity[]>(requestURL);
-                const data = await res.json();
-
-                // A 200 with an empty array is a valid answer (e.g. coordinates over the ocean).
-                if (!data[0]) throw new Error(`No city found for coordinates ${lat}, ${lon}`);
-
-                saveCityName(data[0].name);
-                setSelectedCity(data[0].name);
-            } catch (error) {
-                console.error("Failed to resolve city name by coordinates: ", error);
-                setSelectedCity(loadLastSavedCityName() ?? "Sorry, something went wrong :(");
-            }
-        },
-        [setSelectedCity]
-    );
-
     useEffect(() => {
-        fetchCityNameByCoords(geolocation.lat, geolocation.lon);
-    }, [geolocation.lat, geolocation.lon, fetchCityNameByCoords]);
+        const { lat, lon } = geolocation;
+
+        if (!lat || !lon) return;
+
+        let cancelled = false;
+
+        getCityNameByCoords({ lat, lon })
+            .then((name) => {
+                if (cancelled) return;
+
+                saveLastCityName(name);
+                setSelectedCity(name);
+            })
+            .catch((error: unknown) => {
+                if (cancelled) return;
+
+                console.error("Failed to resolve city name by coordinates: ", error);
+                setSelectedCity(loadLastCityName() ?? "Sorry, something went wrong :(");
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [geolocation, setSelectedCity]);
 
     return (
         <div className="city">
             <h3 className="city-name">{cityName}</h3>
             <EditCityToggler onClick={focusOnCitySearch} />
-            <CitySearch />
+            {/* Without a boundary here the lazy chunk suspends the WHOLE tree, so the app rendered
+                nothing at all until city-search.js had loaded. */}
+            <Suspense fallback={null}>
+                <CitySearch />
+            </Suspense>
         </div>
     );
 }

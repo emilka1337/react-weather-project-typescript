@@ -1,39 +1,23 @@
 import { useEffect } from "react";
-import ky from "ky";
+
+import { getGeolocationByIp } from "@/lib/ip-geolocation";
 import { useGeolocationStore } from "@/stores/geolocation-store";
 import { CityGeolocation } from "@/types/geolocation";
-import { IPGeolocationSchema } from "@/lib/ip-geolocation";
 
-// Never rejects: the caller runs inside a Geolocation error callback, where a rejected
-// promise would surface as an unhandled rejection with nowhere to catch it.
-const defineGeolocationByUserIP = async (): Promise<CityGeolocation | null> => {
-    try {
-        const res = await ky.get("https://ipapi.co/json/");
-        const parsedData = IPGeolocationSchema.safeParse(await res.json());
-
-        if (!parsedData.success) {
-            console.error("Unexpected IP geolocation response: ", parsedData.error);
-            return null;
-        }
-
-        return { lat: parsedData.data.latitude, lon: parsedData.data.longitude };
-    } catch (error) {
-        console.error("IP geolocation error: ", error);
-        return null;
-    }
-};
-
-// Asks user for geolocation permission and sets it in the Redux store and also returns it.
-// Falls back to IP-based geolocation when the browser cannot or will not provide coordinates.
+// Asks the browser for coordinates and writes them to the shared geolocation store. Falls back to
+// IP-based geolocation when the browser cannot or will not provide them.
+//
+// The store is the seam the whole app hangs off: `city` writes coordinates into it when a city is
+// picked, `weather` reacts to them. The two features never import each other.
 const useGeolocation = (): CityGeolocation => {
     const geolocation: CityGeolocation = useGeolocationStore((state) => state.geolocation);
     const setGeolocation = useGeolocationStore((state) => state.setGeolocation);
 
     useEffect(() => {
-        let cancelled: boolean = false;
+        let cancelled = false;
 
-        const applyGeolocationByUserIP = async (): Promise<void> => {
-            const ipGeolocation: CityGeolocation | null = await defineGeolocationByUserIP();
+        const applyGeolocationByIp = async (): Promise<void> => {
+            const ipGeolocation = await getGeolocationByIp();
 
             if (ipGeolocation && !cancelled) {
                 setGeolocation(ipGeolocation);
@@ -41,7 +25,7 @@ const useGeolocation = (): CityGeolocation => {
         };
 
         if (!navigator.geolocation) {
-            void applyGeolocationByUserIP();
+            void applyGeolocationByIp();
             return;
         }
 
@@ -56,10 +40,10 @@ const useGeolocation = (): CityGeolocation => {
             },
             (error: GeolocationPositionError): void => {
                 console.error("Geolocation API error: ", error);
-                void applyGeolocationByUserIP();
+                void applyGeolocationByIp();
             },
-            // Without a timeout the error callback can never fire on a device that simply
-            // never returns a fix, and the IP fallback below would never run.
+            // Without a timeout the error callback can never fire on a device that simply never
+            // returns a fix, and the IP fallback would never run.
             { enableHighAccuracy: true, timeout: 10_000, maximumAge: 5 * 60 * 1000 }
         );
 
