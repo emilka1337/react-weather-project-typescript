@@ -79,7 +79,9 @@ describe("SettingsMenu", () => {
 
         expect(screen.getByRole("button", { name: "OK" })).toBeInTheDocument();
 
-        act(() => vi.advanceTimersByTime(3000));
+        act(() => {
+            vi.advanceTimersByTime(3000);
+        });
 
         expect(screen.queryByRole("button", { name: "OK" })).not.toBeInTheDocument();
         expect(screen.getAllByRole("button", { name: "Reset" })).toHaveLength(2);

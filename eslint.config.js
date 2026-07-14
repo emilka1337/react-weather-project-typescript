@@ -117,7 +117,8 @@ export default tseslint.config(
                 { "**/*.{ts,tsx}": "KEBAB_CASE" },
                 { ignoreMiddleExtensions: true },
             ],
-            "check-file/folder-naming-convention": ["error", { "src/**/": "KEBAB_CASE" }],
+            // __tests__ is the one conventional exception; everything else is kebab-case.
+            "check-file/folder-naming-convention": ["error", { "src/**/!(__tests__)/": "KEBAB_CASE" }],
 
             "@typescript-eslint/no-unused-vars": [
                 "error",

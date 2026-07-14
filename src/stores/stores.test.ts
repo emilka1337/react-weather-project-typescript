@@ -41,6 +41,28 @@ describe("geolocationStore", () => {
 
         expect(useGeolocationStore.getState().geolocation).toBe(before);
     });
+
+    // Re-setting the SAME coordinates used to store a fresh object, which changed the reference and
+    // re-ran every effect keyed on it. useForecast, re-running while its own request was still in
+    // flight, then fired a second identical request.
+    it("keeps the same object when the coordinates have not actually moved", () => {
+        useGeolocationStore.getState().setGeolocation({ lat: 40.37, lon: 49.89 });
+        const before = useGeolocationStore.getState().geolocation;
+
+        useGeolocationStore.getState().setGeolocation({ lat: 40.37, lon: 49.89 });
+
+        expect(useGeolocationStore.getState().geolocation).toBe(before);
+    });
+
+    it("replaces the object when the coordinates really do move", () => {
+        useGeolocationStore.getState().setGeolocation({ lat: 40.37, lon: 49.89 });
+        const before = useGeolocationStore.getState().geolocation;
+
+        useGeolocationStore.getState().setGeolocation({ lat: 40.68, lon: 46.36 });
+
+        expect(useGeolocationStore.getState().geolocation).not.toBe(before);
+        expect(useGeolocationStore.getState().geolocation).toEqual({ lat: 40.68, lon: 46.36 });
+    });
 });
 
 describe("starredCitiesStore", () => {

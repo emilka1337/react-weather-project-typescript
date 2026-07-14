@@ -7,13 +7,20 @@ interface GeolocationStore {
     setGeolocation: (geolocation: CityGeolocation) => void;
 }
 
-export const useGeolocationStore = create<GeolocationStore>((set) => ({
+export const useGeolocationStore = create<GeolocationStore>((set, get) => ({
     geolocation: { lat: 0, lon: 0 },
 
-    // Guard carried over from the Redux slice: an incomplete fix must not overwrite a good one.
-    setGeolocation: (geolocation: CityGeolocation) => {
-        if (!geolocation.lat || !geolocation.lon) return;
+    setGeolocation: ({ lat, lon }: CityGeolocation) => {
+        // An incomplete fix must not overwrite a good one.
+        if (!lat || !lon) return;
 
-        set({ geolocation });
+        const current = get().geolocation;
+
+        // Same coordinates, same object. Storing a fresh object for an unchanged position changes
+        // the reference, which re-runs every effect keyed on it - and useForecast, re-running while
+        // its own request is still in flight, would fire a second identical request.
+        if (current.lat === lat && current.lon === lon) return;
+
+        set({ geolocation: { lat, lon } });
     },
 }));
