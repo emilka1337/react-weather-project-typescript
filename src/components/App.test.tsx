@@ -1,22 +1,14 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor, act } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import App from "./App";
+import { useSettingsStore } from "@/store/settingsStore";
 import { makeForecast } from "@/testing/fixtures/forecast";
-import { useForecastStore } from "../store/forecastStore";
-import { useGeolocationStore } from "../store/geolocationStore";
-import { useSettingsStore } from "../store/settingsStore";
-import { fetchForecast } from "../api/fetchForecast";
+import { BAKU } from "@/testing/mocks/handlers";
+import { server } from "@/testing/mocks/server";
 
-const BAKU = { latitude: 40.37, longitude: 49.89 };
-
-vi.mock("../api/fetchForecast", () => ({ fetchForecast: vi.fn() }));
-
-// City resolves the city name through ky; keep it off the network.
-vi.mock("ky", () => ({
-    default: {
-        get: vi.fn(async () => ({ json: async () => [{ name: "Baku", country: "AZ" }] })),
-    },
-}));
+const COORDS = { latitude: BAKU.lat, longitude: BAKU.lon } as GeolocationCoordinates;
 
 const mockGeolocation = (coords: GeolocationCoordinates | null): void => {
     vi.stubGlobal("navigator", {
@@ -29,86 +21,96 @@ const mockGeolocation = (coords: GeolocationCoordinates | null): void => {
     });
 };
 
+// Counts the forecast requests that actually leave through ky, rather than counting calls to a
+// mocked module. That is the whole point of using MSW here: the URL, the query string and the
+// response parsing all run for real.
+const countForecastRequests = (): { count: () => number } => {
+    let count = 0;
+
+    server.use(
+        http.get("https://api.openweathermap.org/data/2.5/forecast", () => {
+            count += 1;
+
+            return HttpResponse.json({
+                city: { name: "Baku", country: "AZ", coord: BAKU },
+                cnt: 40,
+                cod: "200",
+                list: makeForecast(),
+            });
+        })
+    );
+
+    return { count: () => count };
+};
+
 describe("App", () => {
     beforeEach(() => {
-        vi.clearAllMocks(); // call counts must not leak between tests
-        localStorage.clear();
-        useForecastStore.setState({ forecast: [] });
-        useGeolocationStore.setState({ geolocation: { lat: 0, lon: 0 } });
         useSettingsStore.setState((state) => ({
             settings: { ...state.settings, darkMode: false, temperatureInF: false },
         }));
-        vi.mocked(fetchForecast).mockResolvedValue({
-            city: { name: "Baku", coord: { lat: BAKU.latitude, lon: BAKU.longitude } },
-            cnt: 40,
-            cod: "200",
-            list: makeForecast(),
-        } as never);
     });
 
-    // City renders the lazy CitySearch with no Suspense boundary above it, so the whole tree
-    // stays suspended until that chunk resolves. Nothing renders synchronously — hence waitFor.
-    it("renders without a Provider and shows the loader until a forecast arrives", async () => {
-        mockGeolocation(null); // browser never answers, so no forecast is ever requested
+    // City renders the lazy CitySearch with no Suspense boundary above it, so the whole tree stays
+    // suspended until that chunk resolves. Nothing renders synchronously — hence waitFor.
+    it("shows the loader and requests no forecast while the browser never answers", async () => {
+        const forecast = countForecastRequests();
+        mockGeolocation(null);
 
         const { container } = render(<App />);
 
         await waitFor(() => expect(container.querySelector(".loading")).not.toBeNull());
-        expect(fetchForecast).not.toHaveBeenCalled();
+        expect(forecast.count()).toBe(0);
     });
 
-    it("drives geolocation -> forecast fetch -> store -> rendered temperature", async () => {
-        mockGeolocation(BAKU as GeolocationCoordinates);
+    it("drives geolocation -> forecast request -> store -> rendered temperature", async () => {
+        const forecast = countForecastRequests();
+        mockGeolocation(COORDS);
 
         const { container } = render(<App />);
-
-        await waitFor(() =>
-            expect(fetchForecast).toHaveBeenCalledWith({ lat: BAKU.latitude, lon: BAKU.longitude })
-        );
 
         // 20 is the first unit's temp in the fixture.
         await waitFor(() =>
-            expect(container.querySelector(".selected-temperature")?.textContent).toContain("20")
+            expect(container.querySelector(".selected-temperature")).toHaveTextContent("20")
         );
-        expect(await screen.findByText("Baku")).toBeDefined();
-        expect(useForecastStore.getState().forecast).toHaveLength(40);
+        expect(await screen.findByText("Baku")).toBeInTheDocument();
+        expect(forecast.count()).toBe(1);
     });
 
     it("serves a second mount from the localStorage cache instead of refetching", async () => {
-        mockGeolocation(BAKU as GeolocationCoordinates);
+        const forecast = countForecastRequests();
+        mockGeolocation(COORDS);
 
         const first = render(<App />);
-        await waitFor(() => expect(fetchForecast).toHaveBeenCalledTimes(1));
+        await waitFor(() => expect(forecast.count()).toBe(1));
         first.unmount();
-
-        useForecastStore.setState({ forecast: [] });
-        useGeolocationStore.setState({ geolocation: { lat: 0, lon: 0 } });
 
         const { container } = render(<App />);
 
         await waitFor(() =>
-            expect(container.querySelector(".selected-temperature")?.textContent).toContain("20")
+            expect(container.querySelector(".selected-temperature")).toHaveTextContent("20")
         );
-        expect(fetchForecast).toHaveBeenCalledTimes(1); // cache hit: no second request
+        expect(forecast.count()).toBe(1); // cache hit: no second request
     });
 
     it("reflects a settings toggle in the rendered output", async () => {
-        mockGeolocation(BAKU as GeolocationCoordinates);
+        countForecastRequests();
+        mockGeolocation(COORDS);
 
         const { container } = render(<App />);
         await waitFor(() =>
-            expect(container.querySelector(".selected-temperature")?.textContent).toContain("20")
+            expect(container.querySelector(".selected-temperature")).toHaveTextContent("20")
         );
 
         act(() => useSettingsStore.getState().toggleTemperatureScale());
 
         // 20 C -> 68 F
         await waitFor(() =>
-            expect(container.querySelector(".selected-temperature")?.textContent).toContain("68")
+            expect(container.querySelector(".selected-temperature")).toHaveTextContent("68")
         );
     });
 
     it("applies dark mode from the settings store to the root class", async () => {
+        countForecastRequests();
         mockGeolocation(null);
 
         const { container } = render(<App />);

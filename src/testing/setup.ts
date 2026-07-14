@@ -1,5 +1,13 @@
-import { afterEach, beforeEach, vi } from "vitest";
+import "@testing-library/jest-dom/vitest";
+
 import { cleanup } from "@testing-library/react";
+import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
+
+import { server } from "@/testing/mocks/server";
+
+// Swaps zustand's create() for the auto-resetting one in __mocks__/zustand.ts, so stores do not
+// carry state from one test into the next.
+vi.mock("zustand");
 
 // Node 25 exposes its own partial `localStorage` global that shadows the jsdom one and has no
 // clear(), so install a plain in-memory Storage instead of trusting whatever the runtime provides.
@@ -31,7 +39,7 @@ const memoryStorage = new MemoryStorage();
 vi.stubGlobal("localStorage", memoryStorage);
 Object.defineProperty(window, "localStorage", { value: memoryStorage, configurable: true });
 
-// jsdom implements neither of these, and settingsStore calls matchMedia at module load.
+// jsdom implements neither of these, and the settings store calls matchMedia at module load.
 vi.stubGlobal(
     "matchMedia",
     vi.fn().mockImplementation((query: string) => ({
@@ -47,10 +55,17 @@ vi.stubGlobal("Notification", {
     requestPermission: vi.fn().mockResolvedValue("denied"),
 });
 
+// "error", not the default "warn": a component that sneaks out a request nobody declared should
+// fail the test. That turns the API boundary itself into an assertion.
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+
 beforeEach(() => {
     localStorage.clear();
 });
 
 afterEach(() => {
     cleanup();
+    server.resetHandlers();
 });
+
+afterAll(() => server.close());
