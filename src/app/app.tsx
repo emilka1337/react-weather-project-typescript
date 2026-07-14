@@ -7,7 +7,7 @@ import SettingsMenu from "@/features/settings/components/settings-menu";
 // Hooks
 import useGeolocation from "@/hooks/use-geolocation";
 import useNotificationPermission from "@/hooks/use-notification-permission";
-import useDesktopNotification from "@/features/weather/hooks/use-tomorrow-forecast-notification";
+import useTomorrowForecastNotification from "@/features/weather/hooks/use-tomorrow-forecast-notification";
 // Stores
 import { useForecastStore } from "@/features/weather/stores/forecast-store";
 import { useSettingsStore } from "@/stores/settings-store";
@@ -60,13 +60,13 @@ function App() {
     const setForecast = useForecastStore((state) => state.setForecast);
     const geolocation: CityGeolocation = useGeolocation(); // Defines user geolocation
     useNotificationPermission();
-    const showNotification = useDesktopNotification();
+    const showNotification = useTomorrowForecastNotification();
 
     useEffect(() => {
         if (forecast.length > 0) {
             showNotification();
         }
-    }, [forecast]);
+    }, [forecast, showNotification]);
 
     const getForecast = useCallback(
         (geolocation: CityGeolocation): void => {
