@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
-import { useSelector } from "react-redux";
-import { ReduxState } from "../../types/State";
+import { useSettingsStore } from "../../store/settingsStore";
+import { useSelectedWeatherStore } from "../../store/selectedWeatherStore";
 
 const icons = {
     wind: (
@@ -31,10 +31,12 @@ const icons = {
 };
 
 function MoreWeatherInfo() {
-    const windSpeed: number = useSelector((state: ReduxState) => state.selectedWeather.selectedWind);
-    const speedUnitInMS: boolean = useSelector((state: ReduxState) => state.settings.speedUnitInMS);
-    const humidity: number = useSelector((state: ReduxState) => state.selectedWeather.selectedHumidity);
-    const sky: string = useSelector((state: ReduxState) => state.selectedWeather.selectedMain);
+    const windSpeed: number = useSelectedWeatherStore((state) => state.selectedWeather.selectedWind);
+    const speedUnitInMS: boolean = useSettingsStore((state) => state.settings.speedUnitInMS);
+    const humidity: number = useSelectedWeatherStore(
+        (state) => state.selectedWeather.selectedHumidity
+    );
+    const sky: string = useSelectedWeatherStore((state) => state.selectedWeather.selectedMain);
 
     const getWindSpeedValue = useCallback(
         (speedUnitInMS: boolean): string => {

@@ -1,13 +1,11 @@
 import React, { useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setSelectedCity } from "../../store/selectedCitySlice";
 import EditCityToggler from "./EditCityToggler";
 import ky from "ky";
 import { CityGeolocation } from "../../types/CityGeolocation";
-import { ReduxState } from "../../types/State";
-import { AppDispatch } from "../../store/store";
 import { SearchCity } from "../../types/SearchCity";
-import { setShowCitySearchMenu } from "../../store/citySearchMenuSlice";
+import { useGeolocationStore } from "../../store/geolocationStore";
+import { useSelectedCityStore } from "../../store/selectedCityStore";
+import { useCitySearchMenuStore } from "../../store/citySearchMenuStore";
 
 const CitySearch = React.lazy(() => import("./CitySearch"));
 
@@ -28,14 +26,14 @@ const loadLastSavedCityName = (): string | undefined => {
 };
 
 function City() {
-    const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
-    const showCitySearch = useSelector((state: ReduxState) => state.showCitySearchMenu);
-    const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
-
-    const dispatch: AppDispatch = useDispatch();
+    const geolocation: CityGeolocation = useGeolocationStore((state) => state.geolocation);
+    const showCitySearch = useCitySearchMenuStore((state) => state.showCitySearchMenu);
+    const setShowCitySearchMenu = useCitySearchMenuStore((state) => state.setShowCitySearchMenu);
+    const cityName: string = useSelectedCityStore((state) => state.selectedCity);
+    const setSelectedCity = useSelectedCityStore((state) => state.setSelectedCity);
 
     const focusOnCitySearch = (): void => {
-        dispatch(setShowCitySearchMenu(!showCitySearch));
+        setShowCitySearchMenu(!showCitySearch);
     };
 
     const fetchCityNameByCoords = useCallback(
@@ -54,13 +52,13 @@ function City() {
                 if (!data[0]) throw new Error(`No city found for coordinates ${lat}, ${lon}`);
 
                 saveCityName(data[0].name);
-                dispatch(setSelectedCity(data[0].name));
+                setSelectedCity(data[0].name);
             } catch (error) {
                 console.error("Failed to resolve city name by coordinates: ", error);
-                dispatch(setSelectedCity(loadLastSavedCityName() ?? "Sorry, something went wrong :("));
+                setSelectedCity(loadLastSavedCityName() ?? "Sorry, something went wrong :(");
             }
         },
-        [dispatch]
+        [setSelectedCity]
     );
 
     useEffect(() => {

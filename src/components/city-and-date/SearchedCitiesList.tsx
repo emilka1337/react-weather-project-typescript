@@ -1,34 +1,39 @@
 import React, { useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setSelectedCity } from "../../store/selectedCitySlice";
-import { setGeolocation } from "../../store/geolocationSlice";
-import { addCityToStarredCities } from "../../store/starredCitiesSlice";
-import { AppDispatch } from "../../store/store";
 import { SearchCity } from "../../types/SearchCity";
-import { ReduxState } from "../../types/State";
+import { useSelectedCityStore } from "../../store/selectedCityStore";
+import { useGeolocationStore } from "../../store/geolocationStore";
+import { useStarredCitiesStore } from "../../store/starredCitiesStore";
 
 interface SearchedCitiesListProps {
     readonly citiesList: SearchCity[];
 }
 
 function SearchedCitiesList({ citiesList }: SearchedCitiesListProps) {
-    const dispatch: AppDispatch = useDispatch();
-    const StarredCitiesList: SearchCity[] = useSelector((state: ReduxState) => state.starredCities);
+    const setSelectedCity = useSelectedCityStore((state) => state.setSelectedCity);
+    const setGeolocation = useGeolocationStore((state) => state.setGeolocation);
+    const starredCities: SearchCity[] = useStarredCitiesStore((state) => state.starredCities);
+    const addCityToStarredCities = useStarredCitiesStore((state) => state.addCityToStarredCities);
 
-    const handleCityClick = useCallback((city: SearchCity): void => {
-        dispatch(setSelectedCity(city.name));
-        dispatch(setGeolocation({ lat: city.lat, lon: city.lon }));
-    }, []);
+    const handleCityClick = useCallback(
+        (city: SearchCity): void => {
+            setSelectedCity(city.name);
+            setGeolocation({ lat: city.lat, lon: city.lon });
+        },
+        [setSelectedCity, setGeolocation]
+    );
 
-    const addToFavorites = useCallback((city: SearchCity) => {
-        const cityAlreadyStarred: boolean = StarredCitiesList.some(
-            (starredCity: SearchCity) => city.name === starredCity.name
-        );
+    const addToFavorites = useCallback(
+        (city: SearchCity) => {
+            const cityAlreadyStarred: boolean = starredCities.some(
+                (starredCity: SearchCity) => city.name === starredCity.name
+            );
 
-        if (!cityAlreadyStarred) {
-            dispatch(addCityToStarredCities(city));
-        }
-    }, []);
+            if (!cityAlreadyStarred) {
+                addCityToStarredCities(city);
+            }
+        },
+        [starredCities, addCityToStarredCities]
+    );
 
     return (
         <ul className="cities-list">

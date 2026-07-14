@@ -1,9 +1,7 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import ky from "ky";
-import { setGeolocation } from "../store/geolocationSlice";
+import { useGeolocationStore } from "../store/geolocationStore";
 import { CityGeolocation } from "../types/CityGeolocation";
-import { ReduxState } from "../types/State";
 import { IPGeolocationSchema } from "../entities/IPGeolocationResponse";
 
 // Never rejects: the caller runs inside a Geolocation error callback, where a rejected
@@ -28,8 +26,8 @@ const defineGeolocationByUserIP = async (): Promise<CityGeolocation | null> => {
 // Asks user for geolocation permission and sets it in the Redux store and also returns it.
 // Falls back to IP-based geolocation when the browser cannot or will not provide coordinates.
 const useGeolocation = (): CityGeolocation => {
-    const geolocation: CityGeolocation = useSelector((state: ReduxState) => state.geolocation);
-    const dispatch = useDispatch();
+    const geolocation: CityGeolocation = useGeolocationStore((state) => state.geolocation);
+    const setGeolocation = useGeolocationStore((state) => state.setGeolocation);
 
     useEffect(() => {
         let cancelled: boolean = false;
@@ -38,7 +36,7 @@ const useGeolocation = (): CityGeolocation => {
             const ipGeolocation: CityGeolocation | null = await defineGeolocationByUserIP();
 
             if (ipGeolocation && !cancelled) {
-                dispatch(setGeolocation(ipGeolocation));
+                setGeolocation(ipGeolocation);
             }
         };
 
@@ -51,12 +49,10 @@ const useGeolocation = (): CityGeolocation => {
             (position: GeolocationPosition): void => {
                 if (cancelled) return;
 
-                dispatch(
-                    setGeolocation({
-                        lat: position.coords.latitude,
-                        lon: position.coords.longitude,
-                    })
-                );
+                setGeolocation({
+                    lat: position.coords.latitude,
+                    lon: position.coords.longitude,
+                });
             },
             (error: GeolocationPositionError): void => {
                 console.error("Geolocation API error: ", error);
@@ -70,7 +66,7 @@ const useGeolocation = (): CityGeolocation => {
         return () => {
             cancelled = true;
         };
-    }, [dispatch]);
+    }, [setGeolocation]);
 
     return geolocation;
 };

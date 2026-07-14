@@ -1,5 +1,4 @@
 import { useCallback, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 // Components
 import Topbar from "./city-and-date/Topbar";
 import DailyForecast from "./forecast/DailyForecast";
@@ -9,15 +8,13 @@ import SettingsMenu from "./settings/SettingsMenu";
 import useGeolocation from "../hooks/useGeolocation";
 import useNotificationPermission from "../hooks/useNotificationPermission";
 import useDesktopNotification from "../hooks/useDesktopNotification";
-// Redux Toolkit
-import { setForecast } from "../store/forecastSlice";
-import { fetchForecast } from "../store/forecastThunk";
-import { AppDispatch } from "../store/store";
+// Stores
+import { useForecastStore } from "../store/forecastStore";
+import { useSettingsStore } from "../store/settingsStore";
+import { fetchForecast } from "../api/fetchForecast";
 // Types
 import { ForecastData } from "../types/ForecastData";
 import { CityGeolocation } from "../types/CityGeolocation";
-import { ReduxState } from "../types/State";
-import { ForecastUnit } from "../types/ForecastUnit";
 
 const FORECAST_TTL_MS: number = 300 * 1000;
 
@@ -57,10 +54,10 @@ function isSavedForecastDataUsable(
 }
 
 function App() {
-    const dispatch: AppDispatch = useDispatch();
-    const showSettings: boolean = useSelector((state: ReduxState) => state.settings.showSettings);
-    const darkMode: boolean = useSelector((state: ReduxState) => state.settings.darkMode);
-    const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
+    const showSettings: boolean = useSettingsStore((state) => state.settings.showSettings);
+    const darkMode: boolean = useSettingsStore((state) => state.settings.darkMode);
+    const forecast = useForecastStore((state) => state.forecast);
+    const setForecast = useForecastStore((state) => state.setForecast);
     const geolocation: CityGeolocation = useGeolocation(); // Defines user geolocation
     useNotificationPermission();
     const showNotification = useDesktopNotification();
@@ -78,21 +75,20 @@ function App() {
             const savedForecastData: ForecastData | null = getSavedForecastData();
 
             if (isSavedForecastDataUsable(savedForecastData, geolocation)) {
-                dispatch(setForecast(savedForecastData.list));
+                setForecast(savedForecastData.list);
                 return;
             }
 
-            dispatch(fetchForecast(geolocation))
-                .unwrap()
+            fetchForecast(geolocation)
                 .then((forecastData: ForecastData) => {
                     saveForecastData(forecastData, geolocation);
-                    dispatch(setForecast(forecastData.list));
+                    setForecast(forecastData.list);
                 })
                 .catch((error) => {
                     console.error("Failed to fetch forecast: ", error);
                 });
         },
-        [dispatch]
+        [setForecast]
     );
 
     // Fetching forecast after defining user geolocation

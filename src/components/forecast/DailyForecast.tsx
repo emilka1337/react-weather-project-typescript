@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ForecastDay from "./ForecastDay";
 import ForecastModeTogglePanel from "./ForecastModeTogglePanel";
-import { useSelector } from "react-redux";
 import { ForecastUnit } from "../../types/ForecastUnit";
-import { ReduxState } from "../../types/State";
+import { useForecastStore } from "../../store/forecastStore";
 
 function extractWeekDayFromTimestamp(ts: number): number {
     return new Date(ts * 1000).getDay();
@@ -45,7 +44,7 @@ export function separateListByWeekdays(list: ForecastUnit[]): Array<Array<Foreca
 function DailyForecast() {
     const [separatedForecastList, setseparatedForecastList] = useState<ReadonlyArray<ReadonlyArray<ForecastUnit>>>([]);
 
-    const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
+    const forecast: ForecastUnit[] = useForecastStore((state) => state.forecast);
 
     useEffect(() => {
         if (forecast.length > 0) {

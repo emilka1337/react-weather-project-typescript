@@ -1,12 +1,12 @@
 import React, { useCallback } from "react";
-import { useSelector } from "react-redux";
-import { ReduxState } from "../../types/State";
+import { useSettingsStore } from "../../store/settingsStore";
+import { useSelectedWeatherStore } from "../../store/selectedWeatherStore";
 
 function FeelsLikeField() {
-    const selectedFeelsLike: number = useSelector(
-        (state: ReduxState) => state.selectedWeather.selectedFeelsLike
+    const selectedFeelsLike: number = useSelectedWeatherStore(
+        (state) => state.selectedWeather.selectedFeelsLike
     );
-    const temperatureInF: boolean = useSelector((state: ReduxState) => state.settings.temperatureInF);
+    const temperatureInF: boolean = useSettingsStore((state) => state.settings.temperatureInF);
 
     const getFeelsLikeValue = useCallback((temperatureInF: boolean): string | undefined => {
         if (temperatureInF === false) {
@@ -16,7 +16,7 @@ function FeelsLikeField() {
         } else {
             return "0";
         }
-    }, [])
+    }, [selectedFeelsLike])
 
     return (
         <p className="feels-like">
