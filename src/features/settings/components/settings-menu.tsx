@@ -2,14 +2,13 @@ import React, { useCallback, useState } from "react";
 import { Settings } from "@/types/settings";
 import { useSettingsStore } from "@/stores/settings-store";
 
-interface SettingsMenuProps {
-    readonly showSettings: boolean;
-}
-
-function SettingsMenu({ showSettings }: SettingsMenuProps) {
+function SettingsMenu() {
     const [settingsResetted, setSettingsResetted] = useState<boolean>(false);
 
     const settings: Settings = useSettingsStore((state) => state.settings);
+    // Read from the store, not passed down: app.tsx had to subscribe to a settings primitive just
+    // to hand it to a component that already reads the settings store.
+    const showSettings: boolean = useSettingsStore((state) => state.settings.showSettings);
 
     const toggleDarkMode = useSettingsStore((state) => state.toggleDarkMode);
     const toggleLoadingAnimation = useSettingsStore((state) => state.toggleLoadingAnimation);

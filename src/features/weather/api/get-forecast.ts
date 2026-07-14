@@ -1,17 +1,11 @@
-import ky from "ky";
-
-import { CityGeolocation } from "@/types/geolocation";
 import { ForecastData } from "@/features/weather/types/forecast-data";
+import { openWeatherApi } from "@/lib/api-client";
+import { CityGeolocation } from "@/types/geolocation";
 
-// Was a createAsyncThunk. Zustand has no thunk concept and needs none: the request touches
-// no store state, so it is a plain async function and the caller awaits it.
-export async function fetchForecast({ lat, lon }: CityGeolocation): Promise<ForecastData> {
-    const forecastURL = `${import.meta.env.VITE_BASE_URL
-        }data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${import.meta.env.VITE_API_KEY
-        }&units=metric`;
-
-    // Errors propagate to the caller's catch with the real HTTP status.
-    const res = await ky.get<ForecastData>(forecastURL);
-
-    return res.json();
+// Errors propagate: the caller wants the real HTTP status, not a stub.
+// searchParams must be a plain object — see the note in lib/api-client.ts about the appid merge.
+export function getForecast({ lat, lon }: CityGeolocation): Promise<ForecastData> {
+    return openWeatherApi
+        .get("data/2.5/forecast", { searchParams: { lat, lon, units: "metric" } })
+        .json<ForecastData>();
 }
