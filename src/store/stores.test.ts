@@ -5,7 +5,7 @@ import { useForecastModeStore } from "./forecastModeStore";
 import { useSelectedWeatherStore } from "./selectedWeatherStore";
 import { ForecastModes } from "../enums/ForecastMode";
 import { SearchCity } from "../types/SearchCity";
-import { makeForecastUnit } from "../test/forecastFixture";
+import { makeForecastUnit } from "@/testing/fixtures/forecast";
 
 const city = (name: string, lat: number, lon: number): SearchCity =>
     ({ name, country: "AZ", lat, lon, local_names: {} }) as SearchCity;

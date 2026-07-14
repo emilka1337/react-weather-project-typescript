@@ -1,4 +1,4 @@
-import { ForecastUnit } from "../types/ForecastUnit";
+import { ForecastUnit } from "@/types/ForecastUnit";
 
 // OpenWeather always returns 40 units (5 days x 3h). separateListByWeekdays loops until it has
 // counted 40 of them, so a shorter fixture would spin forever — keep this at 40.

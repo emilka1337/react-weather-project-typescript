@@ -15,6 +15,13 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Path alias — must stay in sync with resolve.alias in vite.config.ts.
+       No baseUrl: it is deprecated, and under moduleResolution "bundler" the paths
+       are resolved relative to this file already. */
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,

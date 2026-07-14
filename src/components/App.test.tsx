@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor, act } from "@testing-library/react";
 import App from "./App";
-import { makeForecast } from "../test/forecastFixture";
+import { makeForecast } from "@/testing/fixtures/forecast";
 import { useForecastStore } from "../store/forecastStore";
 import { useGeolocationStore } from "../store/geolocationStore";
 import { useSettingsStore } from "../store/settingsStore";
