@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from "react";
-import { Settings } from "@/types/settings";
+
 import { useSettingsStore } from "@/stores/settings-store";
 import { useUiStore } from "@/stores/ui-store";
+import { Settings } from "@/types/settings";
 
 function SettingsMenu() {
     const [settingsResetted, setSettingsResetted] = useState<boolean>(false);

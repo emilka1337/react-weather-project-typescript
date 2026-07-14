@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+
 import ForecastCell from "@/features/weather/components/forecast-cell";
 import { ForecastUnit } from "@/features/weather/types/forecast-unit";
 

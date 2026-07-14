@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import { Settings } from "@/types/settings";
 
 const STORAGE_KEY = "weather-app-settings";

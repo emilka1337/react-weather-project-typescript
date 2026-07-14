@@ -1,8 +1,9 @@
 import React, { useCallback } from "react";
-import { SearchCity } from "@/features/city/types/search-city";
+
 import { useSelectedCityStore } from "@/features/city/stores/selected-city-store";
-import { useGeolocationStore } from "@/stores/geolocation-store";
 import { useStarredCitiesStore } from "@/features/city/stores/starred-cities-store";
+import { SearchCity } from "@/features/city/types/search-city";
+import { useGeolocationStore } from "@/stores/geolocation-store";
 
 function StarredCitiesList() {
     const starredCities: SearchCity[] = useStarredCitiesStore((state) => state.starredCities);

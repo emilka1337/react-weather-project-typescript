@@ -1,4 +1,5 @@
 import { create } from "zustand";
+
 import { ForecastModes } from "@/features/weather/types/forecast-mode";
 
 interface ForecastModeStore {

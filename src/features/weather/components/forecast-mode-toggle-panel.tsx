@@ -1,5 +1,5 @@
-import { ForecastModes } from "@/features/weather/types/forecast-mode";
 import { useForecastModeStore } from "@/features/weather/stores/forecast-mode-store";
+import { ForecastModes } from "@/features/weather/types/forecast-mode";
 
 function ForecastModeTogglePanel() {
     const forecastMode: ForecastModes = useForecastModeStore((state) => state.forecastMode);

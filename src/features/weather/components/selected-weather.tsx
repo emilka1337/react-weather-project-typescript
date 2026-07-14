@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
+
 import Loading from "@/components/ui/spinner/spinner";
-import SelectedTemperature from "@/features/weather/components/selected-temperature";
 import FeelsLikeField from "@/features/weather/components/feels-like-field";
 import MoreWeatherInfo from "@/features/weather/components/more-weather-info";
-import { ForecastUnit } from "@/features/weather/types/forecast-unit";
+import SelectedTemperature from "@/features/weather/components/selected-temperature";
 import { useForecastStore } from "@/features/weather/stores/forecast-store";
-import { useSettingsStore } from "@/stores/settings-store";
 import { useSelectedWeatherStore } from "@/features/weather/stores/selected-weather-store";
+import { ForecastUnit } from "@/features/weather/types/forecast-unit";
+import { useSettingsStore } from "@/stores/settings-store";
 
 function SelectedWeather() {
     const showFeelsLikeField: boolean = useSettingsStore(

@@ -1,10 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { useGeolocationStore } from "@/stores/geolocation-store";
+
 import { useStarredCitiesStore } from "@/features/city/stores/starred-cities-store";
+import { SearchCity } from "@/features/city/types/search-city";
 import { useForecastModeStore } from "@/features/weather/stores/forecast-mode-store";
 import { useSelectedWeatherStore } from "@/features/weather/stores/selected-weather-store";
 import { ForecastModes } from "@/features/weather/types/forecast-mode";
-import { SearchCity } from "@/features/city/types/search-city";
+import { useGeolocationStore } from "@/stores/geolocation-store";
 import { makeForecastUnit } from "@/testing/fixtures/forecast";
 
 const city = (name: string, lat: number, lon: number): SearchCity =>
