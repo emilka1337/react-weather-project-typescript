@@ -1,70 +1,28 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useState } from "react";
+
 import Greeting from "@/features/clock/components/greeting";
-import { Time } from "@/types/time";
 import { useSettingsStore } from "@/stores/settings-store";
-
-function getCurrentTime(): Time<number> {
-    const date: Date = new Date();
-    return {
-        hours: date.getHours(),
-        minutes: date.getMinutes(),
-        seconds: date.getSeconds(),
-    };
-}
-
-function formatTime(time: Time<number>, showSeconds: boolean): string | never {
-    const hours: number = time.hours;
-    const minutes: number = time.minutes;
-    const seconds: number | undefined = time.seconds;
-
-    const result: Time<number | string> = {
-        hours: time.hours,
-        minutes: time.minutes,
-        seconds: time.seconds
-    }
-
-    if (hours === null || hours === undefined) {
-        throw new Error("No hours provided to formatTime function");
-    }
-    if (minutes === null || minutes === undefined) {
-        throw new Error("No hours minutes to formatTime function");
-    }
-
-    if (hours && +hours < 10) {
-        result.hours = "0" + hours;
-    }
-    if (minutes && +minutes < 10) {
-        result.minutes = "0" + minutes;
-    }
-    if (seconds && +seconds < 10) {
-        result.seconds = "0" + seconds;
-    }
-
-    if (showSeconds) {
-        return `${result.hours}:${result.minutes}:${result.seconds}`;
-    } else {
-        return `${result.hours}:${result.minutes}`;
-    }
-}
+import { formatTime, getCurrentTime } from "@/utils/format-time";
 
 function Clocks() {
-    const [currentTime, setCurrentTime] = useState<string | null>();
+    const [currentTime, setCurrentTime] = useState<string>("");
 
     const showSecondsInClocks: boolean = useSettingsStore(
         (state) => state.settings.showSecondsInClocks
     );
 
     useEffect(() => {
-        setTime();
-        const timeInterval = setInterval(setTime, 1000);
+        // Defined inside the effect so it closes over the CURRENT setting. It used to be a
+        // useCallback with an empty dependency array, so the interval called the very first
+        // render's closure forever and toggling "show seconds in clocks" did nothing at all
+        // until the page was reloaded.
+        const tick = (): void => setCurrentTime(formatTime(getCurrentTime(), showSecondsInClocks));
+
+        tick();
+        const timeInterval = setInterval(tick, 1000);
+
         return () => clearInterval(timeInterval);
     }, [showSecondsInClocks]);
-
-    const setTime = useCallback(() => {
-        const time: Time<number> = getCurrentTime();
-        const timeFormatted = formatTime(time, showSecondsInClocks);
-        setCurrentTime(timeFormatted);
-    }, [])
 
     return (
         <div className="clocks">
