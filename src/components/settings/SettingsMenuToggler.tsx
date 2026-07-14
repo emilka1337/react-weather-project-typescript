@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleSettings } from "../../store/settingsSlice";
-import { ReduxState } from "../../types/State";
-import { setShowCitySearchMenu } from "../../store/citySearchMenuSlice";
+import { useSettingsStore } from "../../store/settingsStore";
+import { useCitySearchMenuStore } from "../../store/citySearchMenuStore";
 
 function SettingsMenuToggler() {
-    const showSettings: boolean = useSelector((state: ReduxState) => state.settings.showSettings);
+    const showSettings: boolean = useSettingsStore((state) => state.settings.showSettings);
+    const toggleSettings = useSettingsStore((state) => state.toggleSettings);
+    const setShowCitySearchMenu = useCitySearchMenuStore((state) => state.setShowCitySearchMenu);
     const [icon, setIcon] = useState<JSX.Element>();
-
-    const dispatch = useDispatch();
 
     useEffect(() => {
         if (showSettings == true) {
@@ -38,8 +36,8 @@ function SettingsMenuToggler() {
     }, [showSettings]);
 
     function handleClick() {
-        dispatch(setShowCitySearchMenu(false));
-        dispatch(toggleSettings());
+        setShowCitySearchMenu(false);
+        toggleSettings();
     }
 
     return (

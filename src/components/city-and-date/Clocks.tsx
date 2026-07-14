@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useSelector } from "react-redux";
 import Greeting from "./Greeting";
 import { Time } from "../../types/Time";
-import { ReduxState } from "../../types/State";
+import { useSettingsStore } from "../../store/settingsStore";
 
 function getCurrentTime(): Time<number> {
     const date: Date = new Date();
@@ -51,8 +50,8 @@ function formatTime(time: Time<number>, showSeconds: boolean): string | never {
 function Clocks() {
     const [currentTime, setCurrentTime] = useState<string | null>();
 
-    const showSecondsInClocks: boolean = useSelector(
-        (state: ReduxState) => state.settings.showSecondsInClocks
+    const showSecondsInClocks: boolean = useSettingsStore(
+        (state) => state.settings.showSecondsInClocks
     );
 
     useEffect(() => {

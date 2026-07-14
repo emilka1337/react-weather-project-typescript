@@ -1,15 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
-import { setForecastMode } from "../../store/forecastModeSlice";
 import { ForecastModes } from "../../enums/ForecastMode";
-import { ReduxState } from "../../types/State";
-import { AppDispatch } from "../../store/store";
+import { useForecastModeStore } from "../../store/forecastModeStore";
 
 function ForecastModeTogglePanel() {
-    const forecastMode: ForecastModes = useSelector((state: ReduxState) => state.forecastMode);
-    const dispatch: AppDispatch = useDispatch();
+    const forecastMode: ForecastModes = useForecastModeStore((state) => state.forecastMode);
+    const setForecastMode = useForecastModeStore((state) => state.setForecastMode);
 
     const handleForecastModeChange = (mode: ForecastModes): void => {
-        dispatch(setForecastMode(mode));
+        setForecastMode(mode);
     };
 
     return (

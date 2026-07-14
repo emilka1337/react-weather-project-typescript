@@ -1,8 +1,7 @@
-import { useSelector } from "react-redux";
-import { ReduxState } from "../../types/State";
+import { useSettingsStore } from "../../store/settingsStore";
 
 function Loading() {
-    const loadingAnimation = useSelector((state: ReduxState) => state.settings.loadingAnimation);
+    const loadingAnimation = useSettingsStore((state) => state.settings.loadingAnimation);
 
     return (
         <div className="loading">

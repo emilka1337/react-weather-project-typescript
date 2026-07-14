@@ -1,10 +1,12 @@
 import React, { useCallback } from "react";
-import { useSelector } from "react-redux";
-import { ReduxState } from "../../types/State";
+import { useSettingsStore } from "../../store/settingsStore";
+import { useSelectedWeatherStore } from "../../store/selectedWeatherStore";
 
 function SelectedTemperature() {
-    const temperature: number = useSelector((state: ReduxState) => state.selectedWeather.selectedTemperature);
-    const temperatureInF: boolean = useSelector((state: ReduxState) => state.settings.temperatureInF);
+    const temperature: number = useSelectedWeatherStore(
+        (state) => state.selectedWeather.selectedTemperature
+    );
+    const temperatureInF: boolean = useSettingsStore((state) => state.settings.temperatureInF);
 
     const getSelectedTemperatureValue = useCallback(
         (temperatureInF: boolean): string | undefined => {

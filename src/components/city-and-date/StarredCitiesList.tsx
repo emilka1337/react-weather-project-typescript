@@ -1,24 +1,31 @@
 import React, { useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setSelectedCity } from "../../store/selectedCitySlice";
-import { setGeolocation } from "../../store/geolocationSlice";
-import { removeCityFromStarredCities } from "../../store/starredCitiesSlice";
-import { ReduxState } from "../../types/State";
-import { AppDispatch } from "../../store/store";
 import { SearchCity } from "../../types/SearchCity";
+import { useSelectedCityStore } from "../../store/selectedCityStore";
+import { useGeolocationStore } from "../../store/geolocationStore";
+import { useStarredCitiesStore } from "../../store/starredCitiesStore";
 
 function StarredCitiesList() {
-    const starredCities: SearchCity[] = useSelector((state: ReduxState) => state.starredCities);
-    const dispatch: AppDispatch = useDispatch();
+    const starredCities: SearchCity[] = useStarredCitiesStore((state) => state.starredCities);
+    const removeCityFromStarredCities = useStarredCitiesStore(
+        (state) => state.removeCityFromStarredCities
+    );
+    const setSelectedCity = useSelectedCityStore((state) => state.setSelectedCity);
+    const setGeolocation = useGeolocationStore((state) => state.setGeolocation);
 
-    const handleCityClick = useCallback((city: SearchCity): void => {
-        dispatch(setSelectedCity(city.name));
-        dispatch(setGeolocation({ lat: city.lat, lon: city.lon }));
-    }, [])
+    const handleCityClick = useCallback(
+        (city: SearchCity): void => {
+            setSelectedCity(city.name);
+            setGeolocation({ lat: city.lat, lon: city.lon });
+        },
+        [setSelectedCity, setGeolocation]
+    );
 
-    const removeFromFavorites = useCallback((index: number): void => {
-        dispatch(removeCityFromStarredCities(index));
-    }, [])
+    const removeFromFavorites = useCallback(
+        (index: number): void => {
+            removeCityFromStarredCities(index);
+        },
+        [removeCityFromStarredCities]
+    );
 
     return (
         <ul className="cities-list starred-cities-list">

@@ -1,12 +1,10 @@
 import React, { Suspense, useCallback, useMemo, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setSelectedWeather } from "../../store/selectedWeatherSlice";
 import TemperatureContainer from "./TemperatureContainer";
 import { ForecastUnit } from "../../types/ForecastUnit";
 import { Time } from "../../types/Time";
 import { ForecastModes } from "../../enums/ForecastMode";
-import { ReduxState } from "../../types/State";
-import { AppDispatch } from "../../store/store";
+import { useForecastModeStore } from "../../store/forecastModeStore";
+import { useSelectedWeatherStore } from "../../store/selectedWeatherStore";
 
 const WindContainer = React.lazy(() => import("./WindContainer"));
 const HumidityContainer = React.lazy(() => import("./HumidityContainer"));
@@ -37,9 +35,9 @@ function formatTime(time: Time<number>): string {
 }
 
 function ForecastCell({ cellForecast, timestamp, isDefaultActive }: ForecastCellProps) {
-    const forecastMode: ForecastModes = useSelector((state: ReduxState) => state.forecastMode);
+    const forecastMode: ForecastModes = useForecastModeStore((state) => state.forecastMode);
+    const setSelectedWeather = useSelectedWeatherStore((state) => state.setSelectedWeather);
 
-    const dispatch: AppDispatch = useDispatch();
     const activeIndicator = useRef<HTMLDivElement | null>(null);
 
     const date: Date = useMemo<Date>(() => new Date(timestamp * 1000), [timestamp]);
@@ -54,8 +52,8 @@ function ForecastCell({ cellForecast, timestamp, isDefaultActive }: ForecastCell
         if (activeIndicator.current) {
             activeIndicator.current.classList.add("show");
         }
-        dispatch(setSelectedWeather(cellForecast));
-    }, [])
+        setSelectedWeather(cellForecast);
+    }, [setSelectedWeather, cellForecast])
 
     return (
         <div className="forecast-cell" onClick={clickHandler}>

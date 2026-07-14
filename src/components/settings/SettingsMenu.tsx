@@ -1,18 +1,6 @@
 import React, { useCallback, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-    toggleDarkMode,
-    toggleFeelsLikeField,
-    toggleSecondsInClocks,
-    toggleSpeedUnit,
-    toggleTemperatureScale,
-    toggleNotifications,
-    resetSettings,
-    toggleLoadingAnimation,
-} from "../../store/settingsSlice";
 import { Settings } from "../../types/Settings";
-import { ReduxState } from "../../types/State";
-import { AppDispatch } from "../../store/store";
+import { useSettingsStore } from "../../store/settingsStore";
 
 interface SettingsMenuProps {
     readonly showSettings: boolean;
@@ -21,43 +9,23 @@ interface SettingsMenuProps {
 function SettingsMenu({ showSettings }: SettingsMenuProps) {
     const [settingsResetted, setSettingsResetted] = useState<boolean>(false);
 
-    const dispatch: AppDispatch = useDispatch();
-    const settings: Settings = useSelector((state: ReduxState) => state.settings);
+    const settings: Settings = useSettingsStore((state) => state.settings);
+
+    const toggleDarkMode = useSettingsStore((state) => state.toggleDarkMode);
+    const toggleLoadingAnimation = useSettingsStore((state) => state.toggleLoadingAnimation);
+    const toggleFeelsLikeField = useSettingsStore((state) => state.toggleFeelsLikeField);
+    const toggleTemperatureScale = useSettingsStore((state) => state.toggleTemperatureScale);
+    const toggleSpeedUnit = useSettingsStore((state) => state.toggleSpeedUnit);
+    const toggleSecondsInClocks = useSettingsStore((state) => state.toggleSecondsInClocks);
+    const toggleNotifications = useSettingsStore((state) => state.toggleNotifications);
+    const resetSettings = useSettingsStore((state) => state.resetSettings);
 
     //#region Settings click event listeners
-    const darkModeSettingClick = useCallback((): void => {
-        dispatch(toggleDarkMode());
-    }, []);
-
-    const loadingAnimationSettingClick = useCallback((): void => {
-        dispatch(toggleLoadingAnimation());
-    }, []);
-
-    const feelsLikeSettingClick = useCallback((): void => {
-        dispatch(toggleFeelsLikeField());
-    }, []);
-
-    const temperatureScaleSettingClick = useCallback((): void => {
-        dispatch(toggleTemperatureScale());
-    }, []);
-
-    const speedUnitSettingClick = useCallback((): void => {
-        dispatch(toggleSpeedUnit());
-    }, []);
-
-    const showSecondsInClocksClick = useCallback((): void => {
-        dispatch(toggleSecondsInClocks());
-    }, []);
-
-    const showNotificationsClick = useCallback((): void => {
-        dispatch(toggleNotifications());
-    }, []);
-
     const resetSettingsClick = useCallback((): void => {
-        dispatch(resetSettings());
+        resetSettings();
         setSettingsResetted(true);
         setTimeout(() => setSettingsResetted(false), 3000);
-    }, []);
+    }, [resetSettings]);
 
     const resetAppClick = useCallback((): void => {
         localStorage.clear();
@@ -68,43 +36,43 @@ function SettingsMenu({ showSettings }: SettingsMenuProps) {
     return (
         <div className={showSettings ? "settings-menu show" : "settings-menu"}>
             <ul>
-                <li onClick={darkModeSettingClick}>
+                <li onClick={toggleDarkMode}>
                     <h5>Dark mode</h5>
                     <button className={settings.darkMode ? "toggler toggled" : "toggler"}>
                         <div className="circle"></div>
                     </button>
                 </li>
-                <li onClick={loadingAnimationSettingClick}>
+                <li onClick={toggleLoadingAnimation}>
                     <h5>Loading animation</h5>
                     <button className={settings.loadingAnimation ? "toggler toggled" : "toggler"}>
                         <div className="circle"></div>
                     </button>
                 </li>
-                <li onClick={feelsLikeSettingClick}>
+                <li onClick={toggleFeelsLikeField}>
                     <h5>&quot;Feels like&quot; field</h5>
                     <button className={settings.showFeelsLikeField ? "toggler toggled" : "toggler"}>
                         <div className="circle"></div>
                     </button>
                 </li>
-                <li onClick={temperatureScaleSettingClick}>
+                <li onClick={toggleTemperatureScale}>
                     <h5>Temperature in F°</h5>
                     <button className={settings.temperatureInF == true ? "toggler toggled" : "toggler"}>
                         <div className="circle"></div>
                     </button>
                 </li>
-                <li onClick={speedUnitSettingClick}>
+                <li onClick={toggleSpeedUnit}>
                     <h5>Wind speed in m/s</h5>
                     <button className={settings.speedUnitInMS == true ? "toggler toggled" : "toggler"}>
                         <div className="circle"></div>
                     </button>
                 </li>
-                <li onClick={showSecondsInClocksClick}>
+                <li onClick={toggleSecondsInClocks}>
                     <h5>Show seconds in clocks</h5>
                     <button className={settings.showSecondsInClocks ? "toggler toggled" : "toggler"}>
                         <div className="circle"></div>
                     </button>
                 </li>
-                <li onClick={showNotificationsClick}>
+                <li onClick={toggleNotifications}>
                     <h5>Show notifications</h5>
                     <button className={settings.showNotifications ? "toggler toggled" : "toggler"}>
                         <div className="circle"></div>

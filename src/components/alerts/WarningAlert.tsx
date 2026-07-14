@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { Alert } from "../../types/Alert";
-import { ReduxState } from "../../types/State";
+import { useAlertsStore } from "../../store/alertsStore";
 
 function WarningAlert() {
     const [showAlert, setShowAlert] = useState<boolean>(false);
 
-    const warnings: Alert[] = useSelector((state: ReduxState) => state.alerts.warnings);
+    const warnings: Alert[] = useAlertsStore((state) => state.warnings);
 
     const hideAlert = (): void => setShowAlert(false);
 

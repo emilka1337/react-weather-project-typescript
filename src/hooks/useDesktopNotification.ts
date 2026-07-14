@@ -1,7 +1,7 @@
-import { useSelector } from "react-redux";
 import { CommonForecastByDay } from "../types/CommonForecastByDay";
 import { ForecastUnit } from "../types/ForecastUnit";
-import { ReduxState } from "../types/State";
+import { useForecastStore } from "../store/forecastStore";
+import { useSettingsStore } from "../store/settingsStore";
 import { separateListByWeekdays } from "../components/forecast/DailyForecast";
 
 function getCommonForecastByDay(forecastDay: readonly ForecastUnit[]): CommonForecastByDay | undefined {
@@ -30,9 +30,9 @@ type useDesktopNotificationType = () => void;
 
 export default function useDesktopNotification(): useDesktopNotificationType {
     // const [notificationShowed, setNotificationShowed] = useState<boolean>(false);
-    const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
+    const forecast: ForecastUnit[] = useForecastStore((state) => state.forecast);
     const tomorrowForecast: CommonForecastByDay | undefined = getCommonForecastByDay(separateListByWeekdays(forecast)[1]) || undefined;
-    const notificationPermission: boolean = useSelector((state: ReduxState) => state.settings.showNotifications);
+    const notificationPermission: boolean = useSettingsStore((state) => state.settings.showNotifications);
 
     const showTomorrowForecastNotification = () => {
         if (

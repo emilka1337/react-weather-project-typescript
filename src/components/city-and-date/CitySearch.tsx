@@ -3,16 +3,14 @@ import SearchedCitiesList from "./SearchedCitiesList";
 import StarredCitiesList from "./StarredCitiesList";
 import ky from "ky";
 import { SearchCity } from "../../types/SearchCity";
-import { useDispatch, useSelector } from "react-redux";
-import { ReduxState } from "../../types/State";
-import { setShowCitySearchMenu } from "../../store/citySearchMenuSlice";
+import { useCitySearchMenuStore } from "../../store/citySearchMenuStore";
 
 function CitySearch() {
     const [inputValue, setInputValue] = useState<string>("");
     const [citiesList, setCitiesList] = useState<SearchCity[]>([]);
 
-    const showCitySearch = useSelector((state: ReduxState) => state.showCitySearchMenu);
-    const dispatch = useDispatch();
+    const showCitySearch = useCitySearchMenuStore((state) => state.showCitySearchMenu);
+    const setShowCitySearchMenu = useCitySearchMenuStore((state) => state.setShowCitySearchMenu);
 
     const handleInputChange = (e: React.BaseSyntheticEvent) => {
         setInputValue(e.target.value);
@@ -54,7 +52,7 @@ function CitySearch() {
     return (
         <section className={showCitySearch ? "city-search show" : "city-search"}>
             <div className="close-container">
-                <button onClick={() => dispatch(setShowCitySearchMenu(false))}>
+                <button onClick={() => setShowCitySearchMenu(false)}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
