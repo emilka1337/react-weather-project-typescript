@@ -19,25 +19,36 @@ function CitySearch() {
     };
 
     useEffect(() => {
-        const timeoutID: number = setTimeout(async (): Promise<void> => {
-            if (inputValue) {
-                const requestURL: string = `${
-                    import.meta.env.VITE_BASE_URL
-                }geo/1.0/direct?q=${inputValue}&limit=3&appid=${import.meta.env.VITE_API_KEY}`;
+        if (!inputValue) {
+            setCitiesList([]);
+            return;
+        }
 
-                try {
-                    const res = await ky.get<SearchCity[]>(requestURL);
-                    const data = await res.json();
-                    setCitiesList(data);
-                } catch (err) {
-                    console.error(err);
-                }
-            } else {
-                setCitiesList([]);
+        // clearTimeout alone only cancels a timer that has not fired yet. Once the request is
+        // in flight it must be aborted too, otherwise a slow earlier response can land last
+        // and overwrite the results of a newer query.
+        const controller = new AbortController();
+
+        const timeoutID = setTimeout(async (): Promise<void> => {
+            const requestURL: string = `${
+                import.meta.env.VITE_BASE_URL
+            }geo/1.0/direct?q=${encodeURIComponent(inputValue)}&limit=3&appid=${
+                import.meta.env.VITE_API_KEY
+            }`;
+
+            try {
+                const res = await ky.get<SearchCity[]>(requestURL, { signal: controller.signal });
+                setCitiesList(await res.json());
+            } catch (error) {
+                if (controller.signal.aborted) return;
+                console.error("City search failed: ", error);
             }
         }, 500);
 
-        return () => clearTimeout(timeoutID);
+        return () => {
+            clearTimeout(timeoutID);
+            controller.abort();
+        };
     }, [inputValue]);
 
     return (

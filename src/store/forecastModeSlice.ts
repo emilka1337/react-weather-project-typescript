@@ -6,7 +6,7 @@ const forecastModeSlice = createSlice({
     name: "forecastMode",
     initialState: initialState,
     reducers: {
-        setForecastMode: (state, action: PayloadAction<string>): string => action.payload
+        setForecastMode: (_state, action: PayloadAction<string>): string => action.payload
     }
 })
 

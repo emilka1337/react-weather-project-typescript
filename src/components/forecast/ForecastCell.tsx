@@ -18,8 +18,8 @@ interface ForecastCellProps {
 }
 
 function formatTime(time: Time<number>): string {
-    let hours = time.hours;
-    let minutes = time.minutes;
+    const hours = time.hours;
+    const minutes = time.minutes;
 
     const result: Time<string | number> = {
         hours: time.hours,

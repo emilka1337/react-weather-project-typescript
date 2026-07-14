@@ -19,41 +19,51 @@ import { CityGeolocation } from "../types/CityGeolocation";
 import { ReduxState } from "../types/State";
 import { ForecastUnit } from "../types/ForecastUnit";
 
-function saveForecastData(data: ForecastData): void {
-    const date = new Date();
-    data.timeStamp = +date;
+const FORECAST_TTL_MS: number = 300 * 1000;
+
+function saveForecastData(data: ForecastData, geolocation: CityGeolocation): void {
+    data.timeStamp = Date.now();
+    data.geolocation = geolocation;
     localStorage.setItem("forecastData", JSON.stringify(data));
 }
 
 function getSavedForecastData(): ForecastData | null {
     const forecastData: string | null = localStorage.getItem("forecastData");
 
-    if (typeof forecastData === "string") {
+    if (forecastData === null) return null;
+
+    try {
         return JSON.parse(forecastData);
-    } else {
+    } catch (error) {
+        console.error("Saved forecast data is corrupted, dropping it: ", error);
+        localStorage.removeItem("forecastData");
         return null;
     }
 }
 
-function isSavedForecastDataExpired(savedForecastData: ForecastData | null): boolean {
-    const currentMilliseconds: number = Date.now();
+// The cache is keyed on the coordinates it was fetched for, not on the city name: the name
+// arrives asynchronously from reverse geocoding and is still "Loading" on the first render.
+function isSavedForecastDataUsable(
+    savedForecastData: ForecastData | null,
+    geolocation: CityGeolocation
+): savedForecastData is ForecastData {
+    if (!savedForecastData?.timeStamp || !savedForecastData.geolocation) return false;
+    if (Date.now() - savedForecastData.timeStamp > FORECAST_TTL_MS) return false;
 
-    if (savedForecastData && savedForecastData.timeStamp) {
-        return currentMilliseconds - savedForecastData.timeStamp > 300 * 1000;
-    } else return true;
+    return (
+        savedForecastData.geolocation.lat === geolocation.lat &&
+        savedForecastData.geolocation.lon === geolocation.lon
+    );
 }
 
 function App() {
     const dispatch: AppDispatch = useDispatch();
     const showSettings: boolean = useSelector((state: ReduxState) => state.settings.showSettings);
     const darkMode: boolean = useSelector((state: ReduxState) => state.settings.darkMode);
-    const cityName: string = useSelector((state: ReduxState) => state.selectedCity);
     const forecast: ForecastUnit[] = useSelector((state: ReduxState) => state.forecast);
     const geolocation: CityGeolocation = useGeolocation(); // Defines user geolocation
     useNotificationPermission();
     const showNotification = useDesktopNotification();
-    // Defines user geolocation
-    useGeolocation();
 
     useEffect(() => {
         if (forecast.length > 0) {
@@ -61,41 +71,34 @@ function App() {
         }
     }, [forecast]);
 
+    const getForecast = useCallback(
+        (geolocation: CityGeolocation): void => {
+            if (!geolocation.lat || !geolocation.lon) return;
+
+            const savedForecastData: ForecastData | null = getSavedForecastData();
+
+            if (isSavedForecastDataUsable(savedForecastData, geolocation)) {
+                dispatch(setForecast(savedForecastData.list));
+                return;
+            }
+
+            dispatch(fetchForecast(geolocation))
+                .unwrap()
+                .then((forecastData: ForecastData) => {
+                    saveForecastData(forecastData, geolocation);
+                    dispatch(setForecast(forecastData.list));
+                })
+                .catch((error) => {
+                    console.error("Failed to fetch forecast: ", error);
+                });
+        },
+        [dispatch]
+    );
+
     // Fetching forecast after defining user geolocation
     useEffect(() => {
         getForecast(geolocation);
-    }, [geolocation]);
-
-    const getForecast = useCallback((geolocation: CityGeolocation): void => {
-        if (!geolocation.lat || !geolocation.lon) return;
-
-        try {
-            const savedForecastData: ForecastData | null = getSavedForecastData();
-
-            if (
-                savedForecastData === null ||
-                isSavedForecastDataExpired(savedForecastData) ||
-                savedForecastData.city.name != cityName
-            ) {
-                const forecastAction = fetchForecast(geolocation);
-                
-                dispatch(forecastAction)
-                    .unwrap()
-                    .then((forecastData: ForecastData) => {
-                        saveForecastData(forecastData);
-                        dispatch(setForecast(forecastData.list));
-                    })
-                    .catch((error) => {
-                        console.error("Failed to fetch forecast:", error);
-                    });
-            } else {
-                dispatch(setForecast(savedForecastData));
-            }
-        } catch (error) {
-            console.error("getForecast error: ", error);
-            setForecast(getSavedForecastData());
-        }
-    }, []);
+    }, [geolocation, getForecast]);
 
     return (
         <div className={darkMode ? "app dark" : "app"}>

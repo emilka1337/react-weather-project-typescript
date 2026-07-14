@@ -10,20 +10,15 @@ export const fetchForecast = createAsyncThunk<
     CityGeolocation
 >(
     'forecast/fetchforecast',
-    async ({ lat, lon }: CityGeolocation, { rejectWithValue }) => {
+    async ({ lat, lon }: CityGeolocation) => {
         const forecastURL = `${import.meta.env.VITE_BASE_URL
             }data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${import.meta.env.VITE_API_KEY
             }&units=metric`;
 
-        try {
-            const res = await ky.get<ForecastData>(forecastURL);
-            const forecastData = await res.json();
-            console.log(forecastData);
-            return forecastData;
-        } catch (err) {
-            console.log(err);
-            return rejectWithValue([])
-        }
+        // Errors propagate: createAsyncThunk rejects the action with the serialized error,
+        // so the caller's .unwrap().catch() sees the real HTTP status instead of a stub.
+        const res = await ky.get<ForecastData>(forecastURL);
 
+        return res.json();
     }
 );

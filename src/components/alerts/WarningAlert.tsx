@@ -4,7 +4,7 @@ import { Alert } from "../../types/Alert";
 import { ReduxState } from "../../types/State";
 
 function WarningAlert() {
-    let [showAlert, setShowAlert] = useState<boolean>(false);
+    const [showAlert, setShowAlert] = useState<boolean>(false);
 
     const warnings: Alert[] = useSelector((state: ReduxState) => state.alerts.warnings);
 

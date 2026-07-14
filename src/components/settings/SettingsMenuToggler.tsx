@@ -6,7 +6,7 @@ import { setShowCitySearchMenu } from "../../store/citySearchMenuSlice";
 
 function SettingsMenuToggler() {
     const showSettings: boolean = useSelector((state: ReduxState) => state.settings.showSettings);
-    let [icon, setIcon] = useState<JSX.Element>();
+    const [icon, setIcon] = useState<JSX.Element>();
 
     const dispatch = useDispatch();
 
