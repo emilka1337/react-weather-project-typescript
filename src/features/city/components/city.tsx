@@ -4,21 +4,20 @@ import { getCityNameByCoords } from "@/features/city/api/reverse-geocode";
 import EditCityToggler from "@/features/city/components/edit-city-toggler";
 import { useSelectedCityStore } from "@/features/city/stores/selected-city-store";
 import { loadLastCityName, saveLastCityName } from "@/features/city/utils/last-city-storage";
-import { useCitySearchMenuStore } from "@/stores/ui-store";
 import { useGeolocationStore } from "@/stores/geolocation-store";
+import { useUiStore } from "@/stores/ui-store";
 import { CityGeolocation } from "@/types/geolocation";
 
 const CitySearch = React.lazy(() => import("@/features/city/components/city-search"));
 
 function City() {
     const geolocation: CityGeolocation = useGeolocationStore((state) => state.geolocation);
-    const showCitySearch = useCitySearchMenuStore((state) => state.showCitySearchMenu);
-    const setShowCitySearchMenu = useCitySearchMenuStore((state) => state.setShowCitySearchMenu);
+    const togglePanel = useUiStore((state) => state.togglePanel);
     const cityName: string = useSelectedCityStore((state) => state.selectedCity);
     const setSelectedCity = useSelectedCityStore((state) => state.setSelectedCity);
 
     const focusOnCitySearch = (): void => {
-        setShowCitySearchMenu(!showCitySearch);
+        togglePanel("city-search");
     };
 
     useEffect(() => {

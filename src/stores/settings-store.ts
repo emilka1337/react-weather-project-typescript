@@ -8,7 +8,6 @@ const STORAGE_KEY = "weather-app-settings";
 const prefersDarkMode = (): boolean => window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 const defaultSettings = (): Settings => ({
-    showSettings: false,
     darkMode: prefersDarkMode(),
     loadingAnimation: true,
     showFeelsLikeField: false,
@@ -28,7 +27,6 @@ const saveSettings = (settings: Settings): void => writeJson(STORAGE_KEY, settin
 
 interface SettingsStore {
     settings: Settings;
-    toggleSettings: () => void;
     toggleDarkMode: () => void;
     toggleLoadingAnimation: () => void;
     toggleFeelsLikeField: () => void;
@@ -52,7 +50,6 @@ export const useSettingsStore = create<SettingsStore>((set, get) => {
     return {
         settings: loadSettings(),
 
-        toggleSettings: () => update({ showSettings: !get().settings.showSettings }),
         toggleDarkMode: () => update({ darkMode: !get().settings.darkMode }),
         toggleLoadingAnimation: () => update({ loadingAnimation: !get().settings.loadingAnimation }),
         toggleFeelsLikeField: () => update({ showFeelsLikeField: !get().settings.showFeelsLikeField }),

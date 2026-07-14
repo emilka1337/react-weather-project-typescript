@@ -4,14 +4,14 @@ import { searchCities } from "@/features/city/api/search-cities";
 import SearchedCitiesList from "@/features/city/components/searched-cities-list";
 import StarredCitiesList from "@/features/city/components/starred-cities-list";
 import { SearchCity } from "@/features/city/types/search-city";
-import { useCitySearchMenuStore } from "@/stores/ui-store";
+import { useUiStore } from "@/stores/ui-store";
 
 function CitySearch() {
     const [inputValue, setInputValue] = useState<string>("");
     const [citiesList, setCitiesList] = useState<SearchCity[]>([]);
 
-    const showCitySearch = useCitySearchMenuStore((state) => state.showCitySearchMenu);
-    const setShowCitySearchMenu = useCitySearchMenuStore((state) => state.setShowCitySearchMenu);
+    const showCitySearch = useUiStore((state) => state.activePanel === "city-search");
+    const closePanel = useUiStore((state) => state.closePanel);
 
     const handleInputChange = (e: React.BaseSyntheticEvent) => {
         setInputValue(e.target.value);
@@ -47,7 +47,7 @@ function CitySearch() {
     return (
         <section className={showCitySearch ? "city-search show" : "city-search"}>
             <div className="close-container">
-                <button onClick={() => setShowCitySearchMenu(false)}>
+                <button onClick={closePanel}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"

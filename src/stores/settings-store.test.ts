@@ -21,7 +21,7 @@ describe("settingsStore", () => {
         localStorage.setItem(
             STORAGE_KEY,
             JSON.stringify({
-                showSettings: false,
+                showSettings: false, // a key the old build persisted; must be ignored, not crash
                 darkMode: true,
                 loadingAnimation: false,
                 showFeelsLikeField: true,

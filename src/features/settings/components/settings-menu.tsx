@@ -1,14 +1,16 @@
 import React, { useCallback, useState } from "react";
 import { Settings } from "@/types/settings";
 import { useSettingsStore } from "@/stores/settings-store";
+import { useUiStore } from "@/stores/ui-store";
 
 function SettingsMenu() {
     const [settingsResetted, setSettingsResetted] = useState<boolean>(false);
 
     const settings: Settings = useSettingsStore((state) => state.settings);
-    // Read from the store, not passed down: app.tsx had to subscribe to a settings primitive just
-    // to hand it to a component that already reads the settings store.
-    const showSettings: boolean = useSettingsStore((state) => state.settings.showSettings);
+    // Which panel is open is app UI state, not a persisted user preference. It used to be a
+    // showSettings flag inside the saved Settings object, so closing the tab with the menu open
+    // persisted that and reopened the menu on the next load.
+    const showSettings: boolean = useUiStore((state) => state.activePanel === "settings");
 
     const toggleDarkMode = useSettingsStore((state) => state.toggleDarkMode);
     const toggleLoadingAnimation = useSettingsStore((state) => state.toggleLoadingAnimation);
