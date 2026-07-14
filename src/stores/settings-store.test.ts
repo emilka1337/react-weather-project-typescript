@@ -12,7 +12,7 @@ async function freshStore() {
 
 const readPersisted = (): Settings | null => {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw === null ? null : JSON.parse(raw);
+    return raw === null ? null : (JSON.parse(raw) as Settings);
 };
 
 describe("settingsStore", () => {

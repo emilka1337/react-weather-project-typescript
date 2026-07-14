@@ -28,13 +28,17 @@ export default tseslint.config(
         files: ["**/*.{ts,tsx}"],
         extends: [
             js.configs.recommended,
-            ...tseslint.configs.recommended,
+            ...tseslint.configs.recommendedTypeChecked,
             importPlugin.flatConfigs.recommended,
             importPlugin.flatConfigs.typescript,
         ],
         languageOptions: {
             ecmaVersion: 2022,
             globals: globals.browser,
+            parserOptions: {
+                projectService: true,
+                tsconfigRootDir: import.meta.dirname,
+            },
         },
         settings: {
             "import/resolver": {
@@ -119,6 +123,12 @@ export default tseslint.config(
                 "error",
                 { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
             ],
+
+            // The two rules type-aware linting is actually here for. This codebase's recurring bug
+            // is the unobserved promise: a bare async call inside a useEffect, an async callback
+            // handed to setTimeout whose rejection nobody can catch.
+            "@typescript-eslint/no-floating-promises": "error",
+            "@typescript-eslint/no-misused-promises": "error",
         },
     },
 

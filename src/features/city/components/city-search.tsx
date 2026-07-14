@@ -13,8 +13,9 @@ function CitySearch() {
     const showCitySearch = useUiStore((state) => state.activePanel === "city-search");
     const closePanel = useUiStore((state) => state.closePanel);
 
-    const handleInputChange = (e: React.BaseSyntheticEvent) => {
-        setInputValue(e.target.value);
+    // BaseSyntheticEvent made e.target an `any`, so e.target.value was unchecked.
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        setInputValue(event.target.value);
     };
 
     useEffect(() => {

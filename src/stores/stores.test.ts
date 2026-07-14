@@ -8,8 +8,16 @@ import { ForecastModes } from "@/features/weather/types/forecast-mode";
 import { useGeolocationStore } from "@/stores/geolocation-store";
 import { makeForecastUnit } from "@/testing/fixtures/forecast";
 
-const city = (name: string, lat: number, lon: number): SearchCity =>
-    ({ name, country: "AZ", lat, lon, local_names: {} }) as SearchCity;
+const city = (name: string, lat: number, lon: number): SearchCity => ({
+    name,
+    country: "AZ",
+    lat,
+    lon,
+    local_names: {},
+});
+
+const readPersistedCities = (): SearchCity[] =>
+    JSON.parse(localStorage.getItem("starredCities") ?? "[]") as SearchCity[];
 
 describe("geolocationStore", () => {
     beforeEach(() => useGeolocationStore.setState({ geolocation: { lat: 0, lon: 0 } }));
@@ -45,7 +53,7 @@ describe("starredCitiesStore", () => {
         useStarredCitiesStore.getState().addCityToStarredCities(city("Baku", 40.37, 49.89));
 
         expect(useStarredCitiesStore.getState().starredCities).toHaveLength(1);
-        expect(JSON.parse(localStorage.getItem("starredCities") ?? "[]")[0].name).toBe("Baku");
+        expect(readPersistedCities()[0].name).toBe("Baku");
     });
 
     it("removes the city at the given index and persists the result", () => {
@@ -59,7 +67,7 @@ describe("starredCitiesStore", () => {
         const names = useStarredCitiesStore.getState().starredCities.map((c) => c.name);
 
         expect(names).toEqual(["Ganja"]);
-        expect(JSON.parse(localStorage.getItem("starredCities") ?? "[]")).toHaveLength(1);
+        expect(readPersistedCities()).toHaveLength(1);
     });
 
     it("does not mutate the previous array, so React sees a new reference", () => {

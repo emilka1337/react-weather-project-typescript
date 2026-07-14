@@ -34,7 +34,9 @@ describe("Clocks", () => {
         render(<Clocks />);
 
         setNow(9, 6);
-        act(() => vi.advanceTimersByTime(1000));
+        act(() => {
+            vi.advanceTimersByTime(1000);
+        });
 
         expect(screen.getByText("09:06")).toBeInTheDocument();
     });

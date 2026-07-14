@@ -15,7 +15,7 @@ function ForecastModeTogglePanel() {
                 <li>
                     <button
                         className={
-                            forecastMode == "temperature"
+                            forecastMode === ForecastModes.TEMPERATURE
                                 ? "forecast-mode-toggler active"
                                 : "forecast-mode-toggler"
                         }
@@ -35,7 +35,7 @@ function ForecastModeTogglePanel() {
                 <li>
                     <button
                         className={
-                            forecastMode == "wind" ? "forecast-mode-toggler active" : "forecast-mode-toggler"
+                            forecastMode === ForecastModes.WIND ? "forecast-mode-toggler active" : "forecast-mode-toggler"
                         }
                         onClick={() => handleForecastModeChange(ForecastModes.WIND)}
                     >
@@ -52,7 +52,7 @@ function ForecastModeTogglePanel() {
                 <li>
                     <button
                         className={
-                            forecastMode == "humidity"
+                            forecastMode === ForecastModes.HUMIDITY
                                 ? "forecast-mode-toggler active"
                                 : "forecast-mode-toggler"
                         }
