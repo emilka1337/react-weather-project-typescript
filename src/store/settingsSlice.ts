@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Settings } from "../types/Settings";
 
-let localSavedSettings: Settings | string | null = localStorage.getItem("weather-app-settings");
+const localSavedSettings: Settings | string | null = localStorage.getItem("weather-app-settings");
 let parsedSettings: Settings | undefined;
 
 if (localSavedSettings) {

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { SearchCity } from "../types/SearchCity";
 
-let localSavedCities: string | null = localStorage.getItem("starredCities");
+const localSavedCities: string | null = localStorage.getItem("starredCities");
 let parsedCities: SearchCity[] | undefined;
 
 if (localSavedCities) {

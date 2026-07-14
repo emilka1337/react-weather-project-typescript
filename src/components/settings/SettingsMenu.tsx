@@ -19,7 +19,7 @@ interface SettingsMenuProps {
 }
 
 function SettingsMenu({ showSettings }: SettingsMenuProps) {
-    let [settingsResetted, setSettingsResetted] = useState<boolean>(false);
+    const [settingsResetted, setSettingsResetted] = useState<boolean>(false);
 
     const dispatch: AppDispatch = useDispatch();
     const settings: Settings = useSelector((state: ReduxState) => state.settings);

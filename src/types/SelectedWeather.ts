@@ -1,8 +1,9 @@
+// Not readonly: these are mutated as an immer draft inside selectedWeatherSlice reducers.
 export interface SelectedWeather {
-    readonly selectedWeather: number
-    readonly selectedTemperature: number
-    readonly selectedFeelsLike: number
-    readonly selectedWind: number
-    readonly selectedHumidity: number
-    readonly selectedMain: string
+    selectedWeather: number
+    selectedTemperature: number
+    selectedFeelsLike: number
+    selectedWind: number
+    selectedHumidity: number
+    selectedMain: string
 }

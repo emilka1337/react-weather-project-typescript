@@ -6,7 +6,7 @@ const selectedCitySlice = createSlice({
     name: "selectedCity",
     initialState: initialState,
     reducers: {
-        setSelectedCity: (state, action: PayloadAction<string>): string => action.payload
+        setSelectedCity: (_state, action: PayloadAction<string>): string => action.payload
     }
 })
 

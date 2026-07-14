@@ -6,7 +6,7 @@ const showCitySearchMenu = createSlice({
     name: "showCitySearchMenu",
     initialState: initialState,
     reducers: {
-        setShowCitySearchMenu: (state, action: PayloadAction<boolean>): boolean => action.payload
+        setShowCitySearchMenu: (_state, action: PayloadAction<boolean>): boolean => action.payload
     }
 })
 
