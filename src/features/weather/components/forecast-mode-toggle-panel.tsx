@@ -19,6 +19,8 @@ function ForecastModeTogglePanel() {
                                 ? "forecast-mode-toggler active"
                                 : "forecast-mode-toggler"
                         }
+                        aria-label="Show temperature"
+                        aria-pressed={forecastMode === ForecastModes.TEMPERATURE}
                         onClick={() => handleForecastModeChange(ForecastModes.TEMPERATURE)}
                     >
                         <svg
@@ -37,6 +39,8 @@ function ForecastModeTogglePanel() {
                         className={
                             forecastMode === ForecastModes.WIND ? "forecast-mode-toggler active" : "forecast-mode-toggler"
                         }
+                        aria-label="Show wind"
+                        aria-pressed={forecastMode === ForecastModes.WIND}
                         onClick={() => handleForecastModeChange(ForecastModes.WIND)}
                     >
                         <svg
@@ -56,6 +60,8 @@ function ForecastModeTogglePanel() {
                                 ? "forecast-mode-toggler active"
                                 : "forecast-mode-toggler"
                         }
+                        aria-label="Show humidity"
+                        aria-pressed={forecastMode === ForecastModes.HUMIDITY}
                         onClick={() => handleForecastModeChange(ForecastModes.HUMIDITY)}
                     >
                         <svg

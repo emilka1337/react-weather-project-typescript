@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
 
+import SettingToggle from "@/features/settings/components/setting-toggle";
 import { useSettingsStore } from "@/stores/settings-store";
 import { useUiStore } from "@/stores/ui-store";
 import { Settings } from "@/types/settings";
@@ -22,7 +23,6 @@ function SettingsMenu() {
     const toggleNotifications = useSettingsStore((state) => state.toggleNotifications);
     const resetSettings = useSettingsStore((state) => state.resetSettings);
 
-    //#region Settings click event listeners
     const resetSettingsClick = useCallback((): void => {
         resetSettings();
         setSettingsResetted(true);
@@ -33,54 +33,42 @@ function SettingsMenu() {
         localStorage.clear();
         window.location.reload();
     }, []);
-    //#endregion
 
     return (
         <div className={showSettings ? "settings-menu show" : "settings-menu"}>
             <ul>
-                <li onClick={toggleDarkMode}>
-                    <h5>Dark mode</h5>
-                    <button className={settings.darkMode ? "toggler toggled" : "toggler"}>
-                        <div className="circle"></div>
-                    </button>
-                </li>
-                <li onClick={toggleLoadingAnimation}>
-                    <h5>Loading animation</h5>
-                    <button className={settings.loadingAnimation ? "toggler toggled" : "toggler"}>
-                        <div className="circle"></div>
-                    </button>
-                </li>
-                <li onClick={toggleFeelsLikeField}>
-                    <h5>&quot;Feels like&quot; field</h5>
-                    <button className={settings.showFeelsLikeField ? "toggler toggled" : "toggler"}>
-                        <div className="circle"></div>
-                    </button>
-                </li>
-                <li onClick={toggleTemperatureScale}>
-                    <h5>Temperature in F°</h5>
-                    <button className={settings.temperatureInF == true ? "toggler toggled" : "toggler"}>
-                        <div className="circle"></div>
-                    </button>
-                </li>
-                <li onClick={toggleSpeedUnit}>
-                    <h5>Wind speed in m/s</h5>
-                    <button className={settings.speedUnitInMS == true ? "toggler toggled" : "toggler"}>
-                        <div className="circle"></div>
-                    </button>
-                </li>
-                <li onClick={toggleSecondsInClocks}>
-                    <h5>Show seconds in clocks</h5>
-                    <button className={settings.showSecondsInClocks ? "toggler toggled" : "toggler"}>
-                        <div className="circle"></div>
-                    </button>
-                </li>
-                <li onClick={toggleNotifications}>
-                    <h5>Show notifications</h5>
-                    <button className={settings.showNotifications ? "toggler toggled" : "toggler"}>
-                        <div className="circle"></div>
-                    </button>
-                </li>
-                <li>
+                <SettingToggle label="Dark mode" checked={settings.darkMode} onToggle={toggleDarkMode} />
+                <SettingToggle
+                    label="Loading animation"
+                    checked={settings.loadingAnimation}
+                    onToggle={toggleLoadingAnimation}
+                />
+                <SettingToggle
+                    label='"Feels like" field'
+                    checked={settings.showFeelsLikeField}
+                    onToggle={toggleFeelsLikeField}
+                />
+                <SettingToggle
+                    label="Temperature in F°"
+                    checked={settings.temperatureInF}
+                    onToggle={toggleTemperatureScale}
+                />
+                <SettingToggle
+                    label="Wind speed in m/s"
+                    checked={settings.speedUnitInMS}
+                    onToggle={toggleSpeedUnit}
+                />
+                <SettingToggle
+                    label="Show seconds in clocks"
+                    checked={settings.showSecondsInClocks}
+                    onToggle={toggleSecondsInClocks}
+                />
+                <SettingToggle
+                    label="Show notifications"
+                    checked={settings.showNotifications}
+                    onToggle={toggleNotifications}
+                />
+                <li className="reset-row">
                     <h5>
                         Reset Settings <br />
                         <span>(Try this if something not working properly)</span>
@@ -92,7 +80,7 @@ function SettingsMenu() {
                         {settingsResetted ? "OK" : "Reset"}
                     </button>
                 </li>
-                <li>
+                <li className="reset-row">
                     <h5>
                         Reset App <br />
                         <span>(Resets app settings, clears app local storage and reloads the page)</span>

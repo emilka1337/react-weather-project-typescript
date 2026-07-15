@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { searchCities } from "@/features/city/api/search-cities";
 import SearchedCitiesList from "@/features/city/components/searched-cities-list";
@@ -9,9 +9,16 @@ import { useUiStore } from "@/stores/ui-store";
 function CitySearch() {
     const [inputValue, setInputValue] = useState<string>("");
     const [citiesList, setCitiesList] = useState<SearchCity[]>([]);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const showCitySearch = useUiStore((state) => state.activePanel === "city-search");
     const closePanel = useUiStore((state) => state.closePanel);
+
+    // Move focus into the search box when the panel opens, so a keyboard user can type immediately
+    // instead of having to tab to it.
+    useEffect(() => {
+        if (showCitySearch) inputRef.current?.focus();
+    }, [showCitySearch]);
 
     // BaseSyntheticEvent made e.target an `any`, so e.target.value was unchecked.
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -48,7 +55,7 @@ function CitySearch() {
     return (
         <section className={showCitySearch ? "city-search show" : "city-search"}>
             <div className="close-container">
-                <button onClick={closePanel}>
+                <button aria-label="Close city search" onClick={closePanel}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
@@ -59,7 +66,14 @@ function CitySearch() {
                     </svg>
                 </button>
             </div>
-            <input type="text" placeholder="Search city..." value={inputValue} onChange={handleInputChange} />
+            <input
+                ref={inputRef}
+                type="text"
+                aria-label="Search city"
+                placeholder="Search city..."
+                value={inputValue}
+                onChange={handleInputChange}
+            />
             <StarredCitiesList />
             <SearchedCitiesList citiesList={citiesList} />
         </section>

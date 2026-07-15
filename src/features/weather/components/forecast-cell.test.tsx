@@ -14,8 +14,7 @@ const AT_0905 = new Date(2024, 0, 1, 9, 5).getTime() / 1000;
 
 const unit = makeForecastUnit(0, 21.6);
 
-const renderCell = () =>
-    render(<ForecastCell cellForecast={unit} timestamp={AT_0905} isDefaultActive={false} />);
+const renderCell = () => render(<ForecastCell cellForecast={unit} timestamp={AT_0905} />);
 
 describe("ForecastCell", () => {
     it("renders the zero-padded time of the slot", () => {
@@ -49,11 +48,17 @@ describe("ForecastCell", () => {
         expect(await screen.findByText("40%")).toBeInTheDocument();
     });
 
+    it("is a real button, so it is focusable and in the tab order", () => {
+        renderCell();
+
+        expect(screen.getByRole("button")).toBeInTheDocument();
+    });
+
     it("puts the clicked unit into the selected-weather store", async () => {
         const user = userEvent.setup();
-        const { container } = renderCell();
+        renderCell();
 
-        await user.click(container.querySelector(".forecast-cell")!);
+        await user.click(screen.getByRole("button"));
 
         await waitFor(() => {
             const { selectedWeather } = useSelectedWeatherStore.getState();
@@ -63,14 +68,34 @@ describe("ForecastCell", () => {
         });
     });
 
-    it("moves the active indicator onto the clicked cell", async () => {
+    it("can be activated from the keyboard", async () => {
+        const user = userEvent.setup();
+        renderCell();
+
+        screen.getByRole("button").focus();
+        await user.keyboard("{Enter}");
+
+        expect(useSelectedWeatherStore.getState().selectedTimestamp).toBe(unit.dt);
+    });
+
+    // Active state is derived from the store now (selectedTimestamp), not toggled by a
+    // querySelectorAll sweep. aria-pressed lets a screen reader announce which slot is selected.
+    it("reflects selection through aria-pressed and the active indicator", async () => {
         const user = userEvent.setup();
         const { container } = renderCell();
 
+        expect(screen.getByRole("button")).toHaveAttribute("aria-pressed", "false");
         expect(container.querySelector(".active-indicator")).not.toHaveClass("show");
 
-        await user.click(container.querySelector(".forecast-cell")!);
+        await user.click(screen.getByRole("button"));
 
+        expect(screen.getByRole("button")).toHaveAttribute("aria-pressed", "true");
         expect(container.querySelector(".active-indicator")).toHaveClass("show");
+    });
+
+    it("has an accessible name that survives a mode change", () => {
+        renderCell();
+
+        expect(screen.getByRole("button", { name: "Forecast at 09:05" })).toBeInTheDocument();
     });
 });

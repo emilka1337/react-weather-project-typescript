@@ -7,6 +7,7 @@ import SelectedWeather from "@/features/weather/components/selected-weather";
 import useForecast from "@/features/weather/hooks/use-forecast";
 import useTomorrowForecastNotification from "@/features/weather/hooks/use-tomorrow-forecast-notification";
 import { useForecastStore } from "@/features/weather/stores/forecast-store";
+import useClosePanelOnEscape from "@/hooks/use-close-panel-on-escape";
 import useGeolocation from "@/hooks/use-geolocation";
 import useNotificationPermission from "@/hooks/use-notification-permission";
 import { useSettingsStore } from "@/stores/settings-store";
@@ -19,6 +20,7 @@ function App() {
     useForecast(geolocation);
 
     useNotificationPermission();
+    useClosePanelOnEscape();
     const showNotification = useTomorrowForecastNotification();
 
     useEffect(() => {

@@ -4,7 +4,7 @@ interface EditCityTogglerProps {
 
 function EditCityToggler({ onClick }: EditCityTogglerProps) {
     return (
-        <button className="edit-city-toggler" onClick={onClick}>
+        <button className="edit-city-toggler" aria-label="Search for a city" onClick={onClick}>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"

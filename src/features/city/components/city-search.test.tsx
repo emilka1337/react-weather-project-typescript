@@ -47,9 +47,17 @@ describe("CitySearch", () => {
         act(() => useUiStore.getState().openPanel("city-search"));
         const user = renderSearch();
 
-        await user.click(screen.getByRole("button", { name: "" }));
+        await user.click(screen.getByRole("button", { name: "Close city search" }));
 
         expect(useUiStore.getState().activePanel).toBe("none");
+    });
+
+    it("moves focus into the search box when the panel opens, ready to type", () => {
+        act(() => useUiStore.getState().openPanel("city-search"));
+
+        render(<CitySearch />);
+
+        expect(screen.getByRole("textbox", { name: "Search city" })).toHaveFocus();
     });
 
     it("does not search until the input has been quiet for 500ms", async () => {
