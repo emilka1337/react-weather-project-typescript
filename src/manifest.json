@@ -14,11 +14,18 @@
             "32": "favicon/favicon-32x32.png"
         }
     },
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
     "permissions": [
         "notifications",
-        "geolocation"
+        "geolocation",
+        "alarms",
+        "storage"
     ],
     "host_permissions": [
-        "https://api.openweathermap.org/*"
+        "https://api.openweathermap.org/*",
+        "https://ipapi.co/*"
     ]
 }
