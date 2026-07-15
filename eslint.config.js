@@ -4,6 +4,7 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import importPlugin from "eslint-plugin-import";
 import checkFile from "eslint-plugin-check-file";
+import jsxA11y from "eslint-plugin-jsx-a11y";
 import tseslint from "typescript-eslint";
 
 // A feature may not import from another feature. They talk through src/stores, or they are
@@ -31,6 +32,7 @@ export default tseslint.config(
             ...tseslint.configs.recommendedTypeChecked,
             importPlugin.flatConfigs.recommended,
             importPlugin.flatConfigs.typescript,
+            jsxA11y.flatConfigs.recommended,
         ],
         languageOptions: {
             ecmaVersion: 2022,
