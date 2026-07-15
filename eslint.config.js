@@ -153,5 +153,12 @@ export default tseslint.config(
             "check-file/filename-naming-convention": "off",
             "import/no-unresolved": "off",
         },
+    },
+
+    // The only two files that touch the chrome.* extension APIs. `chrome` is not in globals.browser;
+    // everything else is feature-detected behind isExtension() so it never runs on Pages.
+    {
+        files: ["src/background.ts", "src/lib/extension.ts"],
+        languageOptions: { globals: { ...globals.serviceworker, chrome: "readonly" } },
     }
 );
