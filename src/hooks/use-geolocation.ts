@@ -17,6 +17,9 @@ const useGeolocation = (): CityGeolocation => {
         let cancelled = false;
 
         const applyGeolocationByIp = async (): Promise<void> => {
+            // Diagnostic: in an MV3 popup (chrome-extension:// origin) the browser geolocation is a
+            // known failure point, so this tells the two paths apart in the popup console.
+            console.info("[geo] using IP-based fallback");
             const ipGeolocation = await getGeolocationByIp();
 
             if (ipGeolocation && !cancelled) {
@@ -25,6 +28,7 @@ const useGeolocation = (): CityGeolocation => {
         };
 
         if (!navigator.geolocation) {
+            console.info("[geo] navigator.geolocation unavailable");
             void applyGeolocationByIp();
             return;
         }
@@ -33,6 +37,7 @@ const useGeolocation = (): CityGeolocation => {
             (position: GeolocationPosition): void => {
                 if (cancelled) return;
 
+                console.info("[geo] browser position acquired");
                 setGeolocation({
                     lat: position.coords.latitude,
                     lon: position.coords.longitude,

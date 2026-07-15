@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 
+import { isExtension } from "@/lib/extension";
 import { useSettingsStore } from "@/stores/settings-store";
 
 const useNotificationPermission = (): void => {
     const isEnabled: boolean = useSettingsStore((state) => state.settings.showNotifications);
 
     useEffect(() => {
-        if (!isEnabled || Notification.permission !== "default") return;
+        // In the extension the manifest "notifications" permission already grants chrome.notifications,
+        // and the web permission prompt on a chrome-extension:// origin is unwanted. Pages only.
+        if (isExtension() || !isEnabled || Notification.permission !== "default") return;
 
         Notification.requestPermission()
             .then((permission) => {
