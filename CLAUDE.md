@@ -9,7 +9,7 @@
 npm run dev        # дев-сервер Vite
 npm run build      # прод-сборка в dist/
 npm run preview    # локальный просмотр прод-сборки
-npm run lint       # eslint, --max-warnings 0 (в т.ч. границы архитектуры)
+npm run lint       # eslint, --max-warnings 0 (границы архитектуры + jsx-a11y)
 npm run typecheck  # tsc --noEmit
 npm test           # vitest run
 npm run test:watch # vitest в watch-режиме
@@ -147,11 +147,25 @@ src/
 2. **Тест с фейковыми таймерами, упавший на середине, оставляет таймеры фейковыми и вешает все
    последующие.** `afterEach(() => vi.useRealTimers())` — безусловно.
 
+## Доступность (a11y)
+
+`eslint-plugin-jsx-a11y` подключён и форсится тем же `--max-warnings 0`. Всё интерактивное —
+нативные элементы, чтобы фокус и Enter/Space работали даром:
+
+- Ячейка прогноза — `<button>` с `aria-pressed` и `aria-label`. Какая ячейка активна, **выводится
+  из стора** (`selectedTimestamp` в `selected-weather-store`), а не из `document.querySelectorAll`.
+- Тоггл настройки — `<button role="switch" aria-checked>` во всю строку ([setting-toggle.tsx](src/features/settings/components/setting-toggle.tsx)).
+- Переключатели режима и иконочные кнопки — с `aria-label` (у иконок нет текста).
+- **Фокус виден**: глобальный `:focus-visible`-ринг в [styles.scss](src/scss/styles.scss), светлый
+  и тёмный варианты. Без него клавиатурная навигация бесполезна.
+- **Escape** закрывает открытую панель ([use-close-panel-on-escape.ts](src/hooks/use-close-panel-on-escape.ts)),
+  а поле поиска города фокусируется при открытии панели.
+
+Не сделано (осознанно): возврат фокуса на триггер при закрытии панели, и roving-tabindex для
+ленты прогноза (сейчас 40 нативных кнопок = 40 остановок Tab).
+
 ## Известные проблемы
 
-- **Приложение неуправляемо с клавиатуры**: клики висят на `<div>` (`forecast-cell`) и `<li>`
-  (7 тогглов в `settings-menu`). `eslint-plugin-jsx-a11y` намеренно не подключён — он бы
-  заблокировал реструктуризацию. Это следующий PR.
 - Каталог `dist/` закоммичен и содержит инлайненный `VITE_API_KEY`.
 - SCSS — один глобальный каскад: партиалы `@import`-ятся *внутрь* `.app`/`.widget`, а
   `_dark-mode.scss` перекрывает всё через `!important`. Компоненты завязаны на глобальные имена
