@@ -36,22 +36,32 @@ describe("SettingsMenu", () => {
         const user = userEvent.setup();
         render(<SettingsMenu />);
 
-        await user.click(screen.getByText(label));
+        await user.click(screen.getByRole("switch", { name: label }));
 
         expect(isFlipped()).toBe(true);
         expect(localStorage.getItem(STORAGE_KEY)).not.toBeNull();
     });
 
-    it("marks a toggler as toggled once its setting is on", async () => {
+    it("exposes each toggle as a switch whose aria-checked follows its setting", async () => {
         const user = userEvent.setup();
         render(<SettingsMenu />);
 
-        const row = screen.getByText("Temperature in F°").closest("li")!;
-        expect(row.querySelector("button")).not.toHaveClass("toggled");
+        const darkMode = screen.getByRole("switch", { name: "Dark mode" });
+        expect(darkMode).toHaveAttribute("aria-checked", "false");
 
-        await user.click(screen.getByText("Temperature in F°"));
+        await user.click(darkMode);
 
-        expect(row.querySelector("button")).toHaveClass("toggled");
+        expect(darkMode).toHaveAttribute("aria-checked", "true");
+    });
+
+    it("toggles from the keyboard with Space", async () => {
+        const user = userEvent.setup();
+        render(<SettingsMenu />);
+
+        screen.getByRole("switch", { name: "Temperature in F°" }).focus();
+        await user.keyboard(" ");
+
+        expect(settings().temperatureInF).toBe(true);
     });
 
     it("reset restores the defaults and drops the persisted settings entirely", async () => {

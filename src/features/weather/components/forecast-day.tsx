@@ -17,18 +17,9 @@ function ForecastDay({day, weekday}: ForecastDayProps) {
                 <h4>{WEEKDAYS[weekday]}</h4>
             </div>
 
-            {day.map((item: ForecastUnit, index: number) => {
-                const isDefaultActive = index == 0 && index == 0;
-
-                return (
-                    <ForecastCell
-                        timestamp={item.dt}
-                        cellForecast={item}
-                        isDefaultActive={isDefaultActive}
-                        key={item.dt}
-                    />
-                );
-            })}
+            {day.map((item: ForecastUnit) => (
+                <ForecastCell timestamp={item.dt} cellForecast={item} key={item.dt} />
+            ))}
         </li>
     );
 }

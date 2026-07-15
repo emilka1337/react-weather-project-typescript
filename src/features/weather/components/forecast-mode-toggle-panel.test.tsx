@@ -39,4 +39,30 @@ describe("ForecastModeTogglePanel", () => {
         expect(useForecastModeStore.getState().forecastMode).toBe(ForecastModes.HUMIDITY);
         expect(togglers()[2]).toHaveClass("active");
     });
+
+    it("names each mode and announces the active one through aria-pressed", async () => {
+        const user = userEvent.setup();
+        render(<ForecastModeTogglePanel />);
+
+        const temperature = screen.getByRole("button", { name: "Show temperature" });
+        const wind = screen.getByRole("button", { name: "Show wind" });
+
+        expect(temperature).toHaveAttribute("aria-pressed", "true");
+        expect(wind).toHaveAttribute("aria-pressed", "false");
+
+        await user.click(wind);
+
+        expect(wind).toHaveAttribute("aria-pressed", "true");
+        expect(temperature).toHaveAttribute("aria-pressed", "false");
+    });
+
+    it("can be switched from the keyboard", async () => {
+        const user = userEvent.setup();
+        render(<ForecastModeTogglePanel />);
+
+        screen.getByRole("button", { name: "Show wind" }).focus();
+        await user.keyboard("{Enter}");
+
+        expect(useForecastModeStore.getState().forecastMode).toBe(ForecastModes.WIND);
+    });
 });
