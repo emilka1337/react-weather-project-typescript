@@ -25,3 +25,6 @@ dist-ssr
 # Local secrets — see .env.example for the required variables
 .env
 .env.local
+
+# Test coverage artifacts
+coverage
