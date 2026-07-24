@@ -19,7 +19,14 @@ export function readJson<T>(key: string): T | null {
 }
 
 export function writeJson(key: string, value: unknown): void {
-    localStorage.setItem(key, JSON.stringify(value));
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+        // setItem throws on quota-exceeded or when storage is disabled/blocked (private modes). A
+        // lost cache write or settings-persist is not worth crashing a click handler or an async
+        // .then over - readJson simply won't find it next time.
+        console.error(`Failed to write localStorage entry "${key}": `, error);
+    }
 }
 
 export function removeItem(key: string): void {
