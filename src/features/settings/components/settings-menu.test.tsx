@@ -12,7 +12,10 @@ const STORAGE_KEY = "weather-app-settings";
 const settings = () => useSettingsStore.getState().settings;
 
 describe("SettingsMenu", () => {
-    afterEach(() => vi.useRealTimers());
+    afterEach(() => {
+        vi.useRealTimers();
+        Reflect.deleteProperty(globalThis, "chrome");
+    });
 
     it("is hidden until settings is the active panel", () => {
         const { container } = render(<SettingsMenu />);
@@ -113,5 +116,24 @@ describe("SettingsMenu", () => {
 
         expect(localStorage.getItem("something")).toBeNull();
         expect(reload).toHaveBeenCalled();
+    });
+
+    it("Reset App also clears the extension's chrome.storage mirror", async () => {
+        const clear = vi.fn().mockResolvedValue(undefined);
+        (globalThis as { chrome?: unknown }).chrome = {
+            runtime: { id: "abc123" },
+            storage: { local: { clear } },
+        };
+        Object.defineProperty(window, "location", {
+            value: { reload: vi.fn() },
+            writable: true,
+            configurable: true,
+        });
+        const user = userEvent.setup();
+        render(<SettingsMenu />);
+
+        await user.click(screen.getAllByRole("button", { name: "Reset" })[1]);
+
+        expect(clear).toHaveBeenCalled();
     });
 });
