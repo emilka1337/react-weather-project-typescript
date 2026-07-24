@@ -63,6 +63,14 @@ export default defineConfig({
             // background.ts is an entry point wired to chrome.* globals, like main.tsx - its logic
             // lives in tested utils; the glue is covered by the manual Chrome smoke test.
             exclude: ["src/testing/**", "src/**/*.d.ts", "src/main.tsx", "src/background.ts"],
+            // Thresholds so coverage can't silently erode. Set a little under the current ~95% to
+            // leave headroom; `npm run coverage` (and CI) fail below these.
+            thresholds: {
+                lines: 90,
+                functions: 90,
+                branches: 85,
+                statements: 90,
+            },
         },
     },
 });
