@@ -35,19 +35,19 @@ describe("SearchedCitiesList", () => {
         expect(useGeolocationStore.getState().geolocation).toEqual({ lat: 40.37, lon: 49.89 });
     });
 
-    it("stars a city", async () => {
+    it("stars a city, via a button named for accessibility", async () => {
         const user = userEvent.setup();
-        const { container } = render(<SearchedCitiesList citiesList={[baku]} />);
+        render(<SearchedCitiesList citiesList={[baku]} />);
 
-        await user.click(container.querySelectorAll("button")[1]);
+        await user.click(screen.getByRole("button", { name: "Star Baku" }));
 
         expect(useStarredCitiesStore.getState().starredCities).toHaveLength(1);
     });
 
     it("does not add the same city twice", async () => {
         const user = userEvent.setup();
-        const { container } = render(<SearchedCitiesList citiesList={[baku]} />);
-        const star = container.querySelectorAll("button")[1];
+        render(<SearchedCitiesList citiesList={[baku]} />);
+        const star = screen.getByRole("button", { name: "Star Baku" });
 
         await user.click(star);
         await user.click(star);

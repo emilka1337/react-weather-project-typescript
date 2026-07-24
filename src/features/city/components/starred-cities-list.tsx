@@ -33,11 +33,11 @@ function StarredCitiesList() {
             {starredCities.length > 0 && <h5>Starred</h5>}
             {starredCities.map((city, index) => {
                 return (
-                    <li key={index}>
+                    <li key={`${city.name}-${city.lat}-${city.lon}`}>
                         <button className="set-city" onClick={() => handleCityClick(city)}>
                             {city.name}, {city.country}
                         </button>
-                        <button onClick={() => removeFromFavorites(index)}>
+                        <button aria-label={`Remove ${city.name}`} onClick={() => removeFromFavorites(index)}>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="currentColor"

@@ -47,10 +47,9 @@ describe("StarredCitiesList", () => {
     it("unstars the city at that position and persists the result", async () => {
         const user = userEvent.setup();
         seed(baku, ganja);
-        const { container } = render(<StarredCitiesList />);
+        render(<StarredCitiesList />);
 
-        // Second button of the first row is its unstar button.
-        await user.click(container.querySelectorAll("li")[0].querySelectorAll("button")[1]);
+        await user.click(screen.getByRole("button", { name: "Remove Baku" }));
 
         expect(useStarredCitiesStore.getState().starredCities.map((c) => c.name)).toEqual(["Ganja"]);
         expect(localStorage.getItem("starredCities")).toContain("Ganja");
