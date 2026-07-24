@@ -12,14 +12,23 @@
 
 ```bash
 npm run dev        # дев-сервер Vite
-npm run build      # прод-сборка в dist/
+npm run build      # тайпчек (tsc -b) + прод-сборка в dist/
 npm run preview    # локальный просмотр прод-сборки
 npm run lint       # eslint, --max-warnings 0 (границы архитектуры + jsx-a11y)
-npm run typecheck  # tsc --noEmit
+npm run typecheck  # tsc -b --noEmit (проверяет и src, и vite.config.ts)
 npm test           # vitest run
 npm run test:watch # vitest в watch-режиме
-npm run coverage   # vitest + v8 coverage
+npm run coverage   # vitest + v8 coverage (пороги форсятся: см. thresholds в vite.config.ts)
 ```
+
+## CI и деплой
+
+[.github/workflows/ci.yml](.github/workflows/ci.yml): на каждый push/PR — `npm ci` → typecheck →
+lint → coverage → build; на `main` дополнительно собирает `dist/` и деплоит его на GitHub Pages через
+`actions/deploy-pages`. Поэтому **`dist/` больше не коммитится** (в `.gitignore`) — CI собирает и
+публикует сам, и корень Pages отдаёт **собранное** приложение, а не дев-`index.html`. Источник Pages
+в настройках репо переключён на **GitHub Actions** (не branch-деплой). Node запинен: `engines: >=20`
++ `.nvmrc` (CI на 22).
 
 ## Главное правило: однонаправленность
 
@@ -190,7 +199,7 @@ read/write состояния). **`chrome` как глобал разрешён 
 
 ## Тесты
 
-196 тестов, ~95% покрытия. vitest + jsdom + Testing Library + **MSW** + user-event.
+204 теста, ~97% покрытия (пороги форсятся в CI). vitest + jsdom + Testing Library + **MSW** + user-event.
 
 - **MSW перехватывает на уровне fetch**, поэтому `prefixUrl`, склейка `appid`, `AbortSignal` и
   zod-парсинг выполняются по-настоящему. `onUnhandledRequest: "error"` — компонент, тайком сходивший
@@ -225,9 +234,9 @@ read/write состояния). **`chrome` как глобал разрешён 
 
 ## Известные проблемы
 
-- Каталог `dist/` закоммичен (нужен для GitHub Pages) и содержит инлайненный `VITE_API_KEY`. Для
-  расширения ключ и так публичен (см. «Переменные окружения»), но коммит кладёт его ещё и в историю
-  git — стоит ротировать и держать на free-tier с лимитами.
+- `VITE_API_KEY` инлайнится в собранный бандл, который CI деплоит на Pages, — для чисто фронтового
+  клиента он публичен в принципе (см. «Переменные окружения»), держи на free-tier с лимитами. `dist/`
+  больше не коммитится (CI собирает и деплоит), но ключ уже лежит в **старой** истории git — стоит ротировать.
 - **Геолокация в popup не проверена вживую.** `navigator.geolocation` на origin
   `chrome-extension://` в MV3 — известная точка отказа; при провале приложение уходит в IP-fallback
   (ipapi.co). [use-geolocation.ts](src/hooks/use-geolocation.ts) логирует, какой путь сработал
