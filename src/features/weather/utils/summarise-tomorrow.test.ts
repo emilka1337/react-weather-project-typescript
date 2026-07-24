@@ -18,7 +18,7 @@ const dayAnchor = (): number => {
 const unit = (dt: number, temp: number, wind: number): ForecastUnit => ({
     ...makeForecastUnit(0, temp),
     dt,
-    wind: { deg: 180, gust: wind, speed: wind },
+    wind: { deg: 180, speed: wind },
 });
 
 describe("summariseTomorrow", () => {

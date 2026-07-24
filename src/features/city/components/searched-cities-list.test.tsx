@@ -8,7 +8,7 @@ import { useStarredCitiesStore } from "@/features/city/stores/starred-cities-sto
 import { SearchCity } from "@/features/city/types/search-city";
 import { useGeolocationStore } from "@/stores/geolocation-store";
 
-const baku: SearchCity = { name: "Baku", country: "AZ", lat: 40.37, lon: 49.89, local_names: {} };
+const baku: SearchCity = { name: "Baku", country: "AZ", lat: 40.37, lon: 49.89 };
 
 describe("SearchedCitiesList", () => {
     it("renders nothing but an empty list when there are no results", () => {

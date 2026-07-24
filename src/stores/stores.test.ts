@@ -13,7 +13,6 @@ const city = (name: string, lat: number, lon: number): SearchCity => ({
     country: "AZ",
     lat,
     lon,
-    local_names: {},
 });
 
 const readPersistedCities = (): SearchCity[] =>

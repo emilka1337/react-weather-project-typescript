@@ -49,7 +49,7 @@ describe("city search flow", () => {
                 const lat = new URL(request.url).searchParams.get("lat");
                 const name = lat === String(GANJA.lat) ? "Ganja" : "Baku";
 
-                return HttpResponse.json([{ name, country: "AZ", local_names: {} }]);
+                return HttpResponse.json([{ name, country: "AZ", lat: Number(lat), lon: 0 }]);
             }),
             http.get("https://api.openweathermap.org/data/2.5/forecast", ({ request }) => {
                 const params = new URL(request.url).searchParams;
