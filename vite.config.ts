@@ -1,10 +1,9 @@
-/// <reference types="vitest/config" />
 import { readFileSync } from "node:fs";
 import { fileURLToPath, URL } from "node:url";
 
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
+import { defineConfig } from "vitest/config";
 
 // Single source of truth for the version: package.json. The manifest's version is rewritten from it
 // at build time, so the two can never drift and the Chrome Web Store always sees a real bump.
