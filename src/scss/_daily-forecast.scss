@@ -51,6 +51,10 @@
         }
 
         .forecast-cell {
+            // Native <button> reset: it is a button now, for keyboard operability.
+            background: none;
+            font: inherit;
+            color: inherit;
             margin: 10px 0px;
             padding: 5px 15px;
             text-align: center;

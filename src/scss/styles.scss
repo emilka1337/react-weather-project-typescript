@@ -25,6 +25,15 @@ body {
     box-sizing: border-box;
 }
 
+// Keyboard focus must be visible or keyboard navigation is unusable. :focus-visible only shows the
+// ring for keyboard users, not on mouse clicks. Applied globally so every focusable control - the
+// forecast cells, the setting switches, the search input, every button - gets a consistent ring.
+:focus-visible {
+    outline: 2px solid $weatherTextColor;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
 ::selection {
     background-color: $weatherTextColor;
     color: $widgetBgColor;
@@ -40,6 +49,5 @@ body {
     transition: 400ms;
 
     @import "./widget.scss";
-    @import "./alert";
     @import "./dark-mode";
 }

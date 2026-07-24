@@ -1,6 +1,11 @@
 &.dark {
     background: $appDarkBgColor !important;
 
+    // A lighter focus ring so it stays visible against the dark background.
+    :focus-visible {
+        outline-color: $weatherDarkTextColor;
+    }
+
     .widget {
         background: $widgetDarkBgColor !important;
         box-shadow: none;

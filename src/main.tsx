@@ -1,19 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./components/App";
-import { Provider } from "react-redux";
-import store from "./store/store";
+
+import App from "@/app/app";
 // Styles
 import "./scss/styles.scss";
 
 const rootElem: HTMLElement | null = document.getElementById("root");
 
 if (rootElem) {
+    // Zustand stores are module singletons, so there is no Provider to wrap the tree in.
     ReactDOM.createRoot(rootElem).render(
         <React.StrictMode>
-            <Provider store={store}>
-                <App />
-            </Provider>
+            <App />
         </React.StrictMode>
     );
 } else {
