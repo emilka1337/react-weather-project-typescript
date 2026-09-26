@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath, URL } from "node:url";
 
-import react from "@vitejs/plugin-react";
+import babel from "@rolldown/plugin-babel";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import { defineConfig } from "vitest/config";
 
@@ -11,20 +12,27 @@ const pkg = JSON.parse(
     readFileSync(fileURLToPath(new URL("./package.json", import.meta.url)), "utf8")
 ) as { version: string };
 
-// One config, not two: vitest.config.ts used to redeclare the react plugin and would have had to
-// redeclare the alias as well. Vitest reads the `test` block from here.
+// One config, not two: Vitest reads the `test` block from here, with the same plugins and resolve.
 export default defineConfig({
     base: "./",
     plugins: [
         react(),
+        // React Compiler memoizes components and hooks at build time, so the code carries no
+        // React.memo / useMemo / useCallback for performance. Babel is here only for the compiler:
+        // JSX, TypeScript and Fast Refresh are Oxc's job. (plugin-react's own `compiler` option is
+        // still experimental; this is the stable path.)
+        babel({ presets: [reactCompilerPreset()] }),
         viteStaticCopy({
             targets: [
                 {
                     src: "src/manifest.json",
                     dest: "",
+                    // v4 always preserves the source directory structure; strip it so the
+                    // manifest lands at the dist/ root, where Chrome looks for it.
+                    rename: { stripBase: true },
                     transform: (content) =>
                         JSON.stringify(
-                            { ...(JSON.parse(content.toString()) as Record<string, unknown>), version: pkg.version },
+                            { ...(JSON.parse(content) as Record<string, unknown>), version: pkg.version },
                             null,
                             4
                         ),
@@ -33,12 +41,11 @@ export default defineConfig({
         }),
     ],
     resolve: {
-        alias: {
-            "@": fileURLToPath(new URL("./src", import.meta.url)),
-        },
+        // The `@/*` alias lives only in tsconfig.app.json `paths`; Vite resolves it from there.
+        tsconfigPaths: true,
     },
     build: {
-        rollupOptions: {
+        rolldownOptions: {
             // Two entries into one bundle: the popup/Pages HTML, and the background service worker.
             // The worker must land at a stable dist/background.js - the manifest points at it - so it
             // is named without a content hash, while everything else keeps hashed names.
@@ -63,7 +70,7 @@ export default defineConfig({
             // background.ts is an entry point wired to chrome.* globals, like main.tsx - its logic
             // lives in tested utils; the glue is covered by the manual Chrome smoke test.
             exclude: ["src/testing/**", "src/**/*.d.ts", "src/main.tsx", "src/background.ts"],
-            // Thresholds so coverage can't silently erode. Set a little under the current ~95% to
+            // Thresholds so coverage can't silently erode. Set a little under the current ~97% to
             // leave headroom; `npm run coverage` (and CI) fail below these.
             thresholds: {
                 lines: 90,

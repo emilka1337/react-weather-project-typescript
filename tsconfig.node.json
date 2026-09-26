@@ -1,24 +1,25 @@
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "target": "ES2022",
-    "lib": ["ES2023"],
-    "module": "ESNext",
+    "target": "ES2024",
+    "lib": ["ES2024"],
     "skipLibCheck": true,
+
+    /* TypeScript 7 defaults `types` to [] - the config files run on Node and import node:*. */
+    "types": ["node"],
 
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
     "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
     "noEmit": true,
 
-    /* Linting */
-    "strict": true,
+    /* Linting. `strict` and `noUncheckedSideEffectImports` are on by default since TS 6. */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "oxlint.config.ts"]
 }

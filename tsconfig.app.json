@@ -1,34 +1,37 @@
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 
-    /* Bundler mode */
+    /* TypeScript 7 defaults `types` to [] - nothing from node_modules/@types is loaded implicitly.
+       `chrome` is the extension API global (background.ts, lib/extension.ts); vite/client comes in
+       through the reference in src/types/vite-env.d.ts. */
+    "types": ["chrome"],
+
+    /* Bundler mode. Vite (Oxc) transpiles each file on its own, so every file must be
+       transpilable in isolation, and type-only imports must say so. */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
     "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Path alias — must stay in sync with resolve.alias in vite.config.ts.
-       No baseUrl: it is deprecated, and under moduleResolution "bundler" the paths
-       are resolved relative to this file already. */
+    /* Path alias. Vite reads it from here too (resolve.tsconfigPaths in vite.config.ts), so this
+       is the single place it is declared. No baseUrl: removed in TS 7; under "bundler" the paths
+       are resolved relative to this file. */
     "paths": {
       "@/*": ["./src/*"]
     },
 
-    /* Linting */
-    "strict": true,
+    /* Linting. `strict` and `noUncheckedSideEffectImports` are on by default since TS 6. */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noFallthroughCasesInSwitch": true
   },
-  /* __mocks__ is in here so the type-aware linter can see it; it was in no tsconfig project. */
+  /* __mocks__ is in here so the type-aware linter can see it. */
   "include": ["src", "__mocks__"]
 }
