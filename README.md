@@ -1,50 +1,56 @@
-# React + TypeScript + Vite
+# Simple Weather
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Погодный виджет: текущая погода и прогноз на 5 дней с шагом 3 часа по данным
+[OpenWeather](https://openweathermap.org/api). Один и тот же `dist/` работает в двух местах:
 
-Currently, two official plugins are available:
+- **веб-страница** на GitHub Pages;
+- **Chrome-расширение** (Manifest V3): popup + фоновый service worker, который раз в день
+  присылает уведомление «погода на завтра», даже когда popup закрыт.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Стек
 
-## Expanding the ESLint configuration
+| | |
+| --- | --- |
+| UI | React 19 + React Compiler, Zustand 5 |
+| Язык | TypeScript 7 (нативный компилятор) |
+| Сборка | Vite 8 (Rolldown + Oxc), Sass (`@use`-модули) |
+| Данные | ky 2, zod 4 — все внешние ответы валидируются на границе |
+| Качество | oxlint + tsgolint (type-aware), oxfmt, Vitest 5 + Testing Library + MSW |
+| Архитектура | Bulletproof React: `app → features → shared`, границы форсит линтер |
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Быстрый старт
 
-- Configure the top-level `parserOptions` property like this:
+Нужен Node 24 (`.nvmrc`) и бесплатный ключ OpenWeather.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+nvm use            # Node из .nvmrc
+npm ci
+cp .env.example .env   # впиши VITE_API_KEY
+npm run dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Команды
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+npm run dev          # дев-сервер
+npm run build        # тайпчек + прод-сборка в dist/
+npm run preview      # локальный просмотр прод-сборки
+npm run typecheck    # tsc -b (TypeScript 7)
+npm run lint         # oxlint: архитектурные зоны, type-aware правила, React Compiler, a11y
+npm run format       # oxfmt (format:check - только проверка)
+npm test             # vitest
+npm run coverage     # vitest + покрытие с порогами
 ```
+
+CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) гоняет typecheck → lint → format:check →
+coverage → build на каждый push и PR, а с `main` деплоит `dist/` на GitHub Pages.
+
+## Установка расширения локально
+
+1. `npm run build`
+2. `chrome://extensions` → включить «Режим разработчика» → «Загрузить распакованное» → папка `dist/`.
+
+## Для разработчиков
+
+Архитектура, соглашения и известные ловушки (ky, Zustand, React Compiler, TypeScript 7, service
+worker) описаны в [CLAUDE.md](CLAUDE.md).

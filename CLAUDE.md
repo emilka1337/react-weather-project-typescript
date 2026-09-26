@@ -1,6 +1,7 @@
 # CLAUDE.md
 
-Погодный виджет-SPA: React 18 + TypeScript + Zustand + Vite, архитектура **Bulletproof React**.
+Погодный виджет-SPA: React 19 (+ React Compiler) + TypeScript 7 + Zustand + Vite 8, архитектура
+**Bulletproof React**.
 Данные — OpenWeather API (прогноз + геокодинг), запасное определение локации — ipapi.co.
 
 Один и тот же `dist/` едет в **два таргета**: как popup Chrome-расширения (Manifest V3) и как
@@ -14,8 +15,9 @@
 npm run dev        # дев-сервер Vite
 npm run build      # тайпчек (tsc -b) + прод-сборка в dist/
 npm run preview    # локальный просмотр прод-сборки
-npm run lint       # eslint, --max-warnings 0 (границы архитектуры + jsx-a11y)
-npm run typecheck  # tsc -b --noEmit (проверяет и src, и vite.config.ts)
+npm run lint       # oxlint --deny-warnings: границы архитектуры, type-aware, React Compiler, jsx-a11y
+npm run format     # oxfmt: форматирование + сортировка импортов (format:check - проверка)
+npm run typecheck  # tsc -b (TS 7, нативный компилятор; src и конфиги *.config.ts)
 npm test           # vitest run
 npm run test:watch # vitest в watch-режиме
 npm run coverage   # vitest + v8 coverage (пороги форсятся: см. thresholds в vite.config.ts)
@@ -24,11 +26,12 @@ npm run coverage   # vitest + v8 coverage (пороги форсятся: см. 
 ## CI и деплой
 
 [.github/workflows/ci.yml](.github/workflows/ci.yml): на каждый push/PR — `npm ci` → typecheck →
-lint → coverage → build; на `main` дополнительно собирает `dist/` и деплоит его на GitHub Pages через
+lint → format:check → coverage → build; на `main` дополнительно собирает `dist/` и деплоит его на GitHub Pages через
 `actions/deploy-pages`. Поэтому **`dist/` больше не коммитится** (в `.gitignore`) — CI собирает и
 публикует сам, и корень Pages отдаёт **собранное** приложение, а не дев-`index.html`. Источник Pages
-в настройках репо переключён на **GitHub Actions** (не branch-деплой). Node запинен: `engines: >=20`
-+ `.nvmrc` (CI на 22).
+в настройках репо переключён на **GitHub Actions** (не branch-деплой). Node: `.nvmrc` = 24 (CI берёт
+версию оттуда же), `engines` — по самой строгой зависимости (`^22.22.2 || ^24.15.0 || >=26`, её
+диктуют зависимости jsdom 30).
 
 ## Главное правило: однонаправленность
 
@@ -37,7 +40,7 @@ app  →  features  →  shared
 ```
 
 Стрелки не разворачиваются никогда. **Это не соглашение, а инвариант**, который форсит
-`import/no-restricted-paths` в [eslint.config.js](eslint.config.js):
+`no-restricted-imports` в [oxlint.config.ts](oxlint.config.ts) (зоны генерируются из массива `FEATURES`):
 
 1. **Фича не может импортировать из другой фичи.** Совсем.
 2. **Фича не может импортировать из `app`.** Композиция течёт вниз.
@@ -47,7 +50,11 @@ app  →  features  →  shared
 Если зона сработала — **неверна архитектура, а не конфиг**. Не отключай правило: перенеси общий
 кусок вниз, в `src/{lib,utils,types,stores}`, или разверни зависимость.
 
-Добавляешь фичу — впиши её в массив `FEATURES` в `eslint.config.js`, иначе для неё не будет зоны.
+Добавляешь фичу — впиши её в массив `FEATURES` в `oxlint.config.ts`, иначе для неё не будет зоны.
+
+Зоны — это паттерны по **строке импорта**, поэтому все межпапочные импорты идут через алиас `@/`, а
+импорт через `../` **запрещён вовсе** (иначе зону можно было бы обойти относительным путём). Алиас
+объявлен один раз — в `paths` tsconfig; Vite читает его оттуда (`resolve.tsconfigPaths`).
 
 ### Как фичи общаются, если им нельзя друг друга импортировать
 
@@ -82,15 +89,18 @@ src/
   lib/                      api-client (ky), ip-geolocation, extension (мост к chrome.*)
   stores/                   settings, geolocation, ui — сквозное состояние
   types/  utils/            общие типы и утилиты
-  testing/                  setup.ts, fixtures/, mocks/ (MSW)
-  scss/  fonts/  public/    ассеты и глобальные стили
+  testing/                  setup.ts, fixtures/, mocks/ (MSW), architecture.test.ts
+  scss/  fonts/             глобальные стили и шрифты
+public/favicon/             иконки: их берут и index.html, и manifest.json, и воркер (одна копия)
 ```
 
 `background.ts` лежит в корне `src/` рядом с `main.tsx` не случайно: как и `main.tsx`, это **точка
-входа**, а не слой. По зонам ESLint он вне всех `target`, поэтому — как `app` — может импортировать
+входа**, а не слой. Он не попадает ни в одну зону `oxlint.config.ts`, поэтому — как `app` — может импортировать
 из `features` и `shared` (ему нужны `weather/api` и `weather/utils`). Обычным модулям так нельзя.
 
-**Имена файлов и папок — kebab-case.** Форсится `check-file`. Единственное исключение — `__tests__`.
+**Имена файлов и папок — kebab-case.** Файлы форсит `unicorn/filename-case` в oxlint, папки —
+[architecture.test.ts](src/testing/architecture.test.ts) (правила для папок в oxlint нет).
+Единственное исключение — `__tests__`.
 
 ### Почему forecast и selected-weather — одна фича
 
@@ -112,10 +122,10 @@ src/
 
 Сборка кладёт в `dist/` **два входа**: `index.html` (+ хешированные чанки) — popup и Pages, и
 `background.js` — service worker. Мультивход и стабильное имя воркера настроены в
-[vite.config.ts](vite.config.ts) (`rollupOptions.input` + `entryFileNames`: `background` без хеша,
+[vite.config.ts](vite.config.ts) (`rolldownOptions.input` + `entryFileNames`: `background` без хеша,
 остальное с хешем). Воркер — `"type": "module"`, поэтому легально импортирует общий чанк через
 `./assets/...`. Манифест ([src/manifest.json](src/manifest.json)) копируется в `dist/` тем же
-`vite-plugin-static-copy`, а его `version` **переписывается из `package.json` на сборке** — один
+`vite-plugin-static-copy` (v4 сохраняет структуру папок — отсюда `rename: { stripBase: true }`), а его `version` **переписывается из `package.json` на сборке** — один
 бамп, и Web Store всегда видит новую версию.
 
 ### Зачем воркер: уведомления при закрытом popup
@@ -136,7 +146,8 @@ Popup уничтожается в момент закрытия. Веб-`Notific
 [use-extension-storage-sync.ts](src/hooks/use-extension-storage-sync.ts). Весь доступ к `chrome.*`
 инкапсулирован в [lib/extension.ts](src/lib/extension.ts) (`isExtension`, `extensionAssetUrl`,
 read/write состояния). **`chrome` как глобал разрешён ровно в двух файлах** — `background.ts` и
-`lib/extension.ts` (override в [eslint.config.js](eslint.config.js)).
+`lib/extension.ts`. Типы `chrome` видны везде (`types: ["chrome"]` в tsconfig), поэтому ограничение
+держит линтер: `no-restricted-globals` в [oxlint.config.ts](oxlint.config.ts) с исключением для этих двух файлов.
 
 ### Двойной таргет без двойных уведомлений
 
@@ -160,15 +171,40 @@ read/write состояния). **`chrome` как глобал разрешён 
   `import.meta.env` — ровно в одном (`config/env.ts`). Компоненты в сеть не ходят.
 - Сетевые вызовы живут в `features/*/api/`, а не в компонентах.
 - **Валидация внешних ответов — через zod.**
-- Отступ 4 пробела, точки с запятой, двойные кавычки.
+- Стиль держит **oxfmt** ([.oxfmtrc.json](.oxfmtrc.json)): 4 пробела, `;`, двойные кавычки, ширина 110,
+  сортировка импортов (builtin → external → `@/` → относительные). Руками не выравнивай — `npm run format`.
+  Концы строк — LF ([.gitattributes](.gitattributes)): без этого глобальный `core.autocrlf=true` на
+  Windows даёт CRLF, и `format:check` падает на каждом файле.
+
+### TypeScript 7
+
+- Нативный компилятор (Go). **JS API у TS 7.0 нет** — поэтому нет `typescript-eslint` и ESLint вообще:
+  линтер — oxlint, его type-aware правила крутятся на `oxlint-tsgolint` (он и есть TS 7). Не добавляй
+  инструменты, которым нужен `import "typescript"` (typescript-eslint, ts-morph, ...), — API обещан в 7.1.
+- `types` по умолчанию `[]`: нужные глобальные типы перечислены явно (`chrome` в app, `node` в конфигах).
+- `verbatimModuleSyntax`: типы импортируются через `import type` (oxlint чинит это `--fix`).
+- `erasableSyntaxOnly`: **никаких `enum`**, namespace, parameter properties. Вместо enum —
+  `as const`-объект + одноимённый union-тип (см. [forecast-mode.ts](src/features/weather/types/forecast-mode.ts)).
+
+### React 19 + React Compiler
+
+- Компилятор (`babel-plugin-react-compiler` через `@rolldown/plugin-babel` в [vite.config.ts](vite.config.ts))
+  мемоизирует компоненты и хуки сам. **Не пиши `React.memo`, `useMemo`, `useCallback` ради скорости.**
+  Исключение — когда от стабильности ссылки зависит **корректность** (функция — зависимость эффекта):
+  так оставлен `useCallback` в [use-tomorrow-forecast-notification.ts](src/features/weather/hooks/use-tomorrow-forecast-notification.ts).
+- Правила компилятора (`react/purity`, `refs`, `set-state-in-effect`, ...) включены в oxlint: код,
+  который компилятор пропустил бы, ловится на линте. Типичный случай — производное состояние: его
+  **вычисляют в рендере**, а не зеркалят в `useState` через эффект.
+- Именованные импорты (`lazy`, `StrictMode`, `createRoot`, `ChangeEvent`), без namespace `React.*`.
 
 ### Ловушка ky: `searchParams` обязан быть обычным объектом
 
-`api-client` доклеивает `appid` ко всем запросам через deep-merge `searchParams`. **Merge работает
-только если в запросе передан plain object.** Передашь `URLSearchParams` или строку — `appid` молча
-исчезнет, и запрос получит 401. На это есть тест в каждом api-модуле.
+`api-client` доклеивает `appid` ко всем запросам через merge `searchParams`. **Merge работает
+только если в запросе передан plain object.** Передашь `URLSearchParams` или строку — они **заменят**
+параметры инстанса, `appid` молча исчезнет, и запрос получит 401. На это есть тест в каждом api-модуле.
 
-Пути к `prefixUrl` дописываются **без** ведущего слеша: `"data/2.5/forecast"`, не `"/data/..."`.
+ky 2: опция называется `prefix` (не `prefixUrl`), и слеш на стыке `prefix` и пути ky нормализует сам —
+`"data/2.5/forecast"` и `"/data/2.5/forecast"` одно и то же (в коде пишем без ведущего).
 
 ### Ловушка Zustand v5: селектор не должен собирать объект
 
@@ -187,7 +223,7 @@ read/write состояния). **`chrome` как глобал разрешён 
 
 | Переменная | Назначение |
 | --- | --- |
-| `VITE_BASE_URL` | База OpenWeather. **Со слешем на конце** — схема это проверяет |
+| `VITE_BASE_URL` | База OpenWeather, http(s)-URL (схема проверяет). Слеш на конце не обязателен |
 | `VITE_API_KEY` | Ключ OpenWeather |
 
 `.env.test` закоммичен намеренно: Vitest работает в режиме `test`, Vite подхватывает этот файл, и
@@ -199,9 +235,14 @@ read/write состояния). **`chrome` как глобал разрешён 
 
 ## Тесты
 
-204 теста, ~97% покрытия (пороги форсятся в CI). vitest + jsdom + Testing Library + **MSW** + user-event.
+251 тест: строки ~99.8%, функции 100%, ветки ~91% (пороги форсятся в CI). vitest 5 + jsdom + Testing
+Library + **MSW** + user-event.
 
-- **MSW перехватывает на уровне fetch**, поэтому `prefixUrl`, склейка `appid`, `AbortSignal` и
+- **Тесты гоняют код после React Compiler** (тот же плагин, что в сборке) — проверяется то, что едет в
+  прод. Поэтому branches/statements ниже lines: ветки «кэш попал» у компилятора исполняются только при
+  перерендере с теми же входами. Не гонись за ними ради цифры.
+
+- **MSW перехватывает на уровне fetch**, поэтому `prefix`, склейка `appid`, `AbortSignal` и
   zod-парсинг выполняются по-настоящему. `onUnhandledRequest: "error"` — компонент, тайком сходивший
   в сеть, валит тест. Не мокай `ky` модульно: у мока не будет `.create`.
 - **Сторы Zustand сбрасываются автоматически** между тестами ([__mocks__/zustand.ts](__mocks__/zustand.ts)).
@@ -217,7 +258,7 @@ read/write состояния). **`chrome` как глобал разрешён 
 
 ## Доступность (a11y)
 
-`eslint-plugin-jsx-a11y` подключён и форсится тем же `--max-warnings 0`. Всё интерактивное —
+Набор `jsx-a11y` (аналог recommended из eslint-plugin-jsx-a11y) включён в oxlint и форсится тем же `--deny-warnings`. Всё интерактивное —
 нативные элементы, чтобы фокус и Enter/Space работали даром:
 
 - Ячейка прогноза — `<button>` с `aria-pressed` и `aria-label`. Какая ячейка активна, **выводится
@@ -245,7 +286,7 @@ read/write состояния). **`chrome` как глобал разрешён 
 - Уведомления в расширении не привязаны ко времени суток: `chrome.alarms` будит воркер раз в час, и
   первое срабатывание после смены даты шлёт «завтра». Осмысленного «утреннего» времени без работы с
   таймзоной пока нет.
-- SCSS — один глобальный каскад: партиалы `@import`-ятся *внутрь* `.app`/`.widget`, а
+- SCSS — один глобальный каскад: партиалы — `@use`-модули, каждый отдаёт `@mixin styles`, и родитель
+  подключает его *внутри* `.app`/`.widget` (так `&.dark` в `_dark-mode.scss` цепляется к `.app`), а
   `_dark-mode.scss` перекрывает всё через `!important`. Компоненты завязаны на глобальные имена
   классов. Резать по фичам = переезд на CSS Modules; отдельный проект.
-- Sass `@import` устарел, нужна миграция на `@use`.
