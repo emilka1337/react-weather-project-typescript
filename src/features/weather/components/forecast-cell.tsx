@@ -1,14 +1,15 @@
-import { lazy, Suspense } from "react";
-
+import HumidityContainer from "@/features/weather/components/humidity-container";
 import TemperatureContainer from "@/features/weather/components/temperature-container";
+import WindContainer from "@/features/weather/components/wind-container";
 import { useForecastModeStore } from "@/features/weather/stores/forecast-mode-store";
 import { useSelectedWeatherStore } from "@/features/weather/stores/selected-weather-store";
 import { ForecastModes } from "@/features/weather/types/forecast-mode";
 import type { ForecastUnit } from "@/features/weather/types/forecast-unit";
 import { formatTime } from "@/utils/format-time";
 
-const WindContainer = lazy(() => import("@/features/weather/components/wind-container"));
-const HumidityContainer = lazy(() => import("@/features/weather/components/humidity-container"));
+// Wind and humidity used to be React.lazy chunks of ~1 kB each. Under React 19 a click that
+// suspends shows the (empty) fallback at once, so the first mode switch blanked all 40 cells
+// until the chunk arrived. Not worth a network round-trip: they are imported statically.
 
 interface ForecastCellProps {
     readonly cellForecast: ForecastUnit;
@@ -44,16 +45,12 @@ function ForecastCell({ cellForecast, timestamp }: ForecastCellProps) {
                     main={cellForecast.weather[0].main}
                 />
             )}
-            <Suspense>
-                {forecastMode === ForecastModes.WIND && (
-                    <WindContainer speed={cellForecast.wind.speed} degree={cellForecast.wind.deg} />
-                )}
-            </Suspense>
-            <Suspense>
-                {forecastMode === ForecastModes.HUMIDITY && (
-                    <HumidityContainer humidity={cellForecast.main.humidity} />
-                )}
-            </Suspense>
+            {forecastMode === ForecastModes.WIND && (
+                <WindContainer speed={cellForecast.wind.speed} degree={cellForecast.wind.deg} />
+            )}
+            {forecastMode === ForecastModes.HUMIDITY && (
+                <HumidityContainer humidity={cellForecast.main.humidity} />
+            )}
             <div className={isActive ? "active-indicator show" : "active-indicator"}></div>
         </button>
     );

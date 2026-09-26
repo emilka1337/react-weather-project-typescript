@@ -31,21 +31,31 @@ describe("ForecastCell", () => {
         expect(container.querySelector(".temperature")).toHaveTextContent("22");
     });
 
-    it("lazily renders the wind container in wind mode", async () => {
+    it("renders the wind container in wind mode", () => {
         act(() => useForecastModeStore.getState().setForecastMode(ForecastModes.WIND));
 
         renderCell();
 
-        // Behind Suspense, so it arrives on a later tick.
-        expect(await screen.findByText("11 km/h")).toBeInTheDocument();
+        expect(screen.getByText("11 km/h")).toBeInTheDocument();
     });
 
-    it("lazily renders the humidity container in humidity mode", async () => {
+    it("renders the humidity container in humidity mode", () => {
         act(() => useForecastModeStore.getState().setForecastMode(ForecastModes.HUMIDITY));
 
         renderCell();
 
-        expect(await screen.findByText("40%")).toBeInTheDocument();
+        expect(screen.getByText("40%")).toBeInTheDocument();
+    });
+
+    // Regression: with React.lazy containers, React 19 committed the empty Suspense fallback on the
+    // first mode switch, blanking every cell until the chunk loaded. The switch must be immediate.
+    it("shows the new mode's readout in the same commit as the switch, with no blank frame", () => {
+        const { container } = renderCell();
+
+        act(() => useForecastModeStore.getState().setForecastMode(ForecastModes.WIND));
+
+        expect(container.querySelector(".wind-container")).toBeInTheDocument();
+        expect(container.querySelector(".temperature-container")).not.toBeInTheDocument();
     });
 
     it("is a real button, so it is focusable and in the tab order", () => {
