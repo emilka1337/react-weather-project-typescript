@@ -85,4 +85,10 @@ describe("extension bridge", () => {
         await writeLastNotifiedYmd("2026-7-15");
         expect(await readLastNotifiedYmd()).toBe("2026-7-15");
     });
+
+    it("reads null sync state on-extension before the popup has ever written it", async () => {
+        asExtension();
+
+        expect(await readWeatherSyncState()).toBeNull();
+    });
 });

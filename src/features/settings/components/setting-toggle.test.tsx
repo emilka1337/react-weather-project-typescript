@@ -38,4 +38,21 @@ describe("SettingToggle", () => {
 
         expect(onToggle).toHaveBeenCalledOnce();
     });
+
+    it("is controlled: a re-render with new props updates the state and the handler", async () => {
+        const first = vi.fn<() => void>();
+        const second = vi.fn<() => void>();
+        const user = userEvent.setup();
+        const { rerender, container } = render(
+            <SettingToggle label="Dark mode" checked={false} onToggle={first} />,
+        );
+
+        rerender(<SettingToggle label="Dark theme" checked onToggle={second} />);
+        await user.click(screen.getByRole("switch", { name: "Dark theme" }));
+
+        expect(screen.getByRole("switch")).toHaveAttribute("aria-checked", "true");
+        expect(container.querySelector(".toggler")).toHaveClass("toggled");
+        expect(second).toHaveBeenCalledOnce();
+        expect(first).not.toHaveBeenCalled();
+    });
 });

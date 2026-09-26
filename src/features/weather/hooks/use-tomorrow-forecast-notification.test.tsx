@@ -60,4 +60,15 @@ describe("useTomorrowForecastNotification", () => {
 
         expect(fired).toEqual([]);
     });
+
+    it("stays silent when the forecast does not reach tomorrow", () => {
+        const fired = captureNotifications();
+        enableNotifications();
+        // Only the first slot - a single day, so there is no "tomorrow" bucket to summarise.
+        act(() => useForecastStore.getState().setForecast(makeForecast().slice(0, 1)));
+
+        render(<Harness />);
+
+        expect(fired).toEqual([]);
+    });
 });

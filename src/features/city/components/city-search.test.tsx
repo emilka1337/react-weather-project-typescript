@@ -142,4 +142,18 @@ describe("CitySearch", () => {
 
         await waitFor(() => expect(screen.queryByText("Baku, AZ")).not.toBeInTheDocument(), WAIT);
     });
+
+    it("logs a failed search and keeps showing nothing, rather than crashing the panel", async () => {
+        const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
+        server.use(http.get(ENDPOINT, () => new HttpResponse(null, { status: 500 })));
+        const user = renderSearch();
+
+        await user.type(searchInput(), "Baku");
+
+        await waitFor(
+            () => expect(consoleError).toHaveBeenCalledWith("City search failed: ", expect.anything()),
+            WAIT,
+        );
+        expect(screen.queryByRole("button", { name: /Baku/ })).not.toBeInTheDocument();
+    });
 });

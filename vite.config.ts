@@ -70,13 +70,15 @@ export default defineConfig({
             // background.ts is an entry point wired to chrome.* globals, like main.tsx - its logic
             // lives in tested utils; the glue is covered by the manual Chrome smoke test.
             exclude: ["src/testing/**", "src/**/*.d.ts", "src/main.tsx", "src/background.ts"],
-            // Thresholds so coverage can't silently erode. Set a little under the current ~97% to
-            // leave headroom; `npm run coverage` (and CI) fail below these.
+            // Thresholds so coverage can't silently erode, a little under the current numbers to
+            // leave headroom; `npm run coverage` (and CI) fail below these. Branches/statements read
+            // lower than lines because the tests run the React-Compiler output (what ships): its
+            // memo-cache "unchanged" paths only execute on a re-render with equal inputs.
             thresholds: {
-                lines: 90,
-                functions: 90,
-                branches: 85,
-                statements: 90,
+                lines: 97,
+                functions: 97,
+                branches: 88,
+                statements: 94,
             },
         },
     },

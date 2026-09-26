@@ -21,4 +21,14 @@ describe("Spinner", () => {
         expect(container.querySelectorAll(".circle")).toHaveLength(0);
         expect(screen.getByText("Loading...")).toBeInTheDocument();
     });
+
+    it("follows the setting while mounted", () => {
+        const { container } = render(<Spinner />);
+
+        act(() => useSettingsStore.getState().toggleLoadingAnimation());
+        expect(screen.getByText("Loading...")).toBeInTheDocument();
+
+        act(() => useSettingsStore.getState().toggleLoadingAnimation());
+        expect(container.querySelectorAll(".circle")).toHaveLength(2);
+    });
 });

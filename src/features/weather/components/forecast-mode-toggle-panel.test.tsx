@@ -40,6 +40,18 @@ describe("ForecastModeTogglePanel", () => {
         expect(togglers()[2]).toHaveClass("active");
     });
 
+    it("switches back to temperature", async () => {
+        const user = userEvent.setup();
+        render(<ForecastModeTogglePanel />);
+
+        await user.click(togglers()[2]);
+        await user.click(togglers()[0]);
+
+        expect(useForecastModeStore.getState().forecastMode).toBe(ForecastModes.TEMPERATURE);
+        expect(togglers()[0]).toHaveClass("active");
+        expect(togglers()[2]).not.toHaveClass("active");
+    });
+
     it("names each mode and announces the active one through aria-pressed", async () => {
         const user = userEvent.setup();
         render(<ForecastModeTogglePanel />);

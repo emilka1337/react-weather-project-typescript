@@ -18,4 +18,19 @@ describe("Greeting", () => {
 
         expect(screen.getByText(expected)).toBeInTheDocument();
     });
+
+    it("moves on to the next greeting as the hour passes", () => {
+        const { rerender } = render(<Greeting time={{ hours: 11, minutes: 59 }} />);
+
+        rerender(<Greeting time={{ hours: 12, minutes: 0 }} />);
+
+        expect(screen.getByText("Have a nice day")).toBeInTheDocument();
+        expect(screen.queryByText("Good Morning")).not.toBeInTheDocument();
+    });
+
+    it("renders an empty greeting for an hour outside 0-23 rather than a wrong one", () => {
+        render(<Greeting time={{ hours: 24, minutes: 0 }} />);
+
+        expect(screen.getByRole("heading")).toBeEmptyDOMElement();
+    });
 });

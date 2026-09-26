@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { EnvSchema } from "@/config/env";
 
@@ -34,5 +34,28 @@ describe("EnvSchema", () => {
 
     it("rejects a missing variable", () => {
         expect(EnvSchema.safeParse({ VITE_BASE_URL: valid.VITE_BASE_URL }).success).toBe(false);
+    });
+});
+
+describe("env (module load)", () => {
+    afterEach(() => vi.unstubAllEnvs());
+
+    // The point of validating at import time: the app refuses to start with the reason spelled
+    // out, instead of every request 401-ing later.
+    it("throws on import, naming the bad variable, when the environment is invalid", async () => {
+        vi.stubEnv("VITE_API_KEY", "");
+        vi.resetModules();
+
+        await expect(import("@/config/env")).rejects.toThrow(
+            /Invalid environment variables[\s\S]*VITE_API_KEY/,
+        );
+    });
+
+    it("exposes the parsed values when the environment is valid", async () => {
+        vi.resetModules();
+
+        const { env } = await import("@/config/env");
+
+        expect(env.VITE_API_KEY).toBe("test-api-key");
     });
 });
