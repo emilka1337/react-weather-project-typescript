@@ -51,3 +51,18 @@ body {
     @import "./widget.scss";
     @import "./dark-mode";
 }
+
+// The ErrorBoundary fallback replaces the whole .app tree, so it is styled at the top level.
+.error-fallback {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    min-height: 100vh;
+    padding: 24px;
+    text-align: center;
+    font-family: "Google Sans";
+    color: $weatherTextColor;
+    background: $appBgColor;
+}

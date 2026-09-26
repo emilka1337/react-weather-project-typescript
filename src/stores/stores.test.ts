@@ -13,7 +13,6 @@ const city = (name: string, lat: number, lon: number): SearchCity => ({
     country: "AZ",
     lat,
     lon,
-    local_names: {},
 });
 
 const readPersistedCities = (): SearchCity[] =>
@@ -76,6 +75,24 @@ describe("starredCitiesStore", () => {
 
         expect(useStarredCitiesStore.getState().starredCities).toHaveLength(1);
         expect(readPersistedCities()[0].name).toBe("Baku");
+    });
+
+    it("does not add the same city twice", () => {
+        const { addCityToStarredCities } = useStarredCitiesStore.getState();
+
+        addCityToStarredCities(city("Baku", 40.37, 49.89));
+        addCityToStarredCities(city("Baku", 40.37, 49.89));
+
+        expect(useStarredCitiesStore.getState().starredCities).toHaveLength(1);
+    });
+
+    it("treats same-name cities at different coordinates as distinct (Paris FR vs Paris TX)", () => {
+        const { addCityToStarredCities } = useStarredCitiesStore.getState();
+
+        addCityToStarredCities(city("Paris", 48.85, 2.35));
+        addCityToStarredCities(city("Paris", 33.66, -95.55));
+
+        expect(useStarredCitiesStore.getState().starredCities).toHaveLength(2);
     });
 
     it("removes the city at the given index and persists the result", () => {

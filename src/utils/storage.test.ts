@@ -30,4 +30,14 @@ describe("storage", () => {
 
         expect(readJson("key")).toBeNull();
     });
+
+    it("swallows a failing setItem (quota/blocked storage) instead of crashing the caller", () => {
+        const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+        vi.spyOn(localStorage, "setItem").mockImplementation(() => {
+            throw new DOMException("QuotaExceededError");
+        });
+
+        expect(() => writeJson("key", { a: 1 })).not.toThrow();
+        expect(consoleError).toHaveBeenCalled();
+    });
 });

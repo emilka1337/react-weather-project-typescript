@@ -21,10 +21,11 @@ function DailyForecast() {
         <>
             <ForecastModeTogglePanel />
             <ul className="daily-forecast">
-                {separatedForecastList.map((day: readonly ForecastUnit[], index: number) => (
+                {separatedForecastList.map((day: readonly ForecastUnit[]) => (
                     // ?? rather than ||: Sunday is weekday 0, which is falsy, so `||` silently
-                    // relabelled every Sunday column with today's weekday.
-                    <ForecastDay day={day} weekday={day[0].weekday ?? new Date().getDay()} key={index} />
+                    // relabelled every Sunday column with today's weekday. Key on the day's first
+                    // timestamp - stable identity, not the array index.
+                    <ForecastDay day={day} weekday={day[0].weekday ?? new Date().getDay()} key={day[0].dt} />
                 ))}
             </ul>
         </>

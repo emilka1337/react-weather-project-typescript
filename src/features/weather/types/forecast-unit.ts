@@ -1,37 +1,24 @@
-export interface ForecastUnit {
-    readonly clouds: {
-        readonly all: number;
-    };
-    readonly dt: number;
-    readonly dt_txt: string;
-    readonly main: {
-        readonly feels_like: number;
-        readonly grnd_level: number;
-        readonly humidity: number;
-        readonly pressure: number;
-        readonly sea_level: number;
-        readonly temp: number;
-        readonly temp_kf: number;
-        readonly temp_max: number;
-        readonly temp_min: number;
-    };
-    readonly pop: number;
-    readonly sys: {
-        readonly pod: string;
-    };
-    readonly visibility: number;
-    readonly weather: [
-        {
-            readonly description: string;
-            readonly icon: string;
-            readonly id: number;
-            readonly main: string;
-        }
-    ];
-    readonly wind: {
-        readonly deg: number;
-        readonly gust: number;
-        readonly speed: number;
-    };
-    weekday?: number;
-}
+import { z } from "zod";
+
+// The schema is the source of truth; the type is inferred from it, so the two can never drift and
+// the app validates external data at the boundary instead of trusting a hand-written cast.
+//
+// Only the fields the app actually reads are declared - zod strips the rest, so extra fields from
+// OpenWeather never fail the parse. `weekday` is stamped locally by separateListByWeekdays, not sent
+// by the API, hence optional. `weather` must have at least one entry, because weather[0].main is read.
+export const ForecastUnitSchema = z.object({
+    dt: z.number(),
+    main: z.object({
+        temp: z.number(),
+        feels_like: z.number(),
+        humidity: z.number(),
+    }),
+    wind: z.object({
+        speed: z.number(),
+        deg: z.number(),
+    }),
+    weather: z.array(z.object({ main: z.string() })).min(1),
+    weekday: z.number().optional(),
+});
+
+export type ForecastUnit = z.infer<typeof ForecastUnitSchema>;

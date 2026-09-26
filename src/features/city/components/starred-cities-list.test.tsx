@@ -9,8 +9,8 @@ import { useStarredCitiesStore } from "@/features/city/stores/starred-cities-sto
 import { SearchCity } from "@/features/city/types/search-city";
 import { useGeolocationStore } from "@/stores/geolocation-store";
 
-const baku: SearchCity = { name: "Baku", country: "AZ", lat: 40.37, lon: 49.89, local_names: {} };
-const ganja: SearchCity = { name: "Ganja", country: "AZ", lat: 40.68, lon: 46.36, local_names: {} };
+const baku: SearchCity = { name: "Baku", country: "AZ", lat: 40.37, lon: 49.89 };
+const ganja: SearchCity = { name: "Ganja", country: "AZ", lat: 40.68, lon: 46.36 };
 
 const seed = (...cities: SearchCity[]): void => {
     act(() => useStarredCitiesStore.setState({ starredCities: cities }));
@@ -47,10 +47,9 @@ describe("StarredCitiesList", () => {
     it("unstars the city at that position and persists the result", async () => {
         const user = userEvent.setup();
         seed(baku, ganja);
-        const { container } = render(<StarredCitiesList />);
+        render(<StarredCitiesList />);
 
-        // Second button of the first row is its unstar button.
-        await user.click(container.querySelectorAll("li")[0].querySelectorAll("button")[1]);
+        await user.click(screen.getByRole("button", { name: "Remove Baku" }));
 
         expect(useStarredCitiesStore.getState().starredCities.map((c) => c.name)).toEqual(["Ganja"]);
         expect(localStorage.getItem("starredCities")).toContain("Ganja");

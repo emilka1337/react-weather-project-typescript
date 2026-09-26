@@ -12,7 +12,7 @@ interface SearchedCitiesListProps {
 function SearchedCitiesList({ citiesList }: SearchedCitiesListProps) {
     const setSelectedCity = useSelectedCityStore((state) => state.setSelectedCity);
     const setGeolocation = useGeolocationStore((state) => state.setGeolocation);
-    const starredCities: SearchCity[] = useStarredCitiesStore((state) => state.starredCities);
+    // Dedup lives in the store now (by name + coordinates), so this component just adds.
     const addCityToStarredCities = useStarredCitiesStore((state) => state.addCityToStarredCities);
 
     const handleCityClick = useCallback(
@@ -23,29 +23,16 @@ function SearchedCitiesList({ citiesList }: SearchedCitiesListProps) {
         [setSelectedCity, setGeolocation]
     );
 
-    const addToFavorites = useCallback(
-        (city: SearchCity) => {
-            const cityAlreadyStarred: boolean = starredCities.some(
-                (starredCity: SearchCity) => city.name === starredCity.name
-            );
-
-            if (!cityAlreadyStarred) {
-                addCityToStarredCities(city);
-            }
-        },
-        [starredCities, addCityToStarredCities]
-    );
-
     return (
         <ul className="cities-list">
             {citiesList.length > 0 && <h5>Search</h5>}
-            {citiesList.map((city, index) => {
+            {citiesList.map((city) => {
                 return (
-                    <li key={index}>
+                    <li key={`${city.name}-${city.lat}-${city.lon}`}>
                         <button className="set-city" onClick={() => handleCityClick(city)}>
                             {city.name}, {city.country}
                         </button>
-                        <button onClick={() => addToFavorites(city)}>
+                        <button aria-label={`Star ${city.name}`} onClick={() => addCityToStarredCities(city)}>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="currentColor"

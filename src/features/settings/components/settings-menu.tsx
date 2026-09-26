@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 
 import SettingToggle from "@/features/settings/components/setting-toggle";
+import { clearExtensionStorage } from "@/lib/extension";
 import { useSettingsStore } from "@/stores/settings-store";
 import { useUiStore } from "@/stores/ui-store";
 import { Settings } from "@/types/settings";
@@ -31,6 +32,9 @@ function SettingsMenu() {
 
     const resetAppClick = useCallback((): void => {
         localStorage.clear();
+        // In the extension, also wipe the worker's chrome.storage mirror; no-op on Pages. Dispatched
+        // before reload - the browser process handles it independently of the popup's lifecycle.
+        void clearExtensionStorage();
         window.location.reload();
     }, []);
 

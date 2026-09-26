@@ -27,15 +27,28 @@ describe("getForecast", () => {
         expect(sent?.get("appid")).toBe("test-api-key");
     });
 
-    it("returns the parsed payload", async () => {
+    it("returns the parsed payload, keeping only the validated fields", async () => {
         const forecast = await getForecast(BAKU);
 
         expect(forecast.list).toHaveLength(40);
-        expect(forecast.city.name).toBe("Baku");
+        // city/cnt/cod are stripped by the schema - only `list` is consumed.
+        expect(forecast).not.toHaveProperty("city");
     });
 
     it("rejects on an HTTP error rather than swallowing it", async () => {
         server.use(http.get(ENDPOINT, () => new HttpResponse(null, { status: 429 })));
+
+        await expect(getForecast(BAKU)).rejects.toThrow();
+    });
+
+    it("rejects a malformed payload at the boundary instead of letting it crash rendering", async () => {
+        // A unit missing `main` - the kind of shape a raw cast would have waved through, only to
+        // explode later on forecast[i].main.temp.
+        server.use(
+            http.get(ENDPOINT, () =>
+                HttpResponse.json({ list: [{ dt: 1, wind: { speed: 1, deg: 1 }, weather: [{ main: "Clear" }] }] })
+            )
+        );
 
         await expect(getForecast(BAKU)).rejects.toThrow();
     });

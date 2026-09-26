@@ -54,3 +54,10 @@ export async function writeLastNotifiedYmd(ymd: string): Promise<void> {
     if (!isExtension()) return;
     await chrome.storage.local.set({ [LAST_NOTIFIED_KEY]: ymd });
 }
+
+// Wipes the worker's mirror. "Reset App" clears localStorage, but in the extension the coordinates
+// and notifications flag also live here - without this the worker keeps notifying for the old city.
+export async function clearExtensionStorage(): Promise<void> {
+    if (!isExtension()) return;
+    await chrome.storage.local.clear();
+}

@@ -1,11 +1,13 @@
-import { SearchCity } from "@/features/city/types/search-city";
+import { SearchCity, SearchCityListSchema } from "@/features/city/types/search-city";
 import { openWeatherApi } from "@/lib/api-client";
 import { CityGeolocation } from "@/types/geolocation";
 
-export function reverseGeocode({ lat, lon }: CityGeolocation): Promise<SearchCity[]> {
-    return openWeatherApi
+export async function reverseGeocode({ lat, lon }: CityGeolocation): Promise<SearchCity[]> {
+    const payload = await openWeatherApi
         .get("geo/1.0/reverse", { searchParams: { lat, lon, limit: 5 } })
-        .json<SearchCity[]>();
+        .json();
+
+    return SearchCityListSchema.parse(payload);
 }
 
 // A 200 with an empty array is a valid answer (coordinates over the ocean, say). The caller wants
