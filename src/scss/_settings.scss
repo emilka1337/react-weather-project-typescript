@@ -1,3 +1,6 @@
+@use "variables" as *;
+@use "mixins" as *;
+
 // The row layout shared by the toggle button and the reset rows.
 @mixin settingsRow {
     display: flex;
@@ -9,125 +12,128 @@
     border-radius: 10px;
 }
 
-.settings-menu-toggler-container {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.settings-menu-toggler {
-    @include button;
-    z-index: 200;
-}
-
-.settings-menu {
-    z-index: 100;
-    transition: 500ms;
-    position: absolute;
-    top: 0;
-    right: -100%;
-    padding: 35px 20px;
-    background: $widgetBgColor;
-    box-shadow: none;
-    width: 100%;
-    height: 100%;
-
-    &.show {
-        transform: none;
-        right: 0;
+// Emitted where the parent includes it, so the rules nest exactly as the old nested @import did.
+@mixin styles {
+    .settings-menu-toggler-container {
+        display: flex;
+        justify-content: flex-end;
     }
 
-    ul {
-        display: flex;
-        flex-direction: column;
-        padding: 0;
-        list-style: none;
+    .settings-menu-toggler {
+        @include button;
+        z-index: 200;
+    }
 
-        li {
-            border-radius: 10px;
+    .settings-menu {
+        z-index: 100;
+        transition: 500ms;
+        position: absolute;
+        top: 0;
+        right: -100%;
+        padding: 35px 20px;
+        background: $widgetBgColor;
+        box-shadow: none;
+        width: 100%;
+        height: 100%;
+
+        &.show {
+            transform: none;
+            right: 0;
         }
 
-        // The whole row is now a native <button role="switch">, so it needs the button reset.
-        .setting-toggle {
-            @include settingsRow;
-            width: 100%;
-            background: none;
-            border: none;
-            font-family: inherit;
-            color: inherit;
-            text-align: left;
-            cursor: pointer;
-            transition: 200ms;
+        ul {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            list-style: none;
 
-            &:hover {
-                background: $hoverBgColor;
-            }
-        }
-
-        .reset-row {
-            @include settingsRow;
-        }
-
-        li {
-            .setting-label,
-            h5 {
-                color: $textColor;
-                font-weight: 500;
-                margin: 0;
-                font-size: 14px;
-                span {
-                    font-size: 10px;
-                }
-            }
-
-            .toggler {
-                display: inline-block;
-                // background: #A3A1A1;
-                border: 1px solid #a3a1a1;
+            li {
                 border-radius: 10px;
-                padding: 5px 15px;
-                position: relative;
-                transition: 400ms;
-                cursor: pointer;
+            }
 
-                .circle {
-                    background: $textColor;
-                    padding: 8px;
-                    position: absolute;
-                    left: -1px;
-                    top: -3px;
-                    border-radius: 50%;
-                    transition: 400ms;
+            // The whole row is now a native <button role="switch">, so it needs the button reset.
+            .setting-toggle {
+                @include settingsRow;
+                width: 100%;
+                background: none;
+                border: none;
+                font-family: inherit;
+                color: inherit;
+                text-align: left;
+                cursor: pointer;
+                transition: 200ms;
+
+                &:hover {
+                    background: $hoverBgColor;
+                }
+            }
+
+            .reset-row {
+                @include settingsRow;
+            }
+
+            li {
+                .setting-label,
+                h5 {
+                    color: $textColor;
+                    font-weight: 500;
+                    margin: 0;
+                    font-size: 14px;
+                    span {
+                        font-size: 10px;
+                    }
                 }
 
-                &.toggled {
-                    background: #a3a1a1;
+                .toggler {
+                    display: inline-block;
+                    // background: #A3A1A1;
+                    border: 1px solid #a3a1a1;
+                    border-radius: 10px;
+                    padding: 5px 15px;
+                    position: relative;
+                    transition: 400ms;
+                    cursor: pointer;
 
                     .circle {
                         background: $textColor;
-                        border-color: $textColor;
-                        left: calc(100% - 15px);
+                        padding: 8px;
+                        position: absolute;
+                        left: -1px;
+                        top: -3px;
+                        border-radius: 50%;
+                        transition: 400ms;
+                    }
+
+                    &.toggled {
+                        background: #a3a1a1;
+
+                        .circle {
+                            background: $textColor;
+                            border-color: $textColor;
+                            left: calc(100% - 15px);
+                        }
                     }
                 }
-            }
 
-            .reset-button {
-                color: crimson;
-                border: 1px solid transparent;
-                background: transparent;
-                cursor: pointer;
-                transition: 400ms;
-                padding: 5px;
-                border-radius: 5px;
-
-                &:hover {
-                    border-color: $textColor;
-                }
-
-                &.resetted {
-                    color: green;
+                .reset-button {
+                    color: crimson;
+                    border: 1px solid transparent;
+                    background: transparent;
+                    cursor: pointer;
+                    transition: 400ms;
+                    padding: 5px;
+                    border-radius: 5px;
 
                     &:hover {
-                        border-color: green;
+                        border-color: $textColor;
+                    }
+
+                    &.resetted {
+                        color: green;
+
+                        &:hover {
+                            border-color: green;
+                        }
                     }
                 }
             }

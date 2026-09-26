@@ -1,144 +1,151 @@
-&.dark {
-    background: $appDarkBgColor !important;
+@use "variables" as *;
+@use "mixins" as *;
 
-    // A lighter focus ring so it stays visible against the dark background.
-    :focus-visible {
-        outline-color: $weatherDarkTextColor;
-    }
+// Included inside .app: the leading `&.dark` resolves to `.app.dark`, and the !important overrides
+// rely on coming after the light styles in the cascade.
+@mixin styles {
+    &.dark {
+        background: $appDarkBgColor !important;
 
-    .widget {
-        background: $widgetDarkBgColor !important;
-        box-shadow: none;
+        // A lighter focus ring so it stays visible against the dark background.
+        :focus-visible {
+            outline-color: $weatherDarkTextColor;
+        }
 
-        .topbar {
-            color: $darkTextColor !important;
+        .widget {
+            background: $widgetDarkBgColor !important;
+            box-shadow: none;
 
-            svg {
+            .topbar {
                 color: $darkTextColor !important;
-            }
 
-            .city-search {
-                background: $appDarkBgColor;
-
-                & > button {
-                    @include button;
+                svg {
+                    color: $darkTextColor !important;
                 }
 
-                input {
-                    background: $weatherDarkTextColor;
-                }
+                .city-search {
+                    background: $appDarkBgColor;
 
-                .cities-list {
-                    button {
-                        color: $darkTextColor !important;
+                    & > button {
+                        @include button;
+                    }
 
-                        &:hover {
-                            background: $hoverDarkBgColor !important;
+                    input {
+                        background: $weatherDarkTextColor;
+                    }
+
+                    .cities-list {
+                        button {
+                            color: $darkTextColor !important;
+
+                            &:hover {
+                                background: $hoverDarkBgColor !important;
+                            }
                         }
                     }
+
+                    .starred-cities-list svg {
+                        color: #ffe234 !important;
+                    }
+                }
+            }
+
+            .selected-weather {
+                .selected-temperature {
+                    color: $weatherDarkTextColor !important;
                 }
 
-                .starred-cities-list svg {
-                    color: #ffe234 !important;
+                .feels-like {
+                    color: $weatherDarkTextColor !important;
                 }
             }
-        }
 
-        .selected-weather {
-            .selected-temperature {
-                color: $weatherDarkTextColor !important;
+            .loader {
+                .circle {
+                    color: $weatherDarkTextColor !important;
+                }
+
+                h2 {
+                    color: $weatherDarkTextColor !important;
+                }
             }
 
-            .feels-like {
-                color: $weatherDarkTextColor !important;
-            }
-        }
-
-        .loader {
-            .circle {
-                color: $weatherDarkTextColor !important;
+            .more-info {
+                color: $darkTextColor !important;
             }
 
-            h2 {
-                color: $weatherDarkTextColor !important;
+            .forecast-mode-toggler {
+                border-color: $widgetDarkBgColor !important;
+
+                &:hover,
+                &.active {
+                    border-color: $textColor !important;
+                }
+
+                svg {
+                    color: $darkTextColor !important;
+                }
             }
-        }
 
-        .more-info {
-            color: $darkTextColor !important;
-        }
+            .daily-forecast {
+                &::-webkit-scrollbar {
+                    // background: $textColor;
+                    background: $widgetDarkBgColor;
+                }
 
-        .forecast-mode-toggler {
-            border-color: $widgetDarkBgColor !important;
+                &::-webkit-scrollbar-thumb {
+                    // background: $appDarkBgColor;
+                    background: $widgetDarkBgColor;
+                }
 
-            &:hover,
-            &.active {
+                &:hover::-webkit-scrollbar-thumb {
+                    background: $weatherDarkTextColor;
+                }
+            }
+
+            .forecast-day {
                 border-color: $textColor !important;
+
+                .weekday {
+                    background: $widgetDarkBgColor !important;
+                    color: $darkTextColor !important;
+                }
             }
 
-            svg {
-                color: $darkTextColor !important;
-            }
-        }
-
-        .daily-forecast {
-            &::-webkit-scrollbar {
-                // background: $textColor;
-                background: $widgetDarkBgColor;
-            }
-
-            &::-webkit-scrollbar-thumb {
-                // background: $appDarkBgColor;
-                background: $widgetDarkBgColor;
-            }
-
-            &:hover::-webkit-scrollbar-thumb {
-                background: $weatherDarkTextColor;
-            }
-        }
-
-        .forecast-day {
-            border-color: $textColor !important;
-
-            .weekday {
-                background: $widgetDarkBgColor !important;
-                color: $darkTextColor !important;
-            }
-        }
-
-        .forecast-cell {
-            .time,
-            .temperature {
-                color: $darkTextColor !important;
-            }
-
-            .wind {
-                color: $darkTextColor !important;
-            }
-
-            .humidity {
-                color: $darkTextColor !important;
-            }
-
-            &:hover {
-                background: $appDarkBgColor !important;
-            }
-        }
-
-        .settings-menu-toggler {
-            @include buttonDark;
-        }
-
-        .settings-menu {
-            background: $widgetDarkBgColor;
-
-            ul li {
-                &:not(:last-child):hover {
-                    background: $hoverDarkBgColor !important;
+            .forecast-cell {
+                .time,
+                .temperature {
+                    color: $darkTextColor !important;
                 }
 
-                h5 {
-                    color: $darkTextColor;
+                .wind {
+                    color: $darkTextColor !important;
+                }
+
+                .humidity {
+                    color: $darkTextColor !important;
+                }
+
+                &:hover {
+                    background: $appDarkBgColor !important;
+                }
+            }
+
+            .settings-menu-toggler {
+                @include buttonDark;
+            }
+
+            .settings-menu {
+                background: $widgetDarkBgColor;
+
+                ul li {
+                    &:not(:last-child):hover {
+                        background: $hoverDarkBgColor !important;
+                    }
+
+                    h5 {
+                        color: $darkTextColor;
+                    }
                 }
             }
         }

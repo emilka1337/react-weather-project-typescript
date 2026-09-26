@@ -1,46 +1,51 @@
-.selected-weather {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+@use "variables" as *;
 
-    .selected-temperature {
-        font-size: 130px;
-        margin: 0;
-        font-weight: 400;
-        color: $weatherTextColor;
-        position: relative;
-        margin-bottom: 0;
-
-        .degree {
-            position: absolute;
-        }
-    }
-
-    .feels-like {
-        margin: 0;
-        font-size: 14px;
-        color: $weatherTextColor;
-    }
-
-    .more-info {
+// Emitted where the parent includes it, so the rules nest exactly as the old nested @import did.
+@mixin styles {
+    .selected-weather {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 20px;
-        color: $weatherTextColor;
-        margin-top: 20px;
 
-        h2,
-        h3 {
+        .selected-temperature {
+            font-size: 130px;
+            margin: 0;
             font-weight: 400;
+            color: $weatherTextColor;
+            position: relative;
             margin-bottom: 0;
-            margin-top: 0;
-            font-size: 18px;
+
+            .degree {
+                position: absolute;
+            }
         }
 
-        h3 {
+        .feels-like {
+            margin: 0;
+            font-size: 14px;
+            color: $weatherTextColor;
+        }
+
+        .more-info {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 20px;
+            color: $weatherTextColor;
+            margin-top: 20px;
+
+            h2,
+            h3 {
+                font-weight: 400;
+                margin-bottom: 0;
+                margin-top: 0;
+                font-size: 18px;
+            }
+
+            h3 {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
         }
     }
 }

@@ -1,0 +1,27 @@
+@use "variables" as *;
+@use "topbar";
+@use "selected-weather";
+@use "forecast-mode-toggle-panel";
+@use "daily-forecast";
+@use "loading";
+@use "settings";
+
+// Emitted where the parent includes it, so the rules nest exactly as the old nested @import did.
+@mixin styles {
+    .widget {
+        background: $widgetBgColor;
+        width: 800px;
+        max-height: 600px;
+        padding: 25px;
+        box-shadow: 0px 0px 10px #acacac;
+        position: relative;
+        overflow: hidden;
+
+        @include topbar.styles;
+        @include selected-weather.styles;
+        @include forecast-mode-toggle-panel.styles;
+        @include daily-forecast.styles;
+        @include loading.styles;
+        @include settings.styles;
+    }
+}

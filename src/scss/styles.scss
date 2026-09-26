@@ -1,3 +1,7 @@
+@use "variables" as *;
+@use "widget";
+@use "dark-mode";
+
 @font-face {
     font-family: "Google Sans";
     font-weight: 400;
@@ -13,9 +17,6 @@
     font-weight: 600;
     src: url(../fonts/GoogleSans-Bold.woff2) format("woff2");
 }
-
-@import "./variables";
-@import "./mixins";
 
 body {
     margin: 0;
@@ -48,8 +49,8 @@ body {
     font-family: "Google Sans";
     transition: 400ms;
 
-    @import "./widget.scss";
-    @import "./dark-mode";
+    @include widget.styles;
+    @include dark-mode.styles;
 }
 
 // The ErrorBoundary fallback replaces the whole .app tree, so it is styled at the top level.
