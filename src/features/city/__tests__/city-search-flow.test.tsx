@@ -18,7 +18,6 @@ const WAIT = { timeout: 3000 };
 // The browser answers with Baku, so the app starts there.
 const mockGeolocation = (): void => {
     vi.stubGlobal("navigator", {
-        ...navigator,
         geolocation: {
             getCurrentPosition: (success: PositionCallback) =>
                 success({

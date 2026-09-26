@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { readUsableForecast, saveForecast } from "@/features/weather/api/forecast-cache";
 import { getForecast } from "@/features/weather/api/get-forecast";
 import { useForecastStore } from "@/features/weather/stores/forecast-store";
-import { CityGeolocation } from "@/types/geolocation";
+import type { CityGeolocation } from "@/types/geolocation";
 
 // Owns the whole forecast lifecycle for a set of coordinates: cache lookup, request, cache write,
 // store update. This used to live in app.tsx, which made the shell responsible for a feature's

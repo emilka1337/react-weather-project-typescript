@@ -1,4 +1,4 @@
-import { Time } from "@/types/time";
+import type { Time } from "@/types/time";
 
 // Zero-pads, which the clock's own version failed to do: it tested `if (hours && +hours < 10)`,
 // and 0 is falsy, so midnight rendered as "0:05" instead of "00:05".

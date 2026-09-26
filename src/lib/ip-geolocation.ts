@@ -1,7 +1,7 @@
 import ky from "ky";
 import { z } from "zod";
 
-import { CityGeolocation } from "@/types/geolocation";
+import type { CityGeolocation } from "@/types/geolocation";
 
 // ipapi.co returns coordinates directly, so no geocoding round-trip is needed. It is a different
 // host from OpenWeather, so it does not go through openWeatherApi. Only the fields we read are

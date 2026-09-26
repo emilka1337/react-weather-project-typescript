@@ -1,5 +1,3 @@
-import React from "react";
-
 import City from "@/features/city/components/city";
 import Clocks from "@/features/clock/components/clocks";
 import SettingsMenuToggler from "@/features/settings/components/settings-menu-toggler";
@@ -16,4 +14,4 @@ function Topbar() {
     );
 }
 
-export default React.memo(Topbar);
+export default Topbar;

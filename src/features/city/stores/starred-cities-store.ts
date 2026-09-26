@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { SearchCity } from "@/features/city/types/search-city";
+import type { SearchCity } from "@/features/city/types/search-city";
 import { readJson, writeJson } from "@/utils/storage";
 
 const STORAGE_KEY = "starredCities";

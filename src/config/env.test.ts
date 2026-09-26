@@ -12,13 +12,18 @@ describe("EnvSchema", () => {
         expect(EnvSchema.safeParse(valid).success).toBe(true);
     });
 
-    // Every request path is appended without a leading slash, so a base URL without the trailing
-    // slash silently produces "...openweathermap.orgdata/2.5/forecast".
-    it("rejects a base URL with no trailing slash", () => {
-        const result = EnvSchema.safeParse({ ...valid, VITE_BASE_URL: "https://api.openweathermap.org" });
+    // ky 2 joins `prefix` and the path with exactly one slash, so the trailing slash is optional.
+    it("accepts a base URL without a trailing slash", () => {
+        expect(EnvSchema.safeParse({ ...valid, VITE_BASE_URL: "https://api.openweathermap.org" }).success).toBe(true);
+    });
 
-        expect(result.success).toBe(false);
-        expect(result.error?.issues[0].message).toContain("trailing slash");
+    it("rejects a base URL that is not an http(s) URL", () => {
+        for (const VITE_BASE_URL of ["api.openweathermap.org", "ftp://api.openweathermap.org/", ""]) {
+            const result = EnvSchema.safeParse({ ...valid, VITE_BASE_URL });
+
+            expect(result.success).toBe(false);
+            expect(result.error?.issues[0].message).toContain("http(s) URL");
+        }
     });
 
     it("rejects an empty API key, rather than 401ing later", () => {

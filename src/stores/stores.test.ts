@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStarredCitiesStore } from "@/features/city/stores/starred-cities-store";
-import { SearchCity } from "@/features/city/types/search-city";
+import type { SearchCity } from "@/features/city/types/search-city";
 import { useForecastModeStore } from "@/features/weather/stores/forecast-mode-store";
 import { useSelectedWeatherStore } from "@/features/weather/stores/selected-weather-store";
 import { ForecastModes } from "@/features/weather/types/forecast-mode";

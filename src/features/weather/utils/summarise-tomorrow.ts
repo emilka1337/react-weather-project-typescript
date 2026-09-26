@@ -1,5 +1,5 @@
-import { CommonForecastByDay } from "@/features/weather/types/common-forecast-by-day";
-import { ForecastUnit } from "@/features/weather/types/forecast-unit";
+import type { CommonForecastByDay } from "@/features/weather/types/common-forecast-by-day";
+import type { ForecastUnit } from "@/features/weather/types/forecast-unit";
 import { separateListByWeekdays } from "@/features/weather/utils/separate-list-by-weekdays";
 
 function summariseDay(day: readonly ForecastUnit[] | undefined): CommonForecastByDay | null {

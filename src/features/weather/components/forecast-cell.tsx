@@ -1,14 +1,14 @@
-import React, { Suspense, useCallback, useMemo } from "react";
+import { lazy, Suspense } from "react";
 
 import TemperatureContainer from "@/features/weather/components/temperature-container";
 import { useForecastModeStore } from "@/features/weather/stores/forecast-mode-store";
 import { useSelectedWeatherStore } from "@/features/weather/stores/selected-weather-store";
 import { ForecastModes } from "@/features/weather/types/forecast-mode";
-import { ForecastUnit } from "@/features/weather/types/forecast-unit";
+import type { ForecastUnit } from "@/features/weather/types/forecast-unit";
 import { formatTime } from "@/utils/format-time";
 
-const WindContainer = React.lazy(() => import("@/features/weather/components/wind-container"));
-const HumidityContainer = React.lazy(() => import("@/features/weather/components/humidity-container"));
+const WindContainer = lazy(() => import("@/features/weather/components/wind-container"));
+const HumidityContainer = lazy(() => import("@/features/weather/components/humidity-container"));
 
 interface ForecastCellProps {
     readonly cellForecast: ForecastUnit;
@@ -22,15 +22,12 @@ function ForecastCell({ cellForecast, timestamp }: ForecastCellProps) {
     // document.querySelectorAll(".active-indicator") sweep on every click.
     const isActive = useSelectedWeatherStore((state) => state.selectedTimestamp === cellForecast.dt);
 
-    const formattedTime: string = useMemo(() => {
-        const date = new Date(timestamp * 1000);
+    const date = new Date(timestamp * 1000);
+    const formattedTime: string = formatTime({ hours: date.getHours(), minutes: date.getMinutes() });
 
-        return formatTime({ hours: date.getHours(), minutes: date.getMinutes() });
-    }, [timestamp]);
-
-    const clickHandler = useCallback((): void => {
+    const clickHandler = (): void => {
         setSelectedWeather(cellForecast);
-    }, [setSelectedWeather, cellForecast]);
+    };
 
     return (
         <button
@@ -62,4 +59,4 @@ function ForecastCell({ cellForecast, timestamp }: ForecastCellProps) {
     );
 }
 
-export default React.memo(ForecastCell);
+export default ForecastCell;

@@ -1,4 +1,5 @@
-import { SearchCity, SearchCityListSchema } from "@/features/city/types/search-city";
+import type { SearchCity} from "@/features/city/types/search-city";
+import { SearchCityListSchema } from "@/features/city/types/search-city";
 import { openWeatherApi } from "@/lib/api-client";
 
 // The query goes through searchParams, so it is URL-encoded for us; the old hand-built URL needed

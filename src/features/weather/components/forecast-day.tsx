@@ -1,16 +1,14 @@
-import React, { useMemo } from "react";
-
 import ForecastCell from "@/features/weather/components/forecast-cell";
-import { ForecastUnit } from "@/features/weather/types/forecast-unit";
+import type { ForecastUnit } from "@/features/weather/types/forecast-unit";
 
 interface ForecastDayProps {
     readonly day: readonly ForecastUnit[];
     readonly weekday: number;
 }
 
-function ForecastDay({day, weekday}: ForecastDayProps) {
-    const WEEKDAYS = useMemo(() => ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], []);
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+function ForecastDay({day, weekday}: ForecastDayProps) {
     return (
         <li className="forecast-day">
             <div className="weekday">
@@ -24,4 +22,4 @@ function ForecastDay({day, weekday}: ForecastDayProps) {
     );
 }
 
-export default React.memo(ForecastDay);
+export default ForecastDay;

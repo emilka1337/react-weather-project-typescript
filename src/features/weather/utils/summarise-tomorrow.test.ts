@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { ForecastUnit } from "@/features/weather/types/forecast-unit";
+import type { ForecastUnit } from "@/features/weather/types/forecast-unit";
 import { summariseTomorrow } from "@/features/weather/utils/summarise-tomorrow";
 import { makeForecastUnit } from "@/testing/fixtures/forecast";
 

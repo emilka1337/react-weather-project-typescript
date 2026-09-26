@@ -12,7 +12,6 @@ const COORDS = { latitude: BAKU.lat, longitude: BAKU.lon } as GeolocationCoordin
 
 const mockGeolocation = (coords: GeolocationCoordinates | null): void => {
     vi.stubGlobal("navigator", {
-        ...navigator,
         geolocation: {
             getCurrentPosition: (success: PositionCallback, failure: PositionErrorCallback) => {
                 if (coords) success({ coords, timestamp: 0 } as GeolocationPosition);
@@ -68,7 +67,6 @@ describe("App (smoke)", () => {
             })
         );
         vi.stubGlobal("navigator", {
-            ...navigator,
             geolocation: { getCurrentPosition: () => undefined },
         });
 

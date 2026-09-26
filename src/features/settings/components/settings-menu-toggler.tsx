@@ -1,5 +1,3 @@
-import React from "react";
-
 import { useUiStore } from "@/stores/ui-store";
 
 const closeIcon = (
@@ -35,4 +33,4 @@ function SettingsMenuToggler() {
     );
 }
 
-export default React.memo(SettingsMenuToggler);
+export default SettingsMenuToggler;

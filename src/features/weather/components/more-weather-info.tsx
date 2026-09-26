@@ -1,5 +1,3 @@
-import React from "react";
-
 import { useSelectedWeatherStore } from "@/features/weather/stores/selected-weather-store";
 import { formatWindSpeed } from "@/features/weather/utils/units";
 import { useSettingsStore } from "@/stores/settings-store";
@@ -55,4 +53,4 @@ function MoreWeatherInfo() {
     );
 }
 
-export default React.memo(MoreWeatherInfo);
+export default MoreWeatherInfo;

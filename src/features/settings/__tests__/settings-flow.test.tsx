@@ -11,7 +11,6 @@ const STORAGE_KEY = "weather-app-settings";
 
 const mockGeolocation = (): void => {
     vi.stubGlobal("navigator", {
-        ...navigator,
         geolocation: {
             getCurrentPosition: (success: PositionCallback) =>
                 success({

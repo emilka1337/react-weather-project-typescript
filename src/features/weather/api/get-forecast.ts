@@ -1,6 +1,7 @@
-import { ForecastData, ForecastSchema } from "@/features/weather/types/forecast-data";
+import type { ForecastData} from "@/features/weather/types/forecast-data";
+import { ForecastSchema } from "@/features/weather/types/forecast-data";
 import { openWeatherApi } from "@/lib/api-client";
-import { CityGeolocation } from "@/types/geolocation";
+import type { CityGeolocation } from "@/types/geolocation";
 
 // Validated at the boundary: a malformed/unexpected payload throws a ZodError here (which the caller
 // catches) instead of surfacing as a crash deep in rendering. searchParams must be a plain object -

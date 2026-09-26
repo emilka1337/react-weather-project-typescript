@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { Settings } from "@/types/settings";
+import type { Settings } from "@/types/settings";
 import { readJson, removeItem, writeJson } from "@/utils/storage";
 
 const STORAGE_KEY = "weather-app-settings";

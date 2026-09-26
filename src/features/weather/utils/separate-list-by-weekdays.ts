@@ -1,4 +1,4 @@
-import { ForecastUnit } from "@/features/weather/types/forecast-unit";
+import type { ForecastUnit } from "@/features/weather/types/forecast-unit";
 
 const weekdayOf = (unit: ForecastUnit): number => new Date(unit.dt * 1000).getDay();
 

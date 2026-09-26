@@ -2,11 +2,9 @@ import { z } from "zod";
 
 // Exported so the unit test can exercise the schema without touching import.meta.env.
 export const EnvSchema = z.object({
-    VITE_BASE_URL: z
-        .string()
-        .min(1, "VITE_BASE_URL is required")
-        // Every request path is appended without a leading slash, so the base must bring its own.
-        .refine((value) => value.endsWith("/"), "VITE_BASE_URL must end with a trailing slash"),
+    // ky 2 normalises the slash where `prefix` meets the request path, so a trailing slash is
+    // optional - but it must be a real http(s) URL, or every request fails far from the cause.
+    VITE_BASE_URL: z.url({ protocol: /^https?$/, error: "VITE_BASE_URL must be an http(s) URL" }),
     VITE_API_KEY: z.string().min(1, "VITE_API_KEY is required"),
 });
 

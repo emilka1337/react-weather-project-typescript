@@ -1,5 +1,5 @@
-import { ForecastData } from "@/features/weather/types/forecast-data";
-import { CityGeolocation } from "@/types/geolocation";
+import type { ForecastData } from "@/features/weather/types/forecast-data";
+import type { CityGeolocation } from "@/types/geolocation";
 import { readJson, writeJson } from "@/utils/storage";
 
 const STORAGE_KEY = "forecastData";

@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import type { ChangeEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { searchCities } from "@/features/city/api/search-cities";
 import SearchedCitiesList from "@/features/city/components/searched-cities-list";
 import StarredCitiesList from "@/features/city/components/starred-cities-list";
-import { SearchCity } from "@/features/city/types/search-city";
+import type { SearchCity } from "@/features/city/types/search-city";
 import { useUiStore } from "@/stores/ui-store";
 
 function CitySearch() {
@@ -21,15 +22,15 @@ function CitySearch() {
     }, [showCitySearch]);
 
     // BaseSyntheticEvent made e.target an `any`, so e.target.value was unchecked.
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setInputValue(event.target.value);
+        // Cleared in the event that caused it, not in the effect below: an effect that only sets
+        // state costs an extra render. The effect's cleanup still aborts any in-flight request.
+        if (!event.target.value) setCitiesList([]);
     };
 
     useEffect(() => {
-        if (!inputValue) {
-            setCitiesList([]);
-            return;
-        }
+        if (!inputValue) return;
 
         // clearTimeout alone only cancels a timer that has not fired yet. Once the request is
         // in flight it must be aborted too, otherwise a slow earlier response can land last
@@ -80,4 +81,4 @@ function CitySearch() {
     );
 }
 
-export default React.memo(CitySearch);
+export default CitySearch;

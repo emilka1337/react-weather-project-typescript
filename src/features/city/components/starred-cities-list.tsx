@@ -1,8 +1,6 @@
-import React, { useCallback } from "react";
-
 import { useSelectedCityStore } from "@/features/city/stores/selected-city-store";
 import { useStarredCitiesStore } from "@/features/city/stores/starred-cities-store";
-import { SearchCity } from "@/features/city/types/search-city";
+import type { SearchCity } from "@/features/city/types/search-city";
 import { useGeolocationStore } from "@/stores/geolocation-store";
 
 function StarredCitiesList() {
@@ -13,20 +11,14 @@ function StarredCitiesList() {
     const setSelectedCity = useSelectedCityStore((state) => state.setSelectedCity);
     const setGeolocation = useGeolocationStore((state) => state.setGeolocation);
 
-    const handleCityClick = useCallback(
-        (city: SearchCity): void => {
-            setSelectedCity(city.name);
-            setGeolocation({ lat: city.lat, lon: city.lon });
-        },
-        [setSelectedCity, setGeolocation]
-    );
+    const handleCityClick = (city: SearchCity): void => {
+        setSelectedCity(city.name);
+        setGeolocation({ lat: city.lat, lon: city.lon });
+    };
 
-    const removeFromFavorites = useCallback(
-        (index: number): void => {
-            removeCityFromStarredCities(index);
-        },
-        [removeCityFromStarredCities]
-    );
+    const removeFromFavorites = (index: number): void => {
+        removeCityFromStarredCities(index);
+    };
 
     return (
         <ul className="cities-list starred-cities-list">
@@ -54,4 +46,4 @@ function StarredCitiesList() {
     );
 }
 
-export default React.memo(StarredCitiesList);
+export default StarredCitiesList;

@@ -1,5 +1,7 @@
+import { HTTPError } from "ky";
 import { http, HttpResponse } from "msw";
 import { describe, expect, it } from "vitest";
+import { ZodError } from "zod";
 
 import { getForecast } from "@/features/weather/api/get-forecast";
 import { makeForecast } from "@/testing/fixtures/forecast";
@@ -38,7 +40,7 @@ describe("getForecast", () => {
     it("rejects on an HTTP error rather than swallowing it", async () => {
         server.use(http.get(ENDPOINT, () => new HttpResponse(null, { status: 429 })));
 
-        await expect(getForecast(BAKU)).rejects.toThrow();
+        await expect(getForecast(BAKU)).rejects.toThrow(HTTPError);
     });
 
     it("rejects a malformed payload at the boundary instead of letting it crash rendering", async () => {
@@ -50,6 +52,6 @@ describe("getForecast", () => {
             )
         );
 
-        await expect(getForecast(BAKU)).rejects.toThrow();
+        await expect(getForecast(BAKU)).rejects.toThrow(ZodError);
     });
 });

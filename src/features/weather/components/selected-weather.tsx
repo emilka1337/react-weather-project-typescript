@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 import Loading from "@/components/ui/spinner/spinner";
 import FeelsLikeField from "@/features/weather/components/feels-like-field";
@@ -6,7 +6,7 @@ import MoreWeatherInfo from "@/features/weather/components/more-weather-info";
 import SelectedTemperature from "@/features/weather/components/selected-temperature";
 import { useForecastStore } from "@/features/weather/stores/forecast-store";
 import { useSelectedWeatherStore } from "@/features/weather/stores/selected-weather-store";
-import { ForecastUnit } from "@/features/weather/types/forecast-unit";
+import type { ForecastUnit } from "@/features/weather/types/forecast-unit";
 import { useSettingsStore } from "@/stores/settings-store";
 
 function SelectedWeather() {
@@ -36,4 +36,4 @@ function SelectedWeather() {
     }
 }
 
-export default React.memo(SelectedWeather);
+export default SelectedWeather;

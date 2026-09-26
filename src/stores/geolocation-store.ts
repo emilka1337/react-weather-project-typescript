@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { CityGeolocation } from "@/types/geolocation";
+import type { CityGeolocation } from "@/types/geolocation";
 
 interface GeolocationStore {
     geolocation: CityGeolocation;

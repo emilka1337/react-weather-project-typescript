@@ -1,5 +1,3 @@
-import React from "react";
-
 interface SettingToggleProps {
     readonly label: string;
     readonly checked: boolean;
@@ -29,4 +27,4 @@ function SettingToggle({ label, checked, onToggle }: SettingToggleProps) {
     );
 }
 
-export default React.memo(SettingToggle);
+export default SettingToggle;

@@ -1,8 +1,6 @@
-import React, { useCallback } from "react";
-
 import { useSelectedCityStore } from "@/features/city/stores/selected-city-store";
 import { useStarredCitiesStore } from "@/features/city/stores/starred-cities-store";
-import { SearchCity } from "@/features/city/types/search-city";
+import type { SearchCity } from "@/features/city/types/search-city";
 import { useGeolocationStore } from "@/stores/geolocation-store";
 
 interface SearchedCitiesListProps {
@@ -15,13 +13,10 @@ function SearchedCitiesList({ citiesList }: SearchedCitiesListProps) {
     // Dedup lives in the store now (by name + coordinates), so this component just adds.
     const addCityToStarredCities = useStarredCitiesStore((state) => state.addCityToStarredCities);
 
-    const handleCityClick = useCallback(
-        (city: SearchCity): void => {
-            setSelectedCity(city.name);
-            setGeolocation({ lat: city.lat, lon: city.lon });
-        },
-        [setSelectedCity, setGeolocation]
-    );
+    const handleCityClick = (city: SearchCity): void => {
+        setSelectedCity(city.name);
+        setGeolocation({ lat: city.lat, lon: city.lon });
+    };
 
     return (
         <ul className="cities-list">
@@ -49,4 +44,4 @@ function SearchedCitiesList({ citiesList }: SearchedCitiesListProps) {
     );
 }
 
-export default React.memo(SearchedCitiesList);
+export default SearchedCitiesList;

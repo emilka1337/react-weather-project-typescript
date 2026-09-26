@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from "react";
-
 import ForecastDay from "@/features/weather/components/forecast-day";
 import ForecastModeTogglePanel from "@/features/weather/components/forecast-mode-toggle-panel";
 import { useForecastStore } from "@/features/weather/stores/forecast-store";
-import { ForecastUnit } from "@/features/weather/types/forecast-unit";
+import type { ForecastUnit } from "@/features/weather/types/forecast-unit";
 import { separateListByWeekdays } from "@/features/weather/utils/separate-list-by-weekdays";
 
 function DailyForecast() {
-    const [separatedForecastList, setSeparatedForecastList] = useState<readonly ForecastUnit[][]>([]);
-
     const forecast: ForecastUnit[] = useForecastStore((state) => state.forecast);
 
-    useEffect(() => {
-        setSeparatedForecastList(separateListByWeekdays(forecast));
-    }, [forecast]);
+    // Derived during render, not mirrored into state by an effect (which rendered once with a stale
+    // list, then again). React Compiler memoizes it on `forecast`.
+    const separatedForecastList = separateListByWeekdays(forecast);
 
     if (separatedForecastList.length === 0) return null;
 
@@ -32,4 +28,4 @@ function DailyForecast() {
     );
 }
 
-export default React.memo(DailyForecast);
+export default DailyForecast;

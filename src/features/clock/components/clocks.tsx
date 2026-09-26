@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import Greeting from "@/features/clock/components/greeting";
 import { useSettingsStore } from "@/stores/settings-store";
@@ -32,4 +32,4 @@ function Clocks() {
     );
 }
 
-export default React.memo(Clocks);
+export default Clocks;

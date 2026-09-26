@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import SearchedCitiesList from "@/features/city/components/searched-cities-list";
 import { useSelectedCityStore } from "@/features/city/stores/selected-city-store";
 import { useStarredCitiesStore } from "@/features/city/stores/starred-cities-store";
-import { SearchCity } from "@/features/city/types/search-city";
+import type { SearchCity } from "@/features/city/types/search-city";
 import { useGeolocationStore } from "@/stores/geolocation-store";
 
 const baku: SearchCity = { name: "Baku", country: "AZ", lat: 40.37, lon: 49.89 };

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { getGeolocationByIp } from "@/lib/ip-geolocation";
 import { useGeolocationStore } from "@/stores/geolocation-store";
-import { CityGeolocation } from "@/types/geolocation";
+import type { CityGeolocation } from "@/types/geolocation";
 
 // Asks the browser for coordinates and writes them to the shared geolocation store. Falls back to
 // IP-based geolocation when the browser cannot or will not provide them.

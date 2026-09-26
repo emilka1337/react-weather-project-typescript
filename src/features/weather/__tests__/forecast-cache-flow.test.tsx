@@ -13,7 +13,6 @@ const GANJA = { lat: 40.68, lon: 46.36 };
 
 const mockGeolocation = (coords: { lat: number; lon: number }): void => {
     vi.stubGlobal("navigator", {
-        ...navigator,
         geolocation: {
             getCurrentPosition: (success: PositionCallback) =>
                 success({

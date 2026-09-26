@@ -1,4 +1,4 @@
-import { CommonForecastByDay } from "@/features/weather/types/common-forecast-by-day";
+import type { CommonForecastByDay } from "@/features/weather/types/common-forecast-by-day";
 
 export interface NotificationContent {
     readonly title: string;

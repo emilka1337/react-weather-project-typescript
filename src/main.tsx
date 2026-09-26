@@ -1,22 +1,21 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 
 import App from "@/app/app";
 import ErrorBoundary from "@/components/ui/error-boundary/error-boundary";
-// Styles
-import "./scss/styles.scss";
+import "@/scss/styles.scss";
 
 const rootElem: HTMLElement | null = document.getElementById("root");
 
 if (rootElem) {
     // Zustand stores are module singletons, so there is no Provider to wrap the tree in.
-    ReactDOM.createRoot(rootElem).render(
-        <React.StrictMode>
+    createRoot(rootElem).render(
+        <StrictMode>
             <ErrorBoundary>
                 <App />
             </ErrorBoundary>
-        </React.StrictMode>
+        </StrictMode>
     );
 } else {
-    throw new Error("Root element not found")
+    throw new Error("Root element not found");
 }

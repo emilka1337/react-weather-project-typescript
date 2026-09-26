@@ -1,3 +1,4 @@
+import { HTTPError } from "ky";
 import { http, HttpResponse } from "msw";
 import { describe, expect, it } from "vitest";
 
@@ -54,6 +55,6 @@ describe("getCityNameByCoords", () => {
     it("rejects on an HTTP error", async () => {
         server.use(http.get(ENDPOINT, () => new HttpResponse(null, { status: 401 })));
 
-        await expect(getCityNameByCoords(BAKU)).rejects.toThrow();
+        await expect(getCityNameByCoords(BAKU)).rejects.toThrow(HTTPError);
     });
 });

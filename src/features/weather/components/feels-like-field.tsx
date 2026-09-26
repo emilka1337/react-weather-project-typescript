@@ -1,5 +1,3 @@
-import React from "react";
-
 import { useSelectedWeatherStore } from "@/features/weather/stores/selected-weather-store";
 import { formatTemperature } from "@/features/weather/utils/units";
 import { useSettingsStore } from "@/stores/settings-store";
@@ -18,4 +16,4 @@ function FeelsLikeField() {
     );
 }
 
-export default React.memo(FeelsLikeField);
+export default FeelsLikeField;

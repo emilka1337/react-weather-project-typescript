@@ -101,7 +101,7 @@ describe("SettingsMenu", () => {
     });
 
     it("Reset App wipes storage and reloads the page", async () => {
-        const reload = vi.fn();
+        const reload = vi.fn<() => void>();
         Object.defineProperty(window, "location", {
             value: { reload },
             writable: true,
@@ -119,13 +119,13 @@ describe("SettingsMenu", () => {
     });
 
     it("Reset App also clears the extension's chrome.storage mirror", async () => {
-        const clear = vi.fn().mockResolvedValue(undefined);
+        const clear = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
         (globalThis as { chrome?: unknown }).chrome = {
             runtime: { id: "abc123" },
             storage: { local: { clear } },
         };
         Object.defineProperty(window, "location", {
-            value: { reload: vi.fn() },
+            value: { reload: vi.fn<() => void>() },
             writable: true,
             configurable: true,
         });

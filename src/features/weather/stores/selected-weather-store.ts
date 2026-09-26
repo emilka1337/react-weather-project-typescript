@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
-import { ForecastUnit } from "@/features/weather/types/forecast-unit";
-import { SelectedWeather } from "@/features/weather/types/selected-weather";
+import type { ForecastUnit } from "@/features/weather/types/forecast-unit";
+import type { SelectedWeather } from "@/features/weather/types/selected-weather";
 
 interface SelectedWeatherStore {
     selectedWeather: SelectedWeather;

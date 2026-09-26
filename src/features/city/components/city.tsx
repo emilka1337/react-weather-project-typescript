@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 
 import { getCityNameByCoords } from "@/features/city/api/reverse-geocode";
 import EditCityToggler from "@/features/city/components/edit-city-toggler";
@@ -6,9 +6,9 @@ import { useSelectedCityStore } from "@/features/city/stores/selected-city-store
 import { loadLastCityName, saveLastCityName } from "@/features/city/utils/last-city-storage";
 import { useGeolocationStore } from "@/stores/geolocation-store";
 import { useUiStore } from "@/stores/ui-store";
-import { CityGeolocation } from "@/types/geolocation";
+import type { CityGeolocation } from "@/types/geolocation";
 
-const CitySearch = React.lazy(() => import("@/features/city/components/city-search"));
+const CitySearch = lazy(() => import("@/features/city/components/city-search"));
 
 function City() {
     const geolocation: CityGeolocation = useGeolocationStore((state) => state.geolocation);
@@ -59,4 +59,4 @@ function City() {
     );
 }
 
-export default React.memo(City);
+export default City;

@@ -1,4 +1,4 @@
-import { CityGeolocation } from "@/types/geolocation";
+import type { CityGeolocation } from "@/types/geolocation";
 
 // The seam between the two worlds this one bundle ships into: a Chrome MV3 extension (popup +
 // background service worker) and a plain web page on GitHub Pages. Everything here is feature-detected,

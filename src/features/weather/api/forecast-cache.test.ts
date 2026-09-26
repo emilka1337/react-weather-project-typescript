@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { FORECAST_TTL_MS, readUsableForecast, saveForecast } from "@/features/weather/api/forecast-cache";
-import { ForecastData } from "@/features/weather/types/forecast-data";
+import type { ForecastData } from "@/features/weather/types/forecast-data";
 import { makeForecast } from "@/testing/fixtures/forecast";
 
 const BAKU = { lat: 40.37, lon: 49.89 };

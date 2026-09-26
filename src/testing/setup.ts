@@ -45,14 +45,14 @@ vi.stubGlobal(
     vi.fn().mockImplementation((query: string) => ({
         matches: false,
         media: query,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
+        addEventListener: vi.fn<() => void>(),
+        removeEventListener: vi.fn<() => void>(),
     }))
 );
 
 vi.stubGlobal("Notification", {
     permission: "denied",
-    requestPermission: vi.fn().mockResolvedValue("denied"),
+    requestPermission: vi.fn<() => Promise<NotificationPermission>>().mockResolvedValue("denied"),
 });
 
 // "error", not the default "warn": a component that sneaks out a request nobody declared should

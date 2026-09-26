@@ -1,4 +1,4 @@
-import { ForecastUnit } from "@/features/weather/types/forecast-unit";
+import type { ForecastUnit } from "@/features/weather/types/forecast-unit";
 
 // OpenWeather returns 40 units (5 days x 3h). separateListByWeekdays now groups by weekday and
 // terminates on any length, so the count is not load-bearing - but keeping 40 matches the real API
