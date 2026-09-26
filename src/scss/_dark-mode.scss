@@ -143,7 +143,10 @@
                         background: $hoverDarkBgColor !important;
                     }
 
-                    h5 {
+                    // The toggle rows' labels are <span class="setting-label"> inside the switch
+                    // button (they used to be h5 like the reset rows) - both need the dark colour.
+                    h5,
+                    .setting-label {
                         color: $darkTextColor;
                     }
                 }
