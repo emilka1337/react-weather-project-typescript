@@ -23,8 +23,8 @@ const renderSearch = () => {
 const returns = (...names: string[]): void => {
     server.use(
         http.get(ENDPOINT, () =>
-            HttpResponse.json(names.map((name) => ({ name, country: "AZ", lat: 1, lon: 1 })))
-        )
+            HttpResponse.json(names.map((name) => ({ name, country: "AZ", lat: 1, lon: 1 }))),
+        ),
     );
 };
 
@@ -67,7 +67,7 @@ describe("CitySearch", () => {
             http.get(ENDPOINT, () => {
                 requests += 1;
                 return HttpResponse.json([]);
-            })
+            }),
         );
 
         render(<CitySearch />);
@@ -112,7 +112,7 @@ describe("CitySearch", () => {
                 await delay(query === "Bak" ? 2000 : 0);
 
                 return HttpResponse.json([{ name: query, country: "AZ", lat: 1, lon: 1 }]);
-            })
+            }),
         );
 
         const user = renderSearch();

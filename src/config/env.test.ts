@@ -14,7 +14,9 @@ describe("EnvSchema", () => {
 
     // ky 2 joins `prefix` and the path with exactly one slash, so the trailing slash is optional.
     it("accepts a base URL without a trailing slash", () => {
-        expect(EnvSchema.safeParse({ ...valid, VITE_BASE_URL: "https://api.openweathermap.org" }).success).toBe(true);
+        expect(
+            EnvSchema.safeParse({ ...valid, VITE_BASE_URL: "https://api.openweathermap.org" }).success,
+        ).toBe(true);
     });
 
     it("rejects a base URL that is not an http(s) URL", () => {

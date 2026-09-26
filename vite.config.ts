@@ -8,9 +8,9 @@ import { defineConfig } from "vitest/config";
 
 // Single source of truth for the version: package.json. The manifest's version is rewritten from it
 // at build time, so the two can never drift and the Chrome Web Store always sees a real bump.
-const pkg = JSON.parse(
-    readFileSync(fileURLToPath(new URL("./package.json", import.meta.url)), "utf8")
-) as { version: string };
+const pkg = JSON.parse(readFileSync(fileURLToPath(new URL("./package.json", import.meta.url)), "utf8")) as {
+    version: string;
+};
 
 // One config, not two: Vitest reads the `test` block from here, with the same plugins and resolve.
 export default defineConfig({
@@ -34,7 +34,7 @@ export default defineConfig({
                         JSON.stringify(
                             { ...(JSON.parse(content) as Record<string, unknown>), version: pkg.version },
                             null,
-                            4
+                            4,
                         ),
                 },
             ],

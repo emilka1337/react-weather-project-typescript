@@ -20,7 +20,7 @@
             .city-search {
                 background: $appDarkBgColor;
 
-                &>button {
+                & > button {
                     @include button;
                 }
 
@@ -115,7 +115,7 @@
             .wind {
                 color: $darkTextColor !important;
             }
-            
+
             .humidity {
                 color: $darkTextColor !important;
             }
@@ -136,12 +136,11 @@
                 &:not(:last-child):hover {
                     background: $hoverDarkBgColor !important;
                 }
-    
+
                 h5 {
                     color: $darkTextColor;
                 }
             }
         }
     }
-    
 }

@@ -1,4 +1,4 @@
-import type { ForecastData} from "@/features/weather/types/forecast-data";
+import type { ForecastData } from "@/features/weather/types/forecast-data";
 import { ForecastSchema } from "@/features/weather/types/forecast-data";
 import { openWeatherApi } from "@/lib/api-client";
 import type { CityGeolocation } from "@/types/geolocation";

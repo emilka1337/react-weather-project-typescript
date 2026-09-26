@@ -18,7 +18,7 @@ describe("getForecast", () => {
             http.get(ENDPOINT, ({ request }) => {
                 sent = new URL(request.url).searchParams;
                 return HttpResponse.json({ city: {}, cnt: 40, cod: "200", list: makeForecast() });
-            })
+            }),
         );
 
         await getForecast(BAKU);
@@ -48,8 +48,10 @@ describe("getForecast", () => {
         // explode later on forecast[i].main.temp.
         server.use(
             http.get(ENDPOINT, () =>
-                HttpResponse.json({ list: [{ dt: 1, wind: { speed: 1, deg: 1 }, weather: [{ main: "Clear" }] }] })
-            )
+                HttpResponse.json({
+                    list: [{ dt: 1, wind: { speed: 1, deg: 1 }, weather: [{ main: "Clear" }] }],
+                }),
+            ),
         );
 
         await expect(getForecast(BAKU)).rejects.toThrow(ZodError);

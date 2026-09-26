@@ -1,5 +1,4 @@
 import "@testing-library/jest-dom/vitest";
-
 import { cleanup } from "@testing-library/react";
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
 
@@ -47,7 +46,7 @@ vi.stubGlobal(
         media: query,
         addEventListener: vi.fn<() => void>(),
         removeEventListener: vi.fn<() => void>(),
-    }))
+    })),
 );
 
 vi.stubGlobal("Notification", {

@@ -12,8 +12,8 @@ const WAIT = { timeout: 3000 };
 const searchReturns = (name: string): void => {
     server.use(
         http.get("https://api.openweathermap.org/geo/1.0/direct", () =>
-            HttpResponse.json([{ name, country: "AZ", lat: 40.37, lon: 49.89, local_names: {} }])
-        )
+            HttpResponse.json([{ name, country: "AZ", lat: 40.37, lon: 49.89, local_names: {} }]),
+        ),
     );
 };
 
@@ -48,14 +48,13 @@ describe("starred cities flow", () => {
     it("a city starred in an earlier session is still there on the next page load", async () => {
         localStorage.setItem(
             "starredCities",
-            JSON.stringify([{ name: "Ganja", country: "AZ", lat: 40.68, lon: 46.36, local_names: {} }])
+            JSON.stringify([{ name: "Ganja", country: "AZ", lat: 40.68, lon: 46.36, local_names: {} }]),
         );
 
         // The store reads localStorage once, at module load, so a fresh page means a fresh module.
         vi.resetModules();
-        const { useStarredCitiesStore: freshStore } = await import(
-            "@/features/city/stores/starred-cities-store"
-        );
+        const { useStarredCitiesStore: freshStore } =
+            await import("@/features/city/stores/starred-cities-store");
 
         expect(freshStore.getState().starredCities.map((city) => city.name)).toEqual(["Ganja"]);
     });

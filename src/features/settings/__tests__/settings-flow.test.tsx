@@ -47,7 +47,7 @@ describe("settings flow", () => {
 
         await waitFor(
             () => expect(container.querySelector(".selected-temperature")).toHaveTextContent("20"),
-            WAIT
+            WAIT,
         );
 
         await openSettings(user);
@@ -55,7 +55,7 @@ describe("settings flow", () => {
 
         await waitFor(
             () => expect(container.querySelector(".selected-temperature")).toHaveTextContent("68"),
-            WAIT
+            WAIT,
         );
     });
 

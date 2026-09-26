@@ -12,7 +12,7 @@ describe("ErrorBoundary", () => {
         render(
             <ErrorBoundary>
                 <p>all good</p>
-            </ErrorBoundary>
+            </ErrorBoundary>,
         );
 
         expect(screen.getByText("all good")).toBeInTheDocument();
@@ -25,7 +25,7 @@ describe("ErrorBoundary", () => {
         render(
             <ErrorBoundary>
                 <Boom />
-            </ErrorBoundary>
+            </ErrorBoundary>,
         );
 
         expect(screen.getByRole("alert")).toHaveTextContent("Sorry, something went wrong");

@@ -18,7 +18,7 @@ const renderWeather = () =>
         <>
             <SelectedWeather />
             <DailyForecast />
-        </>
+        </>,
     );
 
 describe("forecast flow", () => {
@@ -36,7 +36,7 @@ describe("forecast flow", () => {
 
         await waitFor(
             () => expect(container.querySelector(".selected-temperature")).toHaveTextContent("23"),
-            WAIT
+            WAIT,
         );
     });
 
@@ -53,7 +53,7 @@ describe("forecast flow", () => {
         // 20 C -> 68 F, everywhere at once.
         await waitFor(
             () => expect(container.querySelector(".selected-temperature")).toHaveTextContent("68"),
-            WAIT
+            WAIT,
         );
         expect(container.querySelectorAll(".temperature")[0]).toHaveTextContent("68");
     });
@@ -69,7 +69,7 @@ describe("forecast flow", () => {
 
         await waitFor(
             () => expect(container.querySelectorAll(".wind-container").length).toBeGreaterThan(0),
-            WAIT
+            WAIT,
         );
         expect(container.querySelectorAll(".temperature-container")).toHaveLength(0);
     });

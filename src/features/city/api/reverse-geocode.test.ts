@@ -16,7 +16,7 @@ describe("reverseGeocode", () => {
             http.get(ENDPOINT, ({ request }) => {
                 sent = new URL(request.url).searchParams;
                 return HttpResponse.json([{ name: "Baku", country: "AZ", lat: 40.37, lon: 49.89 }]);
-            })
+            }),
         );
 
         await reverseGeocode(BAKU);
@@ -37,8 +37,8 @@ describe("getCityNameByCoords", () => {
                 HttpResponse.json([
                     { name: "Baku", country: "AZ", lat: 40.37, lon: 49.89 },
                     { name: "Ganja", country: "AZ", lat: 40.68, lon: 46.36 },
-                ])
-            )
+                ]),
+            ),
         );
 
         await expect(getCityNameByCoords(BAKU)).resolves.toBe("Baku");

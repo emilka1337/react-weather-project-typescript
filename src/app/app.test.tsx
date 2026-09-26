@@ -35,7 +35,7 @@ describe("App (smoke)", () => {
         // Selected temperature, from the forecast. The fixture's first slot is 20 C.
         await waitFor(
             () => expect(container.querySelector(".selected-temperature")).toHaveTextContent("20"),
-            WAIT
+            WAIT,
         );
         // The day strip, and the clock.
         expect(container.querySelectorAll("li.forecast-day").length).toBeGreaterThan(0);
@@ -54,7 +54,7 @@ describe("App (smoke)", () => {
         // ipapi.co answers with Baku's coordinates, so the app still ends up with a forecast.
         await waitFor(
             () => expect(container.querySelector(".selected-temperature")).toHaveTextContent("20"),
-            WAIT
+            WAIT,
         );
     });
 
@@ -64,7 +64,7 @@ describe("App (smoke)", () => {
             http.get("https://api.openweathermap.org/data/2.5/forecast", () => {
                 forecastRequests += 1;
                 return HttpResponse.json({ city: {}, cnt: 0, cod: "200", list: [] });
-            })
+            }),
         );
         vi.stubGlobal("navigator", {
             geolocation: { getCurrentPosition: () => undefined },

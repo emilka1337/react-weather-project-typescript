@@ -49,7 +49,7 @@ const useGeolocation = (): CityGeolocation => {
             },
             // Without a timeout the error callback can never fire on a device that simply never
             // returns a fix, and the IP fallback would never run.
-            { enableHighAccuracy: true, timeout: 10_000, maximumAge: 5 * 60 * 1000 }
+            { enableHighAccuracy: true, timeout: 10_000, maximumAge: 5 * 60 * 1000 },
         );
 
         return () => {

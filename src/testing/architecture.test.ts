@@ -10,7 +10,7 @@ const KEBAB_CASE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const ALLOWED = new Set(["__tests__"]);
 
 const folders = new Set(
-    files.flatMap((file) => file.split("/").slice(2, -1)) // drop "", "src" and the file name
+    files.flatMap((file) => file.split("/").slice(2, -1)), // drop "", "src" and the file name
 );
 
 describe("architecture", () => {

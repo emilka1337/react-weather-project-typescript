@@ -1,5 +1,5 @@
 interface EditCityTogglerProps {
-    onClick: () => void
+    onClick: () => void;
 }
 
 function EditCityToggler({ onClick }: EditCityTogglerProps) {

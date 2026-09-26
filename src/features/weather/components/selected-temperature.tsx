@@ -3,9 +3,7 @@ import { formatTemperature } from "@/features/weather/utils/units";
 import { useSettingsStore } from "@/stores/settings-store";
 
 function SelectedTemperature() {
-    const temperature: number = useSelectedWeatherStore(
-        (state) => state.selectedWeather.selectedTemperature
-    );
+    const temperature: number = useSelectedWeatherStore((state) => state.selectedWeather.selectedTemperature);
     const temperatureInF: boolean = useSettingsStore((state) => state.settings.temperatureInF);
 
     return (

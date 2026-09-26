@@ -36,7 +36,7 @@ const countForecastRequests = (): (() => number) => {
                 cod: "200",
                 list: makeForecast(),
             });
-        })
+        }),
     );
 
     return () => count;
@@ -56,7 +56,7 @@ describe("forecast cache flow", () => {
 
         await waitFor(
             () => expect(container.querySelector(".selected-temperature")).toHaveTextContent("20"),
-            WAIT
+            WAIT,
         );
         expect(requests()).toBe(1);
     });

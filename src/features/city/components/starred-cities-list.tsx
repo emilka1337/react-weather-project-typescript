@@ -5,9 +5,7 @@ import { useGeolocationStore } from "@/stores/geolocation-store";
 
 function StarredCitiesList() {
     const starredCities: SearchCity[] = useStarredCitiesStore((state) => state.starredCities);
-    const removeCityFromStarredCities = useStarredCitiesStore(
-        (state) => state.removeCityFromStarredCities
-    );
+    const removeCityFromStarredCities = useStarredCitiesStore((state) => state.removeCityFromStarredCities);
     const setSelectedCity = useSelectedCityStore((state) => state.setSelectedCity);
     const setGeolocation = useGeolocationStore((state) => state.setGeolocation);
 

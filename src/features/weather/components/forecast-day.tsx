@@ -8,7 +8,7 @@ interface ForecastDayProps {
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-function ForecastDay({day, weekday}: ForecastDayProps) {
+function ForecastDay({ day, weekday }: ForecastDayProps) {
     return (
         <li className="forecast-day">
             <div className="weekday">

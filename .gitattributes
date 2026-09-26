@@ -1,0 +1,7 @@
+# LF everywhere, regardless of core.autocrlf: oxfmt writes LF, CI runs on Linux, and a CRLF working
+# copy on Windows would make `npm run format:check` fail on every file.
+* text=auto eol=lf
+
+*.png binary
+*.ico binary
+*.woff2 binary

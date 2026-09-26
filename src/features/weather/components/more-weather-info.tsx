@@ -33,9 +33,7 @@ const icons = {
 function MoreWeatherInfo() {
     const windSpeed: number = useSelectedWeatherStore((state) => state.selectedWeather.selectedWind);
     const speedUnitInMS: boolean = useSettingsStore((state) => state.settings.speedUnitInMS);
-    const humidity: number = useSelectedWeatherStore(
-        (state) => state.selectedWeather.selectedHumidity
-    );
+    const humidity: number = useSelectedWeatherStore((state) => state.selectedWeather.selectedHumidity);
     const sky: string = useSelectedWeatherStore((state) => state.selectedWeather.selectedMain);
 
     return (

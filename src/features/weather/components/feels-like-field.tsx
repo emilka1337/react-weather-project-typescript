@@ -4,7 +4,7 @@ import { useSettingsStore } from "@/stores/settings-store";
 
 function FeelsLikeField() {
     const selectedFeelsLike: number = useSelectedWeatherStore(
-        (state) => state.selectedWeather.selectedFeelsLike
+        (state) => state.selectedWeather.selectedFeelsLike,
     );
     const temperatureInF: boolean = useSettingsStore((state) => state.settings.temperatureInF);
 

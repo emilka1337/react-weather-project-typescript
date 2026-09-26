@@ -37,7 +37,9 @@ function ForecastModeTogglePanel() {
                 <li>
                     <button
                         className={
-                            forecastMode === ForecastModes.WIND ? "forecast-mode-toggler active" : "forecast-mode-toggler"
+                            forecastMode === ForecastModes.WIND
+                                ? "forecast-mode-toggler active"
+                                : "forecast-mode-toggler"
                         }
                         aria-label="Show wind"
                         aria-pressed={forecastMode === ForecastModes.WIND}

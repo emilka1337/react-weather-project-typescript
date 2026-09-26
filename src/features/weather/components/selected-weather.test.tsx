@@ -43,7 +43,7 @@ describe("SelectedWeather", () => {
         act(() =>
             useSettingsStore.setState((state) => ({
                 settings: { ...state.settings, showFeelsLikeField: true },
-            }))
+            })),
         );
 
         render(<SelectedWeather />);

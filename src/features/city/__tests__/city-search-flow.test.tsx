@@ -40,7 +40,7 @@ describe("city search flow", () => {
             http.get("https://api.openweathermap.org/geo/1.0/direct", () =>
                 HttpResponse.json([
                     { name: "Ganja", country: "AZ", lat: GANJA.lat, lon: GANJA.lon, local_names: {} },
-                ])
+                ]),
             ),
             // Reverse geocoding answers for whichever coordinates it is given: once the city is
             // picked, this is what re-labels the header.
@@ -60,7 +60,7 @@ describe("city search flow", () => {
                     cod: "200",
                     list: makeForecast(),
                 });
-            })
+            }),
         );
 
         const user = userEvent.setup();
@@ -78,10 +78,7 @@ describe("city search flow", () => {
         await waitFor(() => expect(useSelectedCityStore.getState().selectedCity).toBe("Ganja"), WAIT);
 
         // ...and the weather feature, which has never heard of the city feature, refetched for it.
-        await waitFor(
-            () => expect(forecastCoords).toEqual(["40.37,49.89", "40.68,46.36"]),
-            WAIT
-        );
+        await waitFor(() => expect(forecastCoords).toEqual(["40.37,49.89", "40.68,46.36"]), WAIT);
         expect(useForecastStore.getState().forecast).toHaveLength(40);
     });
 

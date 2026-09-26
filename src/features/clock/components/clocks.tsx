@@ -7,9 +7,7 @@ import { formatTime, getCurrentTime } from "@/utils/format-time";
 function Clocks() {
     const [currentTime, setCurrentTime] = useState<string>("");
 
-    const showSecondsInClocks: boolean = useSettingsStore(
-        (state) => state.settings.showSecondsInClocks
-    );
+    const showSecondsInClocks: boolean = useSettingsStore((state) => state.settings.showSecondsInClocks);
 
     useEffect(() => {
         // Defined inside the effect so it closes over the CURRENT setting. It used to be a

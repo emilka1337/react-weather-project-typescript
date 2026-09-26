@@ -96,8 +96,7 @@ describe("starredCitiesStore", () => {
     });
 
     it("removes the city at the given index and persists the result", () => {
-        const { addCityToStarredCities, removeCityFromStarredCities } =
-            useStarredCitiesStore.getState();
+        const { addCityToStarredCities, removeCityFromStarredCities } = useStarredCitiesStore.getState();
 
         addCityToStarredCities(city("Baku", 40.37, 49.89));
         addCityToStarredCities(city("Ganja", 40.68, 46.36));

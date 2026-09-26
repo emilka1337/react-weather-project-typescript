@@ -10,9 +10,7 @@ import type { ForecastUnit } from "@/features/weather/types/forecast-unit";
 import { useSettingsStore } from "@/stores/settings-store";
 
 function SelectedWeather() {
-    const showFeelsLikeField: boolean = useSettingsStore(
-        (state) => state.settings.showFeelsLikeField
-    );
+    const showFeelsLikeField: boolean = useSettingsStore((state) => state.settings.showFeelsLikeField);
     const forecast: ForecastUnit[] = useForecastStore((state) => state.forecast);
     const setSelectedWeather = useSelectedWeatherStore((state) => state.setSelectedWeather);
 

@@ -15,7 +15,7 @@ describe("searchCities", () => {
             http.get(ENDPOINT, ({ request }) => {
                 sent = new URL(request.url).searchParams;
                 return HttpResponse.json([]);
-            })
+            }),
         );
 
         await searchCities("São Paulo & Rio");

@@ -30,7 +30,7 @@ describe("settingsStore", () => {
                 speedUnitInMS: true,
                 showSecondsInClocks: true,
                 showNotifications: true,
-            })
+            }),
         );
 
         const store = await freshStore();

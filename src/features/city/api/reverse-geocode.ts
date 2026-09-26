@@ -1,4 +1,4 @@
-import type { SearchCity} from "@/features/city/types/search-city";
+import type { SearchCity } from "@/features/city/types/search-city";
 import { SearchCityListSchema } from "@/features/city/types/search-city";
 import { openWeatherApi } from "@/lib/api-client";
 import type { CityGeolocation } from "@/types/geolocation";
